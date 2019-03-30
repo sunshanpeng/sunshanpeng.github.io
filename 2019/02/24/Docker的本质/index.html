@@ -1,182 +1,148 @@
-<!DOCTYPE HTML>
-<html lang="zh_CN">
+<!DOCTYPE html>
+<html>
 <head><meta name="generator" content="Hexo 3.8.0">
-    <!--Setting-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta http-equiv="Cache-Control" content="no-siteapp">
-    <meta http-equiv="Cache-Control" content="no-transform">
-    <meta name="renderer" content="webkit|ie-comp|ie-stand">
-    <meta name="apple-mobile-web-app-capable" content="阿鹏的技术博客">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="format-detection" content="telephone=no,email=no,adress=no">
-    <meta name="browsermode" content="application">
-    <meta name="screen-orientation" content="portrait">
-    <link rel="dns-prefetch" href="http://yoursite.com">
-    <!--SEO-->
-
-    <meta name="keywords" content="docker">
-
-
-    <meta name="description" content="Docker容器其实是一种沙盒技术，能够像一个集装箱一样，把应用“装”起来。
-这样应用与应用之间，就因为有了边界而不会相互干扰；
-被装进集装箱的应用，也可以被方便地搬来搬去。
-容器的本质，是由N...">
-
-
-
-<meta name="robots" content="all">
-<meta name="google" content="all">
-<meta name="googlebot" content="all">
-<meta name="verify" content="all">
-
-    <!--Title-->
-
-
-<title>Docker的本质 | 阿鹏的技术博客</title>
-
-
+  <meta charset="utf-8">
+  
+  <title>Docker的本质 | 阿鹏的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="docker">
+  
+  
+  
+  
+  <meta name="description" content="Docker容器其实是一种沙盒技术，能够像一个集装箱一样，把应用“装”起来。 这样应用与应用之间，就因为有了边界而不会相互干扰； 被装进集装箱的应用，也可以被方便地搬来搬去。 容器的本质，是由Namespace、Cgroups和rootfs三种技术构建出来的进程的隔离环境。 Docke容器技术的核心功能，是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。 Namespace技术是用来修改">
+<meta name="keywords" content="docker">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker的本质">
+<meta property="og:url" content="http://yoursite.com/2019/02/24/Docker的本质/index.html">
+<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:description" content="Docker容器其实是一种沙盒技术，能够像一个集装箱一样，把应用“装”起来。 这样应用与应用之间，就因为有了边界而不会相互干扰； 被装进集装箱的应用，也可以被方便地搬来搬去。 容器的本质，是由Namespace、Cgroups和rootfs三种技术构建出来的进程的隔离环境。 Docke容器技术的核心功能，是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。 Namespace技术是用来修改">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181013171129.jpg">
+<meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181013173339.jpg">
+<meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181014213926.jpg">
+<meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181021114000.jpg">
+<meta property="og:updated_time" content="2019-02-24T14:37:53.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker的本质">
+<meta name="twitter:description" content="Docker容器其实是一种沙盒技术，能够像一个集装箱一样，把应用“装”起来。 这样应用与应用之间，就因为有了边界而不会相互干扰； 被装进集装箱的应用，也可以被方便地搬来搬去。 容器的本质，是由Namespace、Cgroups和rootfs三种技术构建出来的进程的隔离环境。 Docke容器技术的核心功能，是通过约束和修改进程的动态表现，从而为其创造出一个“边界”。 Namespace技术是用来修改">
+<meta name="twitter:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181013171129.jpg">
+  
     <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
-
-
-    <link rel="icon" href="/favicon.ico">
-
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
     
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
 
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
 
+  <script src="/js/jquery-3.1.1.min.js"></script>
 
-<link rel="stylesheet" href="/css/bootstrap.min.css?rev=3.3.7">
-<link rel="stylesheet" href="/css/font-awesome.min.css?rev=4.5.0">
-<link rel="stylesheet" href="/css/style.css?rev=@@hash">
-
-
-
-
-    
-	<div class="hide">
-		<script type="text/javascript">
-			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
-		</script>
-	</div>
-
-
-
-
-
-
-    
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
 
 </head>
-
 </html>
-<!--[if lte IE 8]>
-<style>
-    html{ font-size: 1em }
-</style>
-<![endif]-->
-<!--[if lte IE 9]>
-<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
-<![endif]-->
 
-<body>
-    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
-    <div class="main-header-box">
-        <a class="header-avatar" href="/" title="sunshanpeng">
-            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
-        </a>
-        <div class="branding">
-        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+
+
+<header id="allheader" class="site-header" role="banner">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
             
-                 <img src="/img/branding.png" alt="Snippet 博客主题" class="img-responsive center-block">
+              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
             
-    	</div>
-    </div>
-</header>
-    <nav class="main-navigation">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
-                    <span class="sr-only"></span>
-                        <i class="fa fa-bars"></i>
-                    </span>
-                    <a class="navbar-brand" href="http://yoursite.com">阿鹏的技术博客</a>
-                </div>
-                <div class="collapse navbar-collapse" id="main-menu">
-                    <ul class="menu">
-                        
-                            <li role="presentation" class="text-center">
-                                <a href="/"><i class="fa fa-home"></i>Home</a>
-                            </li>
-                        
-                            <li role="presentation" class="text-center">
-                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
-                            </li>
-                        
-                            <li role="presentation" class="text-center">
-                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
-                            </li>
-                        
-                            <li role="presentation" class="text-center">
-                                <a href="/categories/容器/"><i class="fa "></i>容器</a>
-                            </li>
-                        
-                            <li role="presentation" class="text-center">
-                                <a href="/archives/"><i class="fa "></i>时间轴</a>
-                            </li>
-                        
-                    </ul>
-                </div>
+          </h1>
+          
+          
+            <div class="site-description">技术博客</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
             </div>
-        </div>
-    </div>
-</nav>
-    <section class="content-wrap">
-        <div class="container">
-            <div class="row">
-                <main class="col-md-8 main-content m-post">
-                    <p id="process"></p>
-<article class="post">
-    <div class="post-head">
-        <h1 id="Docker的本质">
-            
-	            Docker的本质
-            
-        </h1>
-        <div class="post-meta">
-    
-        <span class="categories-meta fa-wrap">
-            <i class="fa fa-folder-open-o"></i>
-            <a class="category-link" href="/categories/容器/">容器</a>
-        </span>
-    
+          </nav>
 
-    
-        <span class="fa-wrap">
-            <i class="fa fa-tags"></i>
-            <span class="tags-meta">
-                
-                    <a class="tag-link" href="/tags/docker/">docker</a>
-                
-            </span>
-        </span>
-    
+      </div>
+  </div>
+</header>
 
-    
-        
-        <span class="fa-wrap">
-            <i class="fa fa-clock-o"></i>
-            <span class="date-meta">2019/02/24</span>
-        </span>
-        
-    
-</div>
+
+  <div id="container">
+    <div id="wrap">
             
-            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-Docker的本质" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      Docker的本质
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/Docker的本质/" class="article-date">
+	  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
     </div>
-    
-    <div class="post-body post-content">
+    <div class="article-entry" itemprop="articleBody">
+      
         <p>Docker容器其实是一种沙盒技术，能够像一个集装箱一样，把应用“装”起来。</p>
 <p>这样应用与应用之间，就因为有了边界而<strong>不会相互干扰</strong>；</p>
 <p>被装进集装箱的应用，也<strong>可以被方便地搬来搬去</strong>。</p>
@@ -246,113 +212,171 @@
 <p><em>Union FS 是有最大层数限制的，比如 AUFS，曾经是最大不得超过 42 层，现在是不得超过 127 层。</em></p>
 <h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><p>本文内容是在极客时间学习张磊老师《深入剖析Kubernetes》专栏之后的一点理解，如果有写的不对的地方欢迎留言指正，另外也希望大家支持张磊老师，支持极客时间，支持知识付费，多多学习，共同进步。<br><img src="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181021114000.jpg" alt></p>
 
+      
     </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
     
-    <div class="post-footer">
-        <div>
-            
-                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
-            
-        </div>
-        <div>
-            
-        </div>
-    </div>
+<nav id="article-nav">
+  
+    <a href="/2019/02/24/Pod的意义/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Pod的意义
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
 </article>
 
-<div class="article-nav prev-next-wrap clearfix">
-    
-        <a href="/2019/02/24/Pod的意义/" class="pre-post btn btn-default" title="Pod的意义">
-            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
-            <span class="hidden-xs">Pod的意义</span>
-        </a>
-    
-    
-</div>
+<!-- Table of Contents -->
 
-
-    <div id="comments">
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Namespace："><span class="nav-number">1.</span> <span class="nav-text">Namespace：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机和Docker容器比较"><span class="nav-number">1.1.</span> <span class="nav-text">虚拟机和Docker容器比较</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cgroups："><span class="nav-number">2.</span> <span class="nav-text">Cgroups：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rootfs："><span class="nav-number">3.</span> <span class="nav-text">rootfs：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dockerfile"><span class="nav-number">3.1.</span> <span class="nav-text">Dockerfile</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注"><span class="nav-number">4.</span> <span class="nav-text">注</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
         
-	
-    <div id="vcomments" class="valine"></div>
-    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-<script src="/assets/valine.min.js"></script>
-
-    <script>
-        new Valine({
-            av: AV,
-            el: '#vcomments',
-            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
-            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
-            placeholder: '说点什么吧',
-            notify: false,
-            verify: false,
-            avatar: 'mm',
-            meta: 'nick,mail'.split(','),
-            pageSize: '10',
-            path: window.location.pathname,
-            lang: 'zh_CN'.toLowerCase()
-        })
-    </script>
-
+      </div>
 
     </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
 
-
-
-
-
-                </main>
-                
-                    <aside id="article-toc" role="navigation" class="col-md-4">
-    <div class="widget">
-        <h3 class="title">Table of Contents</h3>
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
         
-            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Namespace："><span class="toc-text">Namespace：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#虚拟机和Docker容器比较"><span class="toc-text">虚拟机和Docker容器比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cgroups："><span class="toc-text">Cgroups：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rootfs："><span class="toc-text">rootfs：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dockerfile"><span class="toc-text">Dockerfile</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#注"><span class="toc-text">注</span></a></li></ol>
-        
-    </div>
-</aside>
-
-                
-            </div>
-        </div>
-    </section>
-    <footer class="main-footer">
-    <div class="container">
-        <div class="row">
-        </div>
-    </div>
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
 </footer>
 
-<a id="back-to-top" class="icon-btn hide">
-	<i class="fa fa-chevron-up"></i>
-</a>
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
 
 
-
-
-    <div class="copyright">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="busuanzi">
+    <!-- headerblur min height -->
     
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
 </div>
 
-            </div>
-            <div class="col-sm-12">
-                <span>Copyright &copy; 2017
-                </span> |
-                <span>
-                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
-                </span> |
-                <span>
-                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
-                </span>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
 
 
 
@@ -360,7 +384,23 @@
 
 
 
-<script src="/js/app.js?rev=@@hash"></script>
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
 
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
 </body>
 </html>
