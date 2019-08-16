@@ -9,17 +9,17 @@
   
   
   
-  <meta name="description" content="技术博客">
-<meta name="keywords" content="java devops kubernetes docker">
+  <meta name="description" content="java go devops kubernetes docker">
+<meta name="keywords" content="java go devops kubernetes docker">
 <meta property="og:type" content="website">
 <meta property="og:title" content="阿鹏的技术博客">
-<meta property="og:url" content="http://yoursite.com/categories/容器/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/categories/容器/index.html">
 <meta property="og:site_name" content="阿鹏的技术博客">
-<meta property="og:description" content="技术博客">
+<meta property="og:description" content="java go devops kubernetes docker">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="阿鹏的技术博客">
-<meta name="twitter:description" content="技术博客">
+<meta name="twitter:description" content="java go devops kubernetes docker">
   
     <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
   
@@ -56,9 +56,31 @@
 
 
   
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
 
 
-<header id="allheader" class="site-header" role="banner">
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -69,7 +91,7 @@
           </h1>
           
           
-            <div class="site-description">技术博客</div>
+            <div class="site-description">java go devops kubernetes docker</div>
           
             
           <nav id="main-navigation" class="main-navigation" role="navigation">
@@ -121,6 +143,46 @@
   <div class="archive-article-inner">
     <header class="archive-article-header">
 
+      <a href="/2019/03/24/Docker常用命令/" class="archive-article-date">
+		  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">3月 24, 2019</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/2019/03/24/Docker常用命令/">Docker常用命令</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
+      <a href="/2019/03/24/Kubernetes集群配置优化/" class="archive-article-date">
+		  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">3月 24, 2019</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/2019/03/24/Kubernetes集群配置优化/">Kubernetes集群配置优化</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
       <a href="/2019/02/24/Kubernetes介绍/" class="archive-article-date">
 		  <time datetime="2019-02-24T14:52:37.000Z" itemprop="datePublished">2月 24, 2019</time>
 	  </a>
@@ -161,6 +223,46 @@
   <div class="archive-article-inner">
     <header class="archive-article-header">
 
+      <a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="archive-article-date">
+		  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">2月 24, 2019</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
+      <a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" class="archive-article-date">
+		  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">2月 24, 2019</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/">修改Kubernetes集群Pod容器的内核参数</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
       <a href="/2019/02/24/Docker的本质/" class="archive-article-date">
 		  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">2月 24, 2019</time>
 	  </a>
@@ -168,6 +270,26 @@
   
     <h1 class="thumb" itemprop="name">
       <a class="archive-article-title" href="/2019/02/24/Docker的本质/">Docker的本质</a>
+    </h1>
+  
+
+    </header>
+  </div>
+</article>
+  
+    
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+
+      <a href="/2019/02/24/Kubectl常用命令/" class="archive-article-date">
+		  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">2月 24, 2019</time>
+	  </a>
+      
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="archive-article-title" href="/2019/02/24/Kubectl常用命令/">Kubectl常用命令</a>
     </h1>
   
 
@@ -283,6 +405,42 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
+              <h6 style="margin: 0;"><a href="/2019/03/24/Docker常用命令/">Docker常用命令</a></h6>
+              <span>三月 24, 2019</span>
+            </div>
+
+          </li>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/2019/03/24/Kubernetes集群配置优化/">Kubernetes集群配置优化</a></h6>
+              <span>三月 24, 2019</span>
+            </div>
+
+          </li>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/">Windows电脑本地开发时连接Apollo配置中心启动慢</a></h6>
+              <span>三月 24, 2019</span>
+            </div>
+
+          </li>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
               <h6 style="margin: 0;"><a href="/2019/02/24/Kubernetes介绍/">Kubernetes介绍</a></h6>
               <span>二月 24, 2019</span>
             </div>
@@ -307,7 +465,7 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/02/24/Docker的本质/">Docker的本质</a></h6>
+              <h6 style="margin: 0;"><a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a></h6>
               <span>二月 24, 2019</span>
             </div>
 
@@ -322,7 +480,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">3</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -332,7 +490,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">2</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">6</span></li></ul>
     </div>
   </div>
 
@@ -342,7 +500,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/docker/" style="font-size: 10px;">docker</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a>
+      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a>
     </div>
   </div>
 
@@ -352,7 +510,7 @@
     <h3 class="widget-title">Archives</h3>
 
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">3</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li></ul>
     </div>
   </div>
 
@@ -407,6 +565,9 @@
 
 
     <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

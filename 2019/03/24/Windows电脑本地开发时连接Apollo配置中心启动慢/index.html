@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Windows电脑本地开发时连接Apollo配置中心启动慢 | 阿鹏的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="apollo">
+  
+  
+  
+  
+  <meta name="description" content="表现：启动时中间停顿了10秒左右 原因：电脑上网卡太多  解决方法： 禁用多余网卡  在启动参数指定本机IP：-Dhost.ip=10.208.202.251  10.208.202.251改成自己的IP地址    原理：指定本机IP后就会跳过查找有效IP这一步 具体代码1234567891011121314151617181920212223242526272829303132333435363">
+<meta name="keywords" content="apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows电脑本地开发时连接Apollo配置中心启动慢">
+<meta property="og:url" content="http://sunshanpeng.com/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/index.html">
+<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:description" content="表现：启动时中间停顿了10秒左右 原因：电脑上网卡太多  解决方法： 禁用多余网卡  在启动参数指定本机IP：-Dhost.ip=10.208.202.251  10.208.202.251改成自己的IP地址    原理：指定本机IP后就会跳过查找有效IP这一步 具体代码1234567891011121314151617181920212223242526272829303132333435363">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0802/103323_a0a2e1c0_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0802/103353_03254096_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0802/103409_5814334a_1878326.png">
+<meta property="og:updated_time" content="2019-08-16T18:22:44.567Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Windows电脑本地开发时连接Apollo配置中心启动慢">
+<meta name="twitter:description" content="表现：启动时中间停顿了10秒左右 原因：电脑上网卡太多  解决方法： 禁用多余网卡  在启动参数指定本机IP：-Dhost.ip=10.208.202.251  10.208.202.251改成自己的IP地址    原理：指定本机IP后就会跳过查找有效IP这一步 具体代码1234567891011121314151617181920212223242526272829303132333435363">
+<meta name="twitter:image" content="https://images.gitee.com/uploads/images/2019/0802/103323_a0a2e1c0_1878326.png">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-Windows电脑本地开发时连接Apollo配置中心启动慢" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      Windows电脑本地开发时连接Apollo配置中心启动慢
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/" class="article-date">
+	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="表现："><a href="#表现：" class="headerlink" title="表现："></a>表现：</h3><p>启动时中间停顿了10秒左右<br><img src="https://images.gitee.com/uploads/images/2019/0802/103323_a0a2e1c0_1878326.png" alt="start" title="1564637268772.png"></p>
+<h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><p>电脑上网卡太多</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0802/103353_03254096_1878326.png" alt="ip" title="1564637451380.png"><br><img src="https://images.gitee.com/uploads/images/2019/0802/103409_5814334a_1878326.png" alt="ipconfig" title="1564638108647.png"></p>
+<h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><ol>
+<li><p>禁用多余网卡</p>
+</li>
+<li><p>在启动参数指定本机IP：<code>-Dhost.ip=10.208.202.251</code></p>
+<blockquote>
+<p>10.208.202.251改成自己的IP地址</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h3><p>指定本机IP后就会跳过查找有效IP这一步</p>
+<h3 id="具体代码"><a href="#具体代码" class="headerlink" title="具体代码"></a>具体代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctrip.framework.foundation.internals;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.net.Inet4Address;</span><br><span class="line"><span class="keyword">import</span> java.net.InetAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.NetworkInterface;</span><br><span class="line"><span class="keyword">import</span> java.net.SocketException;</span><br><span class="line"><span class="keyword">import</span> java.net.UnknownHostException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.Enumeration;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> NetworkInterfaceManager &#123;</span><br><span class="line">  INSTANCE;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> InetAddress m_local;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> InetAddress m_localHost;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">NetworkInterfaceManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    load();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> InetAddress <span class="title">findValidateIp</span><span class="params">(List&lt;InetAddress&gt; addresses)</span> </span>&#123;</span><br><span class="line">    InetAddress local = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> maxWeight = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (InetAddress address : addresses) &#123;</span><br><span class="line">      <span class="keyword">if</span> (address <span class="keyword">instanceof</span> Inet4Address) &#123;</span><br><span class="line">        <span class="keyword">int</span> weight = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isSiteLocalAddress()) &#123;</span><br><span class="line">          weight += <span class="number">8</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isLinkLocalAddress()) &#123;</span><br><span class="line">          weight += <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isLoopbackAddress()) &#123;</span><br><span class="line">          weight += <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// has host name</span></span><br><span class="line">        <span class="comment">// TODO fix performance issue when calling getHostName</span></span><br><span class="line">        <span class="keyword">if</span> (!Objects.equals(address.getHostName(), address.getHostAddress())) &#123;</span><br><span class="line">          weight += <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (weight &gt; maxWeight) &#123;</span><br><span class="line">          maxWeight = weight;</span><br><span class="line">          local = address;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> local;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getLocalHostAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m_local.getHostAddress();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getLocalHostName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == m_localHost) &#123;</span><br><span class="line">        m_localHost = InetAddress.getLocalHost();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> m_localHost.getHostName();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnknownHostException e) &#123;</span><br><span class="line">      <span class="keyword">return</span> m_local.getHostName();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> String <span class="title">getProperty</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    String value = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    value = System.getProperty(name);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">      value = System.getenv(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">load</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String ip = getProperty(<span class="string">"host.ip"</span>);<span class="comment">//除了启动参数也可以在环境变量中指定host.ip</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ip != <span class="keyword">null</span>) &#123;<span class="comment">//如果指定了host.ip就直接拿指定IP的网卡信息</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        m_local = InetAddress.getByName(ip);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        System.err.println(e);</span><br><span class="line">        <span class="comment">// ignore</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      Enumeration&lt;NetworkInterface&gt; interfaces = NetworkInterface.getNetworkInterfaces();</span><br><span class="line">      List&lt;NetworkInterface&gt; nis = interfaces == <span class="keyword">null</span> ? Collections.&lt;NetworkInterface&gt;emptyList() : Collections.list(interfaces);</span><br><span class="line">      List&lt;InetAddress&gt; addresses = <span class="keyword">new</span> ArrayList&lt;InetAddress&gt;();</span><br><span class="line">      InetAddress local = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (NetworkInterface ni : nis) &#123;</span><br><span class="line">          <span class="keyword">if</span> (ni.isUp() &amp;&amp; !ni.isLoopback()) &#123;</span><br><span class="line">            addresses.addAll(Collections.list(ni.getInetAddresses()));</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        local = findValidateIp(addresses);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="comment">// ignore</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (local != <span class="keyword">null</span>) &#123;</span><br><span class="line">        m_local = local;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SocketException e) &#123;</span><br><span class="line">      <span class="comment">// ignore it</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    m_local = InetAddress.getLoopbackAddress();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>注：</p>
+<ul>
+<li>官方说还可以通过改host的方式实现，但是我在win10电脑上没有成功。</li>
+<li>1.4修复了该问题</li>
+</ul>
+<p>参考链接：<a href="https://github.com/ctripcorp/apollo/wiki/部署&amp;开发遇到的常见问题#6-客户端多块网卡造成获取ip不准如何解决" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo/wiki/%E9%83%A8%E7%BD%B2&amp;%E5%BC%80%E5%8F%91%E9%81%87%E5%88%B0%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#6-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A4%9A%E5%9D%97%E7%BD%91%E5%8D%A1%E9%80%A0%E6%88%90%E8%8E%B7%E5%8F%96ip%E4%B8%8D%E5%87%86%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3</a></p>
+<p><a href="https://github.com/ctripcorp/apollo/issues/1457" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo/issues/1457</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/24/Kubernetes集群配置优化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Kubernetes集群配置优化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/24/Kubernetes介绍/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Kubernetes介绍</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#表现："><span class="nav-number">1.</span> <span class="nav-text">表现：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原因："><span class="nav-number">2.</span> <span class="nav-text">原因：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法："><span class="nav-number">3.</span> <span class="nav-text">解决方法：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理："><span class="nav-number">4.</span> <span class="nav-text">原理：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体代码"><span class="nav-number">5.</span> <span class="nav-text">具体代码</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

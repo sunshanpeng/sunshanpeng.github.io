@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Tag: docker | 阿鹏的技术博客</title>
+  <title>Page 2 | 阿鹏的技术博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   
@@ -13,7 +13,7 @@
 <meta name="keywords" content="java go devops kubernetes docker">
 <meta property="og:type" content="website">
 <meta property="og:title" content="阿鹏的技术博客">
-<meta property="og:url" content="http://sunshanpeng.com/tags/docker/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/page/2/index.html">
 <meta property="og:site_name" content="阿鹏的技术博客">
 <meta property="og:description" content="java go devops kubernetes docker">
 <meta property="og:locale" content="zh_CN">
@@ -127,80 +127,112 @@
         
           <section id="main">
   
-  
-  
+    <article id="post-Kubectl常用命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <h1><a href="/archives/2019" class="archive-year">2019</a></h1>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-
-      <a href="/2019/03/24/Docker常用命令/" class="archive-article-date">
-		  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">3月 24, 2019</time>
-	  </a>
-      
+      <header class="article-header">
+        
   
     <h1 class="thumb" itemprop="name">
-      <a class="archive-article-title" href="/2019/03/24/Docker常用命令/">Docker常用命令</a>
+      <a class="article-title" href="/2019/02/24/Kubectl常用命令/">Kubectl常用命令</a>
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-
-      <a href="/2019/03/24/Kubernetes集群配置优化/" class="archive-article-date">
-		  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">3月 24, 2019</time>
-	  </a>
+    <div class="article-meta">
       
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="archive-article-title" href="/2019/03/24/Kubernetes集群配置优化/">Kubernetes集群配置优化</a>
-    </h1>
-  
+	<a href="/2019/02/24/Kubectl常用命令/" class="article-date">
+	  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-
-      <a href="/2019/02/24/Docker的本质/" class="archive-article-date">
-		  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">2月 24, 2019</time>
-	  </a>
       
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="archive-article-title" href="/2019/02/24/Docker的本质/">Docker的本质</a>
-    </h1>
-  
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><h3 id="前台运行的容器"><a href="#前台运行的容器" class="headerlink" title="前台运行的容器"></a>前台运行的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=centos --restart=Never <span class="built_in">test</span> bash</span><br></pre></td></tr></table></figure>
+<h3 id="常驻后台的容器"><a href="#常驻后台的容器" class="headerlink" title="常驻后台的容器"></a>常驻后台的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br></pre></td></tr></table></figure>
+<p>通常使用yaml文件创建容器，只在调试或者排错的时候使用<code>kubectl run</code>临时创建容器。</p>
+<p>比如：</p>
+<h3 id="创建网络排查容器"><a href="#创建网络排查容器" class="headerlink" title="创建网络排查容器"></a>创建网络排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools</span><br></pre></td></tr></table></figure>
+<p>如果创建了一个MySQL容器并且暴露了service，但是不能使用service访问mysql，这个时候可以使用<code>nslookup</code>或者<code>dig</code>这些网络命令排查。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dnstools<span class="comment"># nslookup mysql</span></span><br><span class="line">Server:         172.21.0.2</span><br><span class="line">Address:        172.21.0.2<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Name:   mysql.qa.svc.cluster.local</span><br><span class="line">Address: 172.21.147.86</span><br></pre></td></tr></table></figure>
+<h3 id="创建MySQL排查容器"><a href="#创建MySQL排查容器" class="headerlink" title="创建MySQL排查容器"></a>创建MySQL排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql --port 3306 -u root -p123456</span><br></pre></td></tr></table></figure>
+<p>如果创建的MySQL容器在集群外连接不上了，可以创建一个mysql容器在内部连接看看能不能连上。</p>
+<ul>
+<li><code>-h</code>参数是MySQL的host；</li>
+<li><code>--port</code>参数是MySQL的端口号；</li>
+<li><code>-u</code>参数是MySQL的用户名；</li>
+<li><code>-p</code>参数是用户名对应的密码，<code>-p</code>和密码之间没有空格。</li>
+</ul>
+<h2 id="应用资源"><a href="#应用资源" class="headerlink" title="应用资源"></a>应用资源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f deployment.yaml</span><br></pre></td></tr></table></figure>
+<p>推荐使用这种方式创建或者更新资源。</p>
+<h2 id="获取容器"><a href="#获取容器" class="headerlink" title="获取容器"></a>获取容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide</span><br></pre></td></tr></table></figure>
+<p>获取所有namespace的容器。</p>
+<ul>
+<li><code>--all-namespaces</code>表示所有namespace，默认获取<code>default namespace</code>的资源，可以通过<code>-n</code>指定namespace。</li>
+<li><code>-o wide</code>表示输出格式，其他还要<code>json</code>，<code>yaml</code>。</li>
+</ul>
+<h3 id="获取所有不是Running状态的容器"><a href="#获取所有不是Running状态的容器" class="headerlink" title="获取所有不是Running状态的容器"></a>获取所有不是Running状态的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide | awk <span class="string">'&#123;if ($4 != "Running") print $0&#125;'</span></span><br></pre></td></tr></table></figure>
+<h3 id="获取其他资源"><a href="#获取其他资源" class="headerlink" title="获取其他资源"></a>获取其他资源</h3><p>除了容器，还有很多其他资源例如<code>node</code>、<code>service</code>、<code>deployment</code>、<code>statefulset</code>、<code>daemonset</code>、<code>job</code>、<code>pvc</code>、<code>pv</code>等等可以通过kubectl来获取，大多数是区分namespace的，也有不区分namespace的比如<code>node</code>、<code>pv</code>、<code>storageclass</code>等。</p>
+<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc</span><br></pre></td></tr></table></figure>
+<h3 id="强制删除："><a href="#强制删除：" class="headerlink" title="强制删除："></a>强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc --force --grace-period=0</span><br></pre></td></tr></table></figure>
+<h3 id="批量强制删除："><a href="#批量强制删除：" class="headerlink" title="批量强制删除："></a>批量强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods | grep Terminating | awk <span class="string">'&#123;print $1&#125;'</span> | xargs kubectl delete pod --force --grace-period=0</span><br></pre></td></tr></table></figure>
+<h3 id="批量强制删除非运行容器"><a href="#批量强制删除非运行容器" class="headerlink" title="批量强制删除非运行容器"></a>批量强制删除非运行容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces | awk <span class="string">'&#123;if ($4 != "Running") system ("kubectl -n " $1 " delete pods " $2 " --grace-period=0 " " --force ")&#125;'</span></span><br></pre></td></tr></table></figure>
+<h2 id="扩缩容"><a href="#扩缩容" class="headerlink" title="扩缩容"></a>扩缩容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment nginx --replicas 4</span><br></pre></td></tr></table></figure>
+<p>最小可以缩容到0个。</p>
+<h2 id="暂停滚动升级"><a href="#暂停滚动升级" class="headerlink" title="暂停滚动升级"></a>暂停滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout pause deployment nginx</span><br></pre></td></tr></table></figure>
+<p>滚动升级时，可以使用该命令暂停升级来实现金丝雀发布。</p>
+<h2 id="恢复滚动升级"><a href="#恢复滚动升级" class="headerlink" title="恢复滚动升级"></a>恢复滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout resume deployment nginx</span><br></pre></td></tr></table></figure>
+<p>暂停后恢复。</p>
+<h2 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout undo deployment nginx</span><br></pre></td></tr></table></figure>
+<p>回滚到上一次发布。</p>
+<h2 id="给node加taint（污点）"><a href="#给node加taint（污点）" class="headerlink" title="给node加taint（污点）"></a>给node加taint（污点）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes node1 key=value:NoSchedule</span><br></pre></td></tr></table></figure>
+<p>给节点添加污点后只有容忍了该污点的容器才能调度上来。</p>
+<h2 id="查看node信息"><a href="#查看node信息" class="headerlink" title="查看node信息"></a>查看node信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe nodes node1</span><br></pre></td></tr></table></figure>
+<p>通过该命令可以查看node的资源、内核、容器、标签和污点等等。</p>
+<h2 id="给node加标签"><a href="#给node加标签" class="headerlink" title="给node加标签"></a>给node加标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role=node --overwrite</span><br></pre></td></tr></table></figure>
+<p>给node加标签后可以用节点亲和性指定某些pod调度到固定node。</p>
+<h2 id="删除node上的标签"><a href="#删除node上的标签" class="headerlink" title="删除node上的标签"></a>删除node上的标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role-</span><br></pre></td></tr></table></figure>
+<h2 id="根据标签筛选"><a href="#根据标签筛选" class="headerlink" title="根据标签筛选"></a>根据标签筛选</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes -l node-type=iot</span><br></pre></td></tr></table></figure>
+<h2 id="禁止节点调度"><a href="#禁止节点调度" class="headerlink" title="禁止节点调度"></a>禁止节点调度</h2><h3 id="只禁止不驱逐"><a href="#只禁止不驱逐" class="headerlink" title="只禁止不驱逐"></a>只禁止不驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl cordon node1</span><br></pre></td></tr></table></figure>
+<p>这种方式只把node标记为<code>SchedulingDisabled</code>,已经在node上运行的pod不会受影响，之后不会再有新的pod调度上去。</p>
+<h3 id="禁止并驱逐"><a href="#禁止并驱逐" class="headerlink" title="禁止并驱逐"></a>禁止并驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain node1 --ignore-daemonsets --delete-local-data --force</span><br></pre></td></tr></table></figure>
+<p>这种方式除了把node标记为<code>SchedulingDisabled</code>，已经运行的pod也会被驱逐，保证节点除<code>daemonset</code>外没有其他pod。</p>
+<h2 id="恢复调度"><a href="#恢复调度" class="headerlink" title="恢复调度"></a>恢复调度</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl uncordon node1</span><br></pre></td></tr></table></figure>
 
-    </header>
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
   </div>
+  
 </article>
-  
-  
-    </div></section>
+
+<!-- Table of Contents -->
+
   
 
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/">Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
 
 </section>
           <aside id="sidebar">

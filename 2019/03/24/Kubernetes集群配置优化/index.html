@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Kubernetes集群配置优化 | 阿鹏的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="dockerk8s">
+  
+  
+  
+  
+  <meta name="description" content="一、Docker配置123456789101112131415&amp;#123;    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    &quot;log-driver&quot;: &quot;json-file&quot;,    &quot;log-opts&quot;: &amp;#123;        &quot;max-size&quot;: &quot;100m&quot;,        &quot;max-file&quot;: &quot;10&quot;    &amp;#125;,">
+<meta name="keywords" content="docker,k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes集群配置优化">
+<meta property="og:url" content="http://sunshanpeng.com/2019/03/24/Kubernetes集群配置优化/index.html">
+<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:description" content="一、Docker配置123456789101112131415&amp;#123;    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    &quot;log-driver&quot;: &quot;json-file&quot;,    &quot;log-opts&quot;: &amp;#123;        &quot;max-size&quot;: &quot;100m&quot;,        &quot;max-file&quot;: &quot;10&quot;    &amp;#125;,">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2019-08-16T18:20:56.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes集群配置优化">
+<meta name="twitter:description" content="一、Docker配置123456789101112131415&amp;#123;    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    &quot;log-driver&quot;: &quot;json-file&quot;,    &quot;log-opts&quot;: &amp;#123;        &quot;max-size&quot;: &quot;100m&quot;,        &quot;max-file&quot;: &quot;10&quot;    &amp;#125;,">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-Kubernetes集群配置优化" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      Kubernetes集群配置优化
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/03/24/Kubernetes集群配置优化/" class="article-date">
+	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、Docker配置"><a href="#一、Docker配置" class="headerlink" title="一、Docker配置"></a>一、Docker配置</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"exec-opts"</span>: [<span class="string">"native.cgroupdriver=systemd"</span>],</span><br><span class="line">    <span class="attr">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line">    <span class="attr">"log-opts"</span>: &#123;</span><br><span class="line">        <span class="attr">"max-size"</span>: <span class="string">"100m"</span>,</span><br><span class="line">        <span class="attr">"max-file"</span>: <span class="string">"10"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"bip"</span>: <span class="string">"169.254.123.1/24"</span>,</span><br><span class="line">    <span class="attr">"oom-score-adjust"</span>: <span class="number">-1000</span>,</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://registry.docker-cn.com"</span>, <span class="string">"https://docker.mirrors.ustc.edu.cn"</span>],</span><br><span class="line">    <span class="attr">"storage-driver"</span>: <span class="string">"overlay2"</span>,</span><br><span class="line">    <span class="attr">"storage-opts"</span>:[<span class="string">"overlay2.override_kernel_check=true"</span>],</span><br><span class="line">    <span class="attr">"data-root"</span>: <span class="string">"/var/lib/docker"</span>,</span><br><span class="line">    <span class="attr">"live-restore"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="data-root"><a href="#data-root" class="headerlink" title="data-root"></a>data-root</h3><p>设置存储持久数据和资源配置的目录，默认值<code>/var/lib/docker</code>，<strong>17.05.0</strong>以下版本参数为：<code>graph</code>。</p>
+<blockquote>
+<p>如果只有一个系统盘可以不用指定该参数，如果有数据盘并且数据盘不是<code>/var</code>，则需要指定数据目录。</p>
+</blockquote>
+<h3 id="registry-mirrors"><a href="#registry-mirrors" class="headerlink" title="registry-mirrors"></a>registry-mirrors</h3><p>镜像仓库地址，用于镜像加速。</p>
+<blockquote>
+<p>直接连接国外dockerHub拉取镜像速度太慢，一般都会配置国内的镜像地址。</p>
+</blockquote>
+<h3 id="bip"><a href="#bip" class="headerlink" title="bip"></a>bip</h3><p>设置docker0网桥地址，默认是<code>172.17.0.1/16</code>。</p>
+<blockquote>
+<p>默认网段有可能和现有服务器的网段冲突，建议设置成<code>169.254.123.1/24</code></p>
+</blockquote>
+<h3 id="live-restore"><a href="#live-restore" class="headerlink" title="live-restore"></a>live-restore</h3><p>当docker daemon停止时，让容器继续运行，默认<code>false</code>关闭，设为<code>true</code>打开。</p>
+<blockquote>
+<p>默认情况下重启或者关闭docker daemon时，容器都会停止，通过设置live-restore让容器继续运行，在修改docker配置或者升级docker的时候很有用。（如果daemon重启之后使用了不同的bip或不同的data-root，则live restore无法正常工作）</p>
+</blockquote>
+<h3 id="log-opts"><a href="#log-opts" class="headerlink" title="log-opts"></a>log-opts</h3><p>docker日志设置，默认为空。</p>
+<blockquote>
+<p>不设置最大值的话日志文件可能会撑爆硬盘。</p>
+</blockquote>
+<h3 id="exec-opts"><a href="#exec-opts" class="headerlink" title="exec-opts"></a>exec-opts</h3><p>设置docker cgroup驱动。</p>
+<blockquote>
+<p>需要注意docker的Cgroups和kubelet的Cgroups配置是否一致。</p>
+</blockquote>
+<h2 id="二、Kubelet配置"><a href="#二、Kubelet配置" class="headerlink" title="二、Kubelet配置"></a>二、Kubelet配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf </span><br><span class="line">--kubeconfig=/etc/kubernetes/kubelet.conf </span><br><span class="line">--pod-manifest-path=/etc/kubernetes/manifests </span><br><span class="line">--allow-privileged=true --network-plugin=cni </span><br><span class="line">--cni-conf-dir=/etc/cni/net.d </span><br><span class="line">--cni-bin-dir=/opt/cni/bin </span><br><span class="line">--cluster-dns=192.168.176.10 </span><br><span class="line">--pod-infra-container-image=registry-vpc.cn-shanghai.aliyuncs.com/acs/pause-amd64:3.1 </span><br><span class="line">--enable-controller-attach-detach=false </span><br><span class="line">--enable-load-reader </span><br><span class="line">--cluster-domain=cluster.local </span><br><span class="line">--cloud-provider=external </span><br><span class="line">--hostname-override=$(NODE_NAME)</span><br><span class="line">--provider-id=cn-shanghai.i-uf657oy682jirk1oad62 </span><br><span class="line">--authorization-mode=Webhook </span><br><span class="line">--client-ca-file=/etc/kubernetes/pki/ca.crt </span><br><span class="line">--system-reserved=memory=300Mi </span><br><span class="line">--kube-reserved=memory=400Mi </span><br><span class="line">--eviction-hard=imagefs.available&lt;15%,memory.available&lt;300Mi,nodefs.available&lt;10%,nodefs.inodesFree&lt;5% </span><br><span class="line">--cgroup-driver=systemd </span><br><span class="line">--anonymous-auth=false </span><br><span class="line">--rotate-certificates=true </span><br><span class="line">--cert-dir=/var/lib/kubelet/pki</span><br><span class="line">--root-dir=/var/lib/kubelet</span><br></pre></td></tr></table></figure>
+<h3 id="pod-infra-container-image"><a href="#pod-infra-container-image" class="headerlink" title="pod-infra-container-image"></a>pod-infra-container-image</h3><p>基础镜像，默认使用的<code>k8s.gcr.io/pause-amd64:3.1</code>需要翻墙，可以使用国内镜像或者自己上传的镜像。</p>
+<h3 id="root-dir"><a href="#root-dir" class="headerlink" title="root-dir"></a>root-dir</h3><p>设置存储持久数据和资源配置的目录，默认值<code>/var/lib/kubelet</code>。</p>
+<blockquote>
+<p>用法同Docker的data-root参数。</p>
+</blockquote>
+<h3 id="cgroup-driver"><a href="#cgroup-driver" class="headerlink" title="cgroup-driver"></a>cgroup-driver</h3><p>设置kubelet Cgroups驱动。</p>
+<blockquote>
+<p>需要注意docker的Cgroups和kubelet的Cgroups配置是否一致。</p>
+</blockquote>
+<h3 id="system-reserved"><a href="#system-reserved" class="headerlink" title="system-reserved"></a>system-reserved</h3><p>给系统保留的资源大小，可以设置CPU、内存、硬盘。</p>
+<h3 id="kube-reserved"><a href="#kube-reserved" class="headerlink" title="kube-reserved"></a>kube-reserved</h3><p>给kubernetes保留的资源大小，可以设置CPU、内存、硬盘。</p>
+<h3 id="eviction-hard"><a href="#eviction-hard" class="headerlink" title="eviction-hard"></a>eviction-hard</h3><p>驱逐条件，当节点资源小于设置的驱逐条件时，kubelet开始驱逐Pod。</p>
+<h2 id="三、Kube-proxy"><a href="#三、Kube-proxy" class="headerlink" title="三、Kube-proxy"></a>三、Kube-proxy</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- --proxy-mode=ipvs</span><br><span class="line">- --kubeconfig=/var/lib/kube-proxy/kubeconfig.conf</span><br><span class="line">- --cluster-cidr=172.17.0.0/18</span><br><span class="line">- --hostname-override=$(NODE_NAME)</span><br></pre></td></tr></table></figure>
+<h3 id="proxy-mode"><a href="#proxy-mode" class="headerlink" title="proxy-mode"></a>proxy-mode</h3><p>ipvs可以大大提高性能。</p>
+<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
+<li><a href="https://docs.docker.com/engine/reference/commandline/dockerd/" target="_blank" rel="noopener">https://docs.docker.com/engine/reference/commandline/dockerd/</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/</a></li>
+<li><a href="https://docs.docker.com/engine/deprecated/" target="_blank" rel="noopener">https://docs.docker.com/engine/deprecated/</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/03/24/Docker常用命令/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Docker常用命令
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Windows电脑本地开发时连接Apollo配置中心启动慢</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Docker配置"><span class="nav-number">1.</span> <span class="nav-text">一、Docker配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#data-root"><span class="nav-number">1.1.</span> <span class="nav-text">data-root</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#registry-mirrors"><span class="nav-number">1.2.</span> <span class="nav-text">registry-mirrors</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bip"><span class="nav-number">1.3.</span> <span class="nav-text">bip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#live-restore"><span class="nav-number">1.4.</span> <span class="nav-text">live-restore</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#log-opts"><span class="nav-number">1.5.</span> <span class="nav-text">log-opts</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#exec-opts"><span class="nav-number">1.6.</span> <span class="nav-text">exec-opts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、Kubelet配置"><span class="nav-number">2.</span> <span class="nav-text">二、Kubelet配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#pod-infra-container-image"><span class="nav-number">2.1.</span> <span class="nav-text">pod-infra-container-image</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#root-dir"><span class="nav-number">2.2.</span> <span class="nav-text">root-dir</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#cgroup-driver"><span class="nav-number">2.3.</span> <span class="nav-text">cgroup-driver</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#system-reserved"><span class="nav-number">2.4.</span> <span class="nav-text">system-reserved</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kube-reserved"><span class="nav-number">2.5.</span> <span class="nav-text">kube-reserved</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#eviction-hard"><span class="nav-number">2.6.</span> <span class="nav-text">eviction-hard</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Kube-proxy"><span class="nav-number">3.</span> <span class="nav-text">三、Kube-proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#proxy-mode"><span class="nav-number">3.1.</span> <span class="nav-text">proxy-mode</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料："><span class="nav-number">4.</span> <span class="nav-text">参考资料：</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

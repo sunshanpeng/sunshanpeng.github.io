@@ -15,7 +15,7 @@
 <meta name="keywords" content="k8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes介绍">
-<meta property="og:url" content="http://yoursite.com/2019/02/24/Kubernetes介绍/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/2019/02/24/Kubernetes介绍/index.html">
 <meta property="og:site_name" content="阿鹏的技术博客">
 <meta property="og:description" content="有了Docker之后，单个应用进程的使用管理变的更简单了，但是如果想要管理一个集群的不同应用，处理应用之间的关系， 比如：一个Web应用与数据库之间的访问关系，负载均衡和后端服务之间的代理关系，门户应用与授权组件的调用关系， 再比如说一个服务单位的不同功能之间的关系，如一个Web应用与日志搜集组件之间的文件交换关系， 在传统虚拟机环境对这种关系的处理方法都比较“粗颗粒”，一股脑的部署在同一台虚拟机">
 <meta property="og:locale" content="zh_CN">
@@ -23,8 +23,7 @@
 <meta property="og:image" content="http://image.sunshanpeng.com/cae7afc329d743429328887cb831d4c5.jpg">
 <meta property="og:image" content="http://image.sunshanpeng.com/Yrdoo02.jpg">
 <meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181017210240.png">
-<meta property="og:image" content="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181021114000.jpg">
-<meta property="og:updated_time" content="2019-02-24T14:52:55.478Z">
+<meta property="og:updated_time" content="2019-08-16T18:21:22.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes介绍">
 <meta name="twitter:description" content="有了Docker之后，单个应用进程的使用管理变的更简单了，但是如果想要管理一个集群的不同应用，处理应用之间的关系， 比如：一个Web应用与数据库之间的访问关系，负载均衡和后端服务之间的代理关系，门户应用与授权组件的调用关系， 再比如说一个服务单位的不同功能之间的关系，如一个Web应用与日志搜集组件之间的文件交换关系， 在传统虚拟机环境对这种关系的处理方法都比较“粗颗粒”，一股脑的部署在同一台虚拟机">
@@ -65,9 +64,31 @@
 
 
   
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
 
 
-<header id="allheader" class="site-header" role="banner">
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -78,7 +99,7 @@
           </h1>
           
           
-            <div class="site-description">技术博客</div>
+            <div class="site-description">java go devops kubernetes docker</div>
           
             
           <nav id="main-navigation" class="main-navigation" role="navigation">
@@ -155,7 +176,7 @@
 <p>Kubernetes是Google开源的容器编排调度引擎，它的目标不仅仅是一个编排系统，而是提供一个规范，<strong>可以用来描述集群的架构，定义服务的最终状态</strong>，Kubernetes可以将系统自动得到和维持在这个状态。</p>
 <p>更直白的说，Kubernetes用户可以通过编写一个yaml或者json格式的配置文件，也可以通过工具/代码生成或直接请求Kubernetes API创建应用，该配置文件中包含了用户想要应用程序保持的状态，不论整个Kubernetes集群中的个别主机发生什么问题，都不会影响应用程序的状态，你还可以通过改变该配置文件或请求Kubernetes API来改变应用程序的状态。</p>
 <p><strong>配置文件里面怎么定义的，整个系统就是怎么运行的。</strong></p>
-<h2 id="kubernetes-的马洛斯需求"><a href="#kubernetes-的马洛斯需求" class="headerlink" title="kubernetes 的马洛斯需求"></a>kubernetes 的马洛斯需求</h2><p><img src="http://image.sunshanpeng.com/cae7afc329d743429328887cb831d4c5.jpg" alt="image"></p>
+<h2 id="kubernetes-的马斯洛需求"><a href="#kubernetes-的马斯洛需求" class="headerlink" title="kubernetes 的马斯洛需求"></a>kubernetes 的马斯洛需求</h2><p><img src="http://image.sunshanpeng.com/cae7afc329d743429328887cb831d4c5.jpg" alt="image"></p>
 <h2 id="Kubernetes架构图"><a href="#Kubernetes架构图" class="headerlink" title="Kubernetes架构图"></a>Kubernetes架构图</h2><p><img src="http://image.sunshanpeng.com/Yrdoo02.jpg" alt="img"></p>
 <p>Kubernets属于主从的分布式集群架构，包含Master和Node：</p>
 <ol>
@@ -189,7 +210,6 @@
 <li><h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><p>Label是用于区分Pod、Service、Replication Controller的key/value键值对，Pod、Service、 Replication Controller可以有多个label，但是每个label的key只能对应一个value。Labels是Service和Replication Controller运行的基础，为了将访问Service的请求转发给后端提供服务的多个容器，正是通过标识容器的labels来选择正确的容器。同样，Replication Controller也使用labels来管理通过pod 模板创建的一组容器，这样Replication Controller可以更加容易，方便地管理多个容器，无论有多少容器。</p>
 </li>
 </ul>
-<h2 id="注"><a href="#注" class="headerlink" title="注"></a>注</h2><p>  本文内容是在极客时间学习张磊老师《深入剖析Kubernetes》专栏之后的一点理解，如果有写的不对的地方欢迎留言指正，另外也希望大家支持张磊老师，支持极客时间，支持知识付费，多多学习，共同进步。<br>  <img src="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181021114000.jpg" alt></p>
 
       
     </div>
@@ -235,6 +255,15 @@
     
 <nav id="article-nav">
   
+    <a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Windows电脑本地开发时连接Apollo配置中心启动慢
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/02/24/Pod的意义/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
@@ -252,7 +281,7 @@
     <div id="toc" class="toc-article">
     <strong class="toc-title">Contents</strong>
     
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes介绍"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernetes-的马洛斯需求"><span class="nav-number">2.</span> <span class="nav-text">kubernetes 的马洛斯需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes架构图"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">4.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">4.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Replication-Controller"><span class="nav-number">4.2.</span> <span class="nav-text">Replication Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">4.3.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-number">4.4.</span> <span class="nav-text">Label</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注"><span class="nav-number">5.</span> <span class="nav-text">注</span></a></li></ol>
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes介绍"><span class="nav-number">1.</span> <span class="nav-text">Kubernetes介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#kubernetes-的马斯洛需求"><span class="nav-number">2.</span> <span class="nav-text">kubernetes 的马斯洛需求</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kubernetes架构图"><span class="nav-number">3.</span> <span class="nav-text">Kubernetes架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">4.</span> <span class="nav-text">基本概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pod"><span class="nav-number">4.1.</span> <span class="nav-text">Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Replication-Controller"><span class="nav-number">4.2.</span> <span class="nav-text">Replication Controller</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Service"><span class="nav-number">4.3.</span> <span class="nav-text">Service</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Label"><span class="nav-number">4.4.</span> <span class="nav-text">Label</span></a></li></ol></li></ol>
     
     </div>
   </aside>
@@ -305,6 +334,9 @@
 
 
     <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

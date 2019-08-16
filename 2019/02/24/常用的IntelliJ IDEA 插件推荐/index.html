@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>常用的IntelliJ IDEA 插件推荐 | 阿鹏的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="idea">
+  
+  
+  
+  
+  <meta name="description" content="一、Free Mybatis plugin https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/  1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。  2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。  二、Maven Helper https://">
+<meta name="keywords" content="idea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用的IntelliJ IDEA 插件推荐">
+<meta property="og:url" content="http://sunshanpeng.com/2019/02/24/常用的IntelliJ IDEA 插件推荐/index.html">
+<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:description" content="一、Free Mybatis plugin https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/  1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。  2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。  二、Maven Helper https://">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/212554_ab15da27_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/212635_416e2f83_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213032_393ef6cd_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213032_b3cf731e_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213032_2821a886_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213032_053e3326_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213033_9bb92a4c_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213032_1948eb2a_1878326.gif">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213033_7f2b2251_1878326.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213033_ec2c7097_1878326.png">
+<meta property="og:image" content="https://plugins.jetbrains.com/files/2162/screenshot_16015.png">
+<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0806/213031_3215a036_1878326.png">
+<meta property="og:image" content="https://plugins.jetbrains.com/files/7495/screenshot_14958.png">
+<meta property="og:updated_time" content="2019-08-16T18:23:33.732Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="常用的IntelliJ IDEA 插件推荐">
+<meta name="twitter:description" content="一、Free Mybatis plugin https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/  1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。  2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。  二、Maven Helper https://">
+<meta name="twitter:image" content="https://images.gitee.com/uploads/images/2019/0806/212554_ab15da27_1878326.png">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-常用的IntelliJ IDEA 插件推荐" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      常用的IntelliJ IDEA 插件推荐
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、Free-Mybatis-plugin"><a href="#一、Free-Mybatis-plugin" class="headerlink" title="一、Free Mybatis plugin"></a>一、Free Mybatis plugin</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/</a></p>
+</blockquote>
+<p>1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/212554_ab15da27_1878326.png" alt="mybatis" title="1565093569766.png"></p>
+<p>2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/212635_416e2f83_1878326.png" alt="sql" title="1565093752482.png"></p>
+<h3 id="二、Maven-Helper"><a href="#二、Maven-Helper" class="headerlink" title="二、Maven Helper"></a>二、Maven Helper</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7179-maven-helper/</a></p>
+</blockquote>
+<p>简单、方便的查看maven依赖和冲突</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_393ef6cd_1878326.png" alt="Screenshot 1"></p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_b3cf731e_1878326.png" alt="Screenshot 2"></p>
+<h3 id="三、GenerateAllSetter"><a href="#三、GenerateAllSetter" class="headerlink" title="三、GenerateAllSetter"></a>三、GenerateAllSetter</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9360-generateallsetter/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9360-generateallsetter/</a></p>
+</blockquote>
+<p>一键调用一个对象的所有的set方法</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_2821a886_1878326.png" alt="Screenshot 2"></p>
+<h3 id="四、RestfulToolkit"><a href="#四、RestfulToolkit" class="headerlink" title="四、RestfulToolkit"></a>四、RestfulToolkit</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10292-restfultoolkit/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10292-restfultoolkit/</a></p>
+</blockquote>
+<p>通过URL查询对应的方法，可以根据请求方法过滤，另外支持简单的HTTP调用。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_053e3326_1878326.png" alt="Screenshot 1"></p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_9bb92a4c_1878326.png" alt="Screenshot 2"></p>
+<h3 id="五、Key-Promoter-X"><a href="#五、Key-Promoter-X" class="headerlink" title="五、Key Promoter X"></a>五、Key Promoter X</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9792-key-promoter-x/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9792-key-promoter-x/</a></p>
+</blockquote>
+<p>帮助我们快速的掌握 <strong>IntelliJ IDEA</strong>的快捷键。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_1948eb2a_1878326.gif" alt="Screenshot 2"></p>
+<h3 id="六、GsonFormat"><a href="#六、GsonFormat" class="headerlink" title="六、GsonFormat"></a>六、GsonFormat</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7654-gsonformat/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7654-gsonformat/</a></p>
+</blockquote>
+<p>快速方便的把json字符串转换为实体类（快捷键ALT+S）。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_7f2b2251_1878326.png" alt="Screenshot 1"></p>
+<h3 id="七、String-Manipulation"><a href="#七、String-Manipulation" class="headerlink" title="七、String Manipulation"></a>七、String Manipulation</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/2162-string-manipulation/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/2162-string-manipulation/</a></p>
+</blockquote>
+<p>快捷方便的把字符串在驼峰、大小写等格式之间转换（快捷键Alt+M)。</p>
+<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_ec2c7097_1878326.png" alt="Screenshot 1"></p>
+<p><img src="https://plugins.jetbrains.com/files/2162/screenshot_16015.png" alt="Screenshot 2"></p>
+<h3 id="八、Alibaba-Java-Coding-Guidelines"><a href="#八、Alibaba-Java-Coding-Guidelines" class="headerlink" title="八、Alibaba Java Coding Guidelines"></a>八、Alibaba Java Coding Guidelines</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/</a></p>
+</blockquote>
+<p>扫描代码是否符合规范<br><img src="https://images.gitee.com/uploads/images/2019/0806/213031_3215a036_1878326.png" alt="输入图片说明" title="屏幕截图.png"></p>
+<h3 id="九、Lombok"><a href="#九、Lombok" class="headerlink" title="九、Lombok"></a>九、Lombok</h3><p>简化java bean的代码量，自动生成get set toString EqualsAndHashCode 构造器。</p>
+<blockquote>
+<p>需要引入依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;dependency&gt;  </span><br><span class="line">&gt;           &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  </span><br><span class="line">&gt;           &lt;artifactId&gt;lombok&lt;/artifactId&gt;   </span><br><span class="line">&gt; &lt;/dependency&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="十、-ignore"><a href="#十、-ignore" class="headerlink" title="十、.ignore"></a>十、.ignore</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7495--ignore/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7495--ignore/</a></p>
+</blockquote>
+<p>使用协作或者打包工具时，方便的处理要忽略的文件和文件夹。</p>
+<p><img src="https://plugins.jetbrains.com/files/7495/screenshot_14958.png" alt="Screenshot 1"></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/idea/">idea</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          修改Kubernetes集群Pod容器的内核参数
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/24/Docker的本质/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Docker的本质</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、Free-Mybatis-plugin"><span class="nav-number">1.</span> <span class="nav-text">一、Free Mybatis plugin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、Maven-Helper"><span class="nav-number">2.</span> <span class="nav-text">二、Maven Helper</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、GenerateAllSetter"><span class="nav-number">3.</span> <span class="nav-text">三、GenerateAllSetter</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、RestfulToolkit"><span class="nav-number">4.</span> <span class="nav-text">四、RestfulToolkit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、Key-Promoter-X"><span class="nav-number">5.</span> <span class="nav-text">五、Key Promoter X</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、GsonFormat"><span class="nav-number">6.</span> <span class="nav-text">六、GsonFormat</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、String-Manipulation"><span class="nav-number">7.</span> <span class="nav-text">七、String Manipulation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、Alibaba-Java-Coding-Guidelines"><span class="nav-number">8.</span> <span class="nav-text">八、Alibaba Java Coding Guidelines</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、Lombok"><span class="nav-number">9.</span> <span class="nav-text">九、Lombok</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#十、-ignore"><span class="nav-number">10.</span> <span class="nav-text">十、.ignore</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

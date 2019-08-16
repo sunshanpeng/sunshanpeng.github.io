@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>使用同一个deployment实现金丝雀（灰度）发布 | 阿鹏的技术博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="k8s">
+  
+  
+  
+  
+  <meta name="description" content="一、发布前发布前，nginx运行三个实例（pod），副本（replicaset）版本编号855b564c8d，此时运行状态如下：123nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &amp;lt;no">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用同一个deployment实现金丝雀（灰度）发布">
+<meta property="og:url" content="http://sunshanpeng.com/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/index.html">
+<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:description" content="一、发布前发布前，nginx运行三个实例（pod），副本（replicaset）版本编号855b564c8d，此时运行状态如下：123nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &amp;lt;no">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2019-08-16T18:32:04.071Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用同一个deployment实现金丝雀（灰度）发布">
+<meta name="twitter:description" content="一、发布前发布前，nginx运行三个实例（pod），副本（replicaset）版本编号855b564c8d，此时运行状态如下：123nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &amp;lt;no">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-使用同一个deployment实现金丝雀（灰度）发布" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      使用同一个deployment实现金丝雀（灰度）发布
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、发布前"><a href="#一、发布前" class="headerlink" title="一、发布前"></a>一、发布前</h2><p>发布前，nginx运行三个实例（pod），<em>副本（replicaset）版本编号855b564c8d</em>，此时运行状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、发布中"><a href="#二、发布中" class="headerlink" title="二、发布中"></a>二、发布中</h2><h3 id="步骤一：发布"><a href="#步骤一：发布" class="headerlink" title="步骤一：发布"></a>步骤一：发布</h3><p>此时进行发布，<em>新副本版本编号77b6c7b585</em>，此时发布状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         0/1       Running            0          21s       172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="步骤二：暂停"><a href="#步骤二：暂停" class="headerlink" title="步骤二：暂停"></a>步骤二：暂停</h3><p><strong>执行暂停命令<code>kubectl rollout pause deployment -n qa nginx</code></strong></p>
+<p>等待第一个实例运行成功，此时状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时为暂停发布状态，三个旧版本实例正常运行，一个新版本实例运行成功，流量将分摊到这四个实例上。</p>
+</blockquote>
+<h3 id="步骤三：恢复"><a href="#步骤三：恢复" class="headerlink" title="步骤三：恢复"></a>步骤三：恢复</h3><p><strong>执行恢复命令<code>kubectl rollout resume deployment -n qa nginx</code></strong></p>
+<p>此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                         0/1       Running            0          33s       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                        1/1       Running            0          1m        172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>恢复后会执行正常的滚动升级操作，即新增一个新副本实例，删除一个旧副本实例。<br>滚动升级时，新旧版本同时存在，总实例最大数量不会超过目标数量的25%，最小数量不会低于目标数量的75%。</p>
+</blockquote>
+<h2 id="三、发布完成"><a href="#三、发布完成" class="headerlink" title="三、发布完成"></a>三、发布完成</h2><p>实例的副本版本编号都变成77b6c7b585，说明全部升级成功，此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                       1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                      1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                      1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="四、回滚"><a href="#四、回滚" class="headerlink" title="四、回滚"></a>四、回滚</h2><p>发布中发现功能与预期不符，需要取消发布并回滚至上个发布版本，此时可以执行回滚操作。<br><strong>执行回滚命令<code>kubectl rollout undo deployment -n qa nginx</code></strong>。<br>回滚操作在发布中，发布后都可以执行。</p>
+<h3 id="发布中回滚"><a href="#发布中回滚" class="headerlink" title="发布中回滚"></a>发布中回滚</h3><p>当暂停发布进行灰度验证时，发现功能不符合预期，需要取消发布。<br>暂停时灰度验证状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          2m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                         1/1       Running            0          2m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>副本编号变成855b564c8d，说明回滚成功，恢复到新版本。</p>
+</blockquote>
+<h3 id="发布完成后回滚"><a href="#发布完成后回滚" class="headerlink" title="发布完成后回滚"></a>发布完成后回滚</h3><p>全部升级成功后，发现功能异常，回滚到之前版本。<br>回滚前状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                      1/1       Running            0          6m       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                        1/1       Running            0          6m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                      1/1       Running            0          6m       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="滚动升级状态"><a href="#滚动升级状态" class="headerlink" title="滚动升级状态"></a>滚动升级状态</h2><p>目标实例数3个，旧实例数3个，总实例数3个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                       1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数3个，新实例数1个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数2个，新实例数2个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-pmw2f                       1/1       Running            0          15s       172.20.190.51    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          3m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数1个，新实例数3个，总实例数4个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          35m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          35m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          1m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          13h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，新实例数3个，总实例数3个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用apollo配置中心生成雪花算法的workerId
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">修改Kubernetes集群Pod容器的内核参数</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、发布前"><span class="nav-number">1.</span> <span class="nav-text">一、发布前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、发布中"><span class="nav-number">2.</span> <span class="nav-text">二、发布中</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤一：发布"><span class="nav-number">2.1.</span> <span class="nav-text">步骤一：发布</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤二：暂停"><span class="nav-number">2.2.</span> <span class="nav-text">步骤二：暂停</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤三：恢复"><span class="nav-number">2.3.</span> <span class="nav-text">步骤三：恢复</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、发布完成"><span class="nav-number">3.</span> <span class="nav-text">三、发布完成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、回滚"><span class="nav-number">4.</span> <span class="nav-text">四、回滚</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#发布中回滚"><span class="nav-number">4.1.</span> <span class="nav-text">发布中回滚</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布完成后回滚"><span class="nav-number">4.2.</span> <span class="nav-text">发布完成后回滚</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#滚动升级状态"><span class="nav-number">5.</span> <span class="nav-text">滚动升级状态</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>
