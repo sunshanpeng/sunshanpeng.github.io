@@ -15,7 +15,7 @@
 <meta name="keywords" content="k8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="创建NFS的StorageClass">
-<meta property="og:url" content="http://www.sunshanpeng.com/2018/12/17/创建NFS的StorageClass/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/2018/12/17/创建NFS的StorageClass/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="前言在Kubernetes的几种网络存储中，NFS是成本较低、使用简单的一种方案。 但是NFS存储不建议用在生产环境，因为我们测试环境的MySQL数据库部署在NFS上都经常出问题，比如nfs4_reclaim_open_state: Lock reclaim failed和kernel:NMI watchdog: BUG: soft lockup - CPU#0 stuck for 26s。 NF">
 <meta property="og:locale" content="zh_CN">
@@ -59,31 +59,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -306,9 +284,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

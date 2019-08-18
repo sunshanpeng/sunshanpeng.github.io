@@ -13,7 +13,7 @@
 <meta name="keywords" content="java go devops kubernetes docker">
 <meta property="og:type" content="website">
 <meta property="og:title" content="阿鹏的博客">
-<meta property="og:url" content="http://www.sunshanpeng.com/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="java go devops kubernetes docker">
 <meta property="og:locale" content="zh_CN">
@@ -56,31 +56,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -680,83 +658,6 @@
 <!-- Table of Contents -->
 
   
-    <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、发布前"><a href="#一、发布前" class="headerlink" title="一、发布前"></a>一、发布前</h2><p>发布前，nginx运行三个实例（pod），<em>副本（replicaset）版本编号855b564c8d</em>，此时运行状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="二、发布中"><a href="#二、发布中" class="headerlink" title="二、发布中"></a>二、发布中</h2><h3 id="步骤一：发布"><a href="#步骤一：发布" class="headerlink" title="步骤一：发布"></a>步骤一：发布</h3><p>此时进行发布，<em>新副本版本编号77b6c7b585</em>，此时发布状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         0/1       Running            0          21s       172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<h3 id="步骤二：暂停"><a href="#步骤二：暂停" class="headerlink" title="步骤二：暂停"></a>步骤二：暂停</h3><p><strong>执行暂停命令<code>kubectl rollout pause deployment -n qa nginx</code></strong></p>
-<p>等待第一个实例运行成功，此时状态如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>此时为暂停发布状态，三个旧版本实例正常运行，一个新版本实例运行成功，流量将分摊到这四个实例上。</p>
-</blockquote>
-<h3 id="步骤三：恢复"><a href="#步骤三：恢复" class="headerlink" title="步骤三：恢复"></a>步骤三：恢复</h3><p><strong>执行恢复命令<code>kubectl rollout resume deployment -n qa nginx</code></strong></p>
-<p>此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                         0/1       Running            0          33s       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                        1/1       Running            0          1m        172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>恢复后会执行正常的滚动升级操作，即新增一个新副本实例，删除一个旧副本实例。<br>滚动升级时，新旧版本同时存在，总实例最大数量不会超过目标数量的25%，最小数量不会低于目标数量的75%。</p>
-</blockquote>
-<h2 id="三、发布完成"><a href="#三、发布完成" class="headerlink" title="三、发布完成"></a>三、发布完成</h2><p>实例的副本版本编号都变成77b6c7b585，说明全部升级成功，此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                       1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                      1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                      1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="四、回滚"><a href="#四、回滚" class="headerlink" title="四、回滚"></a>四、回滚</h2><p>发布中发现功能与预期不符，需要取消发布并回滚至上个发布版本，此时可以执行回滚操作。<br><strong>执行回滚命令<code>kubectl rollout undo deployment -n qa nginx</code></strong>。<br>回滚操作在发布中，发布后都可以执行。</p>
-<h3 id="发布中回滚"><a href="#发布中回滚" class="headerlink" title="发布中回滚"></a>发布中回滚</h3><p>当暂停发布进行灰度验证时，发现功能不符合预期，需要取消发布。<br>暂停时灰度验证状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          2m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>回滚后状态:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                         1/1       Running            0          2m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>副本编号变成855b564c8d，说明回滚成功，恢复到新版本。</p>
-</blockquote>
-<h3 id="发布完成后回滚"><a href="#发布完成后回滚" class="headerlink" title="发布完成后回滚"></a>发布完成后回滚</h3><p>全部升级成功后，发现功能异常，回滚到之前版本。<br>回滚前状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>回滚后状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                      1/1       Running            0          6m       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                        1/1       Running            0          6m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                      1/1       Running            0          6m       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<h2 id="滚动升级状态"><a href="#滚动升级状态" class="headerlink" title="滚动升级状态"></a>滚动升级状态</h2><p>目标实例数3个，旧实例数3个，总实例数3个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                       1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>目标实例数3个，旧实例数3个，新实例数1个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>目标实例数3个，旧实例数2个，新实例数2个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-pmw2f                       1/1       Running            0          15s       172.20.190.51    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          3m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>目标实例数3个，旧实例数1个，新实例数3个，总实例数4个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          35m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          35m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          1m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          13h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-<p>目标实例数3个，新实例数3个，总实例数3个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
     <article id="post-修改Kubernetes集群Pod容器的内核参数" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -813,6 +714,83 @@
 <li><a href="https://yq.aliyun.com/articles/603745?utm_content=m_1000003707" target="_blank" rel="noopener">https://yq.aliyun.com/articles/603745?utm_content=m_1000003707</a></li>
 <li><a href="https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/</a></li>
 </ul>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、发布前"><a href="#一、发布前" class="headerlink" title="一、发布前"></a>一、发布前</h2><p>发布前，nginx运行三个实例（pod），<em>副本（replicaset）版本编号855b564c8d</em>，此时运行状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、发布中"><a href="#二、发布中" class="headerlink" title="二、发布中"></a>二、发布中</h2><h3 id="步骤一：发布"><a href="#步骤一：发布" class="headerlink" title="步骤一：发布"></a>步骤一：发布</h3><p>此时进行发布，<em>新副本版本编号77b6c7b585</em>，此时发布状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         0/1       Running            0          21s       172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="步骤二：暂停"><a href="#步骤二：暂停" class="headerlink" title="步骤二：暂停"></a>步骤二：暂停</h3><p><strong>执行暂停命令<code>kubectl rollout pause deployment -n qa nginx</code></strong></p>
+<p>等待第一个实例运行成功，此时状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时为暂停发布状态，三个旧版本实例正常运行，一个新版本实例运行成功，流量将分摊到这四个实例上。</p>
+</blockquote>
+<h3 id="步骤三：恢复"><a href="#步骤三：恢复" class="headerlink" title="步骤三：恢复"></a>步骤三：恢复</h3><p><strong>执行恢复命令<code>kubectl rollout resume deployment -n qa nginx</code></strong></p>
+<p>此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                         0/1       Running            0          33s       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                        1/1       Running            0          1m        172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>恢复后会执行正常的滚动升级操作，即新增一个新副本实例，删除一个旧副本实例。<br>滚动升级时，新旧版本同时存在，总实例最大数量不会超过目标数量的25%，最小数量不会低于目标数量的75%。</p>
+</blockquote>
+<h2 id="三、发布完成"><a href="#三、发布完成" class="headerlink" title="三、发布完成"></a>三、发布完成</h2><p>实例的副本版本编号都变成77b6c7b585，说明全部升级成功，此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                       1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                      1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                      1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="四、回滚"><a href="#四、回滚" class="headerlink" title="四、回滚"></a>四、回滚</h2><p>发布中发现功能与预期不符，需要取消发布并回滚至上个发布版本，此时可以执行回滚操作。<br><strong>执行回滚命令<code>kubectl rollout undo deployment -n qa nginx</code></strong>。<br>回滚操作在发布中，发布后都可以执行。</p>
+<h3 id="发布中回滚"><a href="#发布中回滚" class="headerlink" title="发布中回滚"></a>发布中回滚</h3><p>当暂停发布进行灰度验证时，发现功能不符合预期，需要取消发布。<br>暂停时灰度验证状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          2m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                         1/1       Running            0          2m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>副本编号变成855b564c8d，说明回滚成功，恢复到新版本。</p>
+</blockquote>
+<h3 id="发布完成后回滚"><a href="#发布完成后回滚" class="headerlink" title="发布完成后回滚"></a>发布完成后回滚</h3><p>全部升级成功后，发现功能异常，回滚到之前版本。<br>回滚前状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                      1/1       Running            0          6m       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                        1/1       Running            0          6m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                      1/1       Running            0          6m       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="滚动升级状态"><a href="#滚动升级状态" class="headerlink" title="滚动升级状态"></a>滚动升级状态</h2><p>目标实例数3个，旧实例数3个，总实例数3个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                       1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数3个，新实例数1个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数2个，新实例数2个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-pmw2f                       1/1       Running            0          15s       172.20.190.51    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          3m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数1个，新实例数3个，总实例数4个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          35m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          35m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          1m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          13h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，新实例数3个，总实例数3个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -1327,9 +1305,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

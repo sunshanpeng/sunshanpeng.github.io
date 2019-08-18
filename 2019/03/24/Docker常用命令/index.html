@@ -15,7 +15,7 @@
 <meta name="keywords" content="docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Docker常用命令">
-<meta property="og:url" content="http://www.sunshanpeng.com/2019/03/24/Docker常用命令/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/2019/03/24/Docker常用命令/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="拉取镜像1docker pull mysql:5.6 格式：docker pull [OPTIONS] NAME[:TAG|@DIGEST]，tag不写的话默认latest。 登录镜像仓库1docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com 格式：docker login [OPTIONS] [S">
 <meta property="og:locale" content="zh_CN">
@@ -59,31 +59,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -354,9 +332,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

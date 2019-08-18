@@ -15,7 +15,7 @@
 <meta name="keywords" content="k8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes介绍">
-<meta property="og:url" content="http://www.sunshanpeng.com/2019/02/24/Kubernetes介绍/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/2019/02/24/Kubernetes介绍/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="有了Docker之后，单个应用进程的使用管理变的更简单了，但是如果想要管理一个集群的不同应用，处理应用之间的关系， 比如：一个Web应用与数据库之间的访问关系，负载均衡和后端服务之间的代理关系，门户应用与授权组件的调用关系， 再比如说一个服务单位的不同功能之间的关系，如一个Web应用与日志搜集组件之间的文件交换关系， 在传统虚拟机环境对这种关系的处理方法都比较“粗颗粒”，一股脑的部署在同一台虚拟机">
 <meta property="og:locale" content="zh_CN">
@@ -64,31 +64,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -334,9 +312,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

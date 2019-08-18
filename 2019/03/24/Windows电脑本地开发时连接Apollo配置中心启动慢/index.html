@@ -15,7 +15,7 @@
 <meta name="keywords" content="apollo">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Windows电脑本地开发时连接Apollo配置中心启动慢">
-<meta property="og:url" content="http://www.sunshanpeng.com/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/index.html">
+<meta property="og:url" content="http://sunshanpeng.com/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="表现：启动时中间停顿了10秒左右  原因：电脑上网卡太多   解决方法： 禁用多余网卡  在启动参数指定本机IP：-Dhost.ip=10.208.202.251  10.208.202.251改成自己的IP地址    原理：指定本机IP后就会跳过查找有效IP这一步 具体代码12345678910111213141516171819202122232425262728293031323334353">
 <meta property="og:locale" content="zh_CN">
@@ -63,31 +63,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -311,9 +289,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>
