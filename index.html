@@ -56,31 +56,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -373,9 +351,11 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h3 id="表现："><a href="#表现：" class="headerlink" title="表现："></a>表现：</h3><p>启动时中间停顿了10秒左右<br><img src="https://images.gitee.com/uploads/images/2019/0802/103323_a0a2e1c0_1878326.png" alt="start" title="1564637268772.png"></p>
+        <h3 id="表现："><a href="#表现：" class="headerlink" title="表现："></a>表现：</h3><p>启动时中间停顿了10秒左右</p>
+<p><img src="http://image.sunshanpeng.com/201908181151_8.png" alt="start"></p>
 <h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><p>电脑上网卡太多</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0802/103353_03254096_1878326.png" alt="ip" title="1564637451380.png"><br><img src="https://images.gitee.com/uploads/images/2019/0802/103409_5814334a_1878326.png" alt="ipconfig" title="1564638108647.png"></p>
+<p><img src="http://image.sunshanpeng.com/201908181156_911.png" alt="ip"></p>
+<p><img src="http://image.sunshanpeng.com/201908181158_629.png" alt></p>
 <h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><ol>
 <li><p>禁用多余网卡</p>
 </li>
@@ -587,90 +567,6 @@
 <!-- Table of Contents -->
 
   
-    <article id="post-使用apollo配置中心生成雪花算法的workerId" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。</p>
-<p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
-<p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
-<h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
-<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://images.gitee.com/uploads/images/2019/0803/171224_5adc3bd5_1878326.png" alt="Apollo架构图" title="Apollo架构图"></p>
-<p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
-<ul>
-<li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
-<li>Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端（Client）；</li>
-<li>Admin Service提供配置的修改、发布等功能，服务对象是Apollo管理界面（Portal）；</li>
-<li>Portal通过Meta Server连接Admin Service修改、发布配置信息。</li>
-</ul>
-<blockquote>
-<p>ConfigDB存储配置信息，由Config Service和Admin Service使用；</p>
-</blockquote>
-<blockquote>
-<p>PortalDB存储权限和审计信息，由Portal使用。</p>
-</blockquote>
-<h2 id="改造Config-Service生成workerId"><a href="#改造Config-Service生成workerId" class="headerlink" title="改造Config Service生成workerId"></a>改造Config Service生成workerId</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>Client端通过<code>/configs/{appId}/{clusterName}/{namespace:.+}</code>接口拉取全量配置信息，对应方法是<code>com.ctrip.framework.apollo.configservice.controller.ConfigController#queryConfig</code>。方法的返回值ApolloConfig有5个属性：<code>appId</code>、<code>cluster</code>、<code>namespaceName</code>、<code>configurations</code>、<code>releaseKey</code>,只要把生成的workerId放到<code>configurations</code>这个Map类型的属性中，Client端就能直接通过Key值拿到workerId来使用。</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="一、数据库改动"><a href="#一、数据库改动" class="headerlink" title="一、数据库改动"></a>一、数据库改动</h4><p>ConfigDB库的instance表存储了使用配置的应用实例。</p>
-<p>在Instance表新加一个NodeId字段用来存储生成的workerId，并且将AppId和NodeId设置为唯一索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `instance` (</span><br><span class="line">  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;自增Id&apos;,</span><br><span class="line">  `AppId` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;AppID&apos;,</span><br><span class="line">  `ClusterName` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;ClusterName&apos;,</span><br><span class="line">  `DataCenter` varchar(64) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;Data Center Name&apos;,</span><br><span class="line">  `Ip` varchar(32) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;instance ip&apos;,</span><br><span class="line">  `NodeId` int(5) DEFAULT NULL COMMENT &apos;节点id&apos;,</span><br><span class="line">  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</span><br><span class="line">  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;最后修改时间&apos;,</span><br><span class="line">  PRIMARY KEY (`Id`),</span><br><span class="line">  UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),</span><br><span class="line">  UNIQUE KEY `uk_appId_nodeId` (`AppId`,`NodeId`) USING BTREE,</span><br><span class="line">  KEY `IX_IP` (`Ip`),</span><br><span class="line">  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=6779 DEFAULT CHARSET=utf8mb4 COMMENT=&apos;使用配置的应用实例&apos;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="二、代码改动"><a href="#二、代码改动" class="headerlink" title="二、代码改动"></a>二、代码改动</h4><p>原来Instance表的记录是在获取配置时调用<code>com.ctrip.framework.apollo.configservice.util.InstanceConfigAuditUtil#audit</code>异步添加的，这里需要改成获取配置时同步添加实例信息并且放到<code>ApolloConfig</code>的<code>configurations</code>属性中。</p>
-<p>1.<code>com.ctrip.framework.apollo.configservice.controller.ConfigController</code></p>
-<p><code>queryConfig</code>方法返回前获取实例信息并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Instance instance = instanceService.findInstance(appId, clusterName, dataCenter, clientIp);</span><br><span class="line">Integer nodeId = instance.getNodeId();</span><br><span class="line"><span class="keyword">if</span> (nodeId == <span class="keyword">null</span>) &#123;</span><br><span class="line">  nodeId = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line">apolloConfig.addConfig(<span class="string">"apollo.node.id"</span>, String.valueOf(nodeId));</span><br></pre></td></tr></table></figure></p>
-<p>2.<code>com.ctrip.framework.apollo.biz.service.InstanceService</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.minId&#125;"</span>)<span class="comment">//workerId最小值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer minId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.maxId&#125;"</span>)<span class="comment">//workerId最大值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer maxId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer DEFAULT_NODE_ID = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Instance <span class="title">findInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = instanceRepository.findByAppIdAndClusterNameAndDataCenterAndIp(appId, clusterName,</span><br><span class="line">          dataCenter, ip);</span><br><span class="line">  <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">    instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (instance.getNodeId() == <span class="keyword">null</span>) &#123;</span><br><span class="line">    updateInstance(instance);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Instance <span class="title">createInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">  instance.setAppId(appId);</span><br><span class="line">  instance.setClusterName(clusterName);</span><br><span class="line">  instance.setDataCenter(dataCenter);</span><br><span class="line">  instance.setIp(ip);</span><br><span class="line">  instance.setNodeId(generateNodeId(appId));</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    instance = createInstance(instance);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">    <span class="comment">//使用数据库的唯一约束来保证workerId的唯一性</span></span><br><span class="line">    logger.error(<span class="string">"createInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">    instance = findInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateInstance</span><span class="params">(Instance instance)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        instance.setNodeId(generateNodeId(instance.getAppId()));</span><br><span class="line">        instanceRepository.save(instance);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">        logger.error(<span class="string">"updateInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">        updateInstance(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Integer <span class="title">generateNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//生成规则是当前appId最大workerId + 1</span></span><br><span class="line">  <span class="comment">//如果workerId已经到最大值了就拿最早的workerId（这里假设一个应用不会同时有1023（maxId）个实例在运行）</span></span><br><span class="line">  Integer maxNodeId = instanceRepository.maxNodeIdByAppId(appId);</span><br><span class="line">  <span class="keyword">if</span> (maxNodeId == <span class="keyword">null</span> || minId &gt; maxNodeId) &#123;</span><br><span class="line">    <span class="keyword">return</span> minId;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (maxNodeId &lt; maxId) &#123;</span><br><span class="line">    <span class="keyword">return</span> maxNodeId + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getEarliestNodeId(appId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Integer <span class="title">getEarliestNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">      InstanceConfig instanceConfig = instanceConfigRepository.findTopByConfigAppIdOrderByReleaseDeliveryTime(appId);</span><br><span class="line">      <span class="keyword">if</span> (instanceConfig == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Instance instance = instanceRepository.findOne(instanceConfig.getInstanceId());</span><br><span class="line">      <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Integer nodeId = instance.getNodeId();</span><br><span class="line">      instance.setNodeId(<span class="keyword">null</span>);</span><br><span class="line">      instanceRepository.save(instance);</span><br><span class="line">      <span class="keyword">return</span> nodeId;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="三、使用方式"><a href="#三、使用方式" class="headerlink" title="三、使用方式"></a>三、使用方式</h4><p>和其他配置的使用方式一样，直接用<code>@Value(&quot;${apollo.node.id}&quot;)</code>。</p>
-<p>这种方式生成的workerId可以直接使用在只需要一个workerId参数的雪花算法，另一种需要datacenterId和workerId两个参数的雪花算法在使用时需要做一下转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">datacenterId=apollo.node.id &gt;&gt; 5</span><br><span class="line">workerId=apolo.node.id &amp; 31</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>取高五位的值作为datacenterId，取低五位的值作为workerId。</p>
-<ul>
-<li>一个workerId参数的雪花算法，workerId最大1023，二进制为1111111111；</li>
-<li>datacenterId和workerId两个参数的雪花算法，datacenterId最大31，二进制为11111，workerId最大31，二进制为11111，datacenterId作为二进制的高5位，workerId作为二进制的低5位，组合起来1111111111，十进制为1023。</li>
-</ul>
-</blockquote>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
     <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -737,6 +633,195 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-使用apollo配置中心生成雪花算法的workerId" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。</p>
+<p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
+<p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
+<h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
+<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png" alt="Apollo架构图"></p>
+<p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
+<ul>
+<li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
+<li>Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端（Client）；</li>
+<li>Admin Service提供配置的修改、发布等功能，服务对象是Apollo管理界面（Portal）；</li>
+<li>Portal通过Meta Server连接Admin Service修改、发布配置信息。</li>
+</ul>
+<blockquote>
+<p>ConfigDB存储配置信息，由Config Service和Admin Service使用；</p>
+</blockquote>
+<blockquote>
+<p>PortalDB存储权限和审计信息，由Portal使用。</p>
+</blockquote>
+<h2 id="改造Config-Service生成workerId"><a href="#改造Config-Service生成workerId" class="headerlink" title="改造Config Service生成workerId"></a>改造Config Service生成workerId</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>Client端通过<code>/configs/{appId}/{clusterName}/{namespace:.+}</code>接口拉取全量配置信息，对应方法是<code>com.ctrip.framework.apollo.configservice.controller.ConfigController#queryConfig</code>。方法的返回值ApolloConfig有5个属性：<code>appId</code>、<code>cluster</code>、<code>namespaceName</code>、<code>configurations</code>、<code>releaseKey</code>,只要把生成的workerId放到<code>configurations</code>这个Map类型的属性中，Client端就能直接通过Key值拿到workerId来使用。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="一、数据库改动"><a href="#一、数据库改动" class="headerlink" title="一、数据库改动"></a>一、数据库改动</h4><p>ConfigDB库的instance表存储了使用配置的应用实例。</p>
+<p>在Instance表新加一个NodeId字段用来存储生成的workerId，并且将AppId和NodeId设置为唯一索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `instance` (</span><br><span class="line">  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;自增Id&apos;,</span><br><span class="line">  `AppId` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;AppID&apos;,</span><br><span class="line">  `ClusterName` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;ClusterName&apos;,</span><br><span class="line">  `DataCenter` varchar(64) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;Data Center Name&apos;,</span><br><span class="line">  `Ip` varchar(32) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;instance ip&apos;,</span><br><span class="line">  `NodeId` int(5) DEFAULT NULL COMMENT &apos;节点id&apos;,</span><br><span class="line">  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</span><br><span class="line">  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;最后修改时间&apos;,</span><br><span class="line">  PRIMARY KEY (`Id`),</span><br><span class="line">  UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),</span><br><span class="line">  UNIQUE KEY `uk_appId_nodeId` (`AppId`,`NodeId`) USING BTREE,</span><br><span class="line">  KEY `IX_IP` (`Ip`),</span><br><span class="line">  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=6779 DEFAULT CHARSET=utf8mb4 COMMENT=&apos;使用配置的应用实例&apos;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="二、代码改动"><a href="#二、代码改动" class="headerlink" title="二、代码改动"></a>二、代码改动</h4><p>原来Instance表的记录是在获取配置时调用<code>com.ctrip.framework.apollo.configservice.util.InstanceConfigAuditUtil#audit</code>异步添加的，这里需要改成获取配置时同步添加实例信息并且放到<code>ApolloConfig</code>的<code>configurations</code>属性中。</p>
+<p>1.<code>com.ctrip.framework.apollo.configservice.controller.ConfigController</code></p>
+<p><code>queryConfig</code>方法返回前获取实例信息并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Instance instance = instanceService.findInstance(appId, clusterName, dataCenter, clientIp);</span><br><span class="line">Integer nodeId = instance.getNodeId();</span><br><span class="line"><span class="keyword">if</span> (nodeId == <span class="keyword">null</span>) &#123;</span><br><span class="line">  nodeId = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line">apolloConfig.addConfig(<span class="string">"apollo.node.id"</span>, String.valueOf(nodeId));</span><br></pre></td></tr></table></figure></p>
+<p>2.<code>com.ctrip.framework.apollo.biz.service.InstanceService</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.minId&#125;"</span>)<span class="comment">//workerId最小值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer minId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.maxId&#125;"</span>)<span class="comment">//workerId最大值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer maxId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer DEFAULT_NODE_ID = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Instance <span class="title">findInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = instanceRepository.findByAppIdAndClusterNameAndDataCenterAndIp(appId, clusterName,</span><br><span class="line">          dataCenter, ip);</span><br><span class="line">  <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">    instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (instance.getNodeId() == <span class="keyword">null</span>) &#123;</span><br><span class="line">    updateInstance(instance);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Instance <span class="title">createInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">  instance.setAppId(appId);</span><br><span class="line">  instance.setClusterName(clusterName);</span><br><span class="line">  instance.setDataCenter(dataCenter);</span><br><span class="line">  instance.setIp(ip);</span><br><span class="line">  instance.setNodeId(generateNodeId(appId));</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    instance = createInstance(instance);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">    <span class="comment">//使用数据库的唯一约束来保证workerId的唯一性</span></span><br><span class="line">    logger.error(<span class="string">"createInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">    instance = findInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateInstance</span><span class="params">(Instance instance)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        instance.setNodeId(generateNodeId(instance.getAppId()));</span><br><span class="line">        instanceRepository.save(instance);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">        logger.error(<span class="string">"updateInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">        updateInstance(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Integer <span class="title">generateNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//生成规则是当前appId最大workerId + 1</span></span><br><span class="line">  <span class="comment">//如果workerId已经到最大值了就拿最早的workerId（这里假设一个应用不会同时有1023（maxId）个实例在运行）</span></span><br><span class="line">  Integer maxNodeId = instanceRepository.maxNodeIdByAppId(appId);</span><br><span class="line">  <span class="keyword">if</span> (maxNodeId == <span class="keyword">null</span> || minId &gt; maxNodeId) &#123;</span><br><span class="line">    <span class="keyword">return</span> minId;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (maxNodeId &lt; maxId) &#123;</span><br><span class="line">    <span class="keyword">return</span> maxNodeId + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getEarliestNodeId(appId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Integer <span class="title">getEarliestNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">      InstanceConfig instanceConfig = instanceConfigRepository.findTopByConfigAppIdOrderByReleaseDeliveryTime(appId);</span><br><span class="line">      <span class="keyword">if</span> (instanceConfig == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Instance instance = instanceRepository.findOne(instanceConfig.getInstanceId());</span><br><span class="line">      <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Integer nodeId = instance.getNodeId();</span><br><span class="line">      instance.setNodeId(<span class="keyword">null</span>);</span><br><span class="line">      instanceRepository.save(instance);</span><br><span class="line">      <span class="keyword">return</span> nodeId;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="三、使用方式"><a href="#三、使用方式" class="headerlink" title="三、使用方式"></a>三、使用方式</h4><p>和其他配置的使用方式一样，直接用<code>@Value(&quot;${apollo.node.id}&quot;)</code>。</p>
+<p>这种方式生成的workerId可以直接使用在只需要一个workerId参数的雪花算法，另一种需要datacenterId和workerId两个参数的雪花算法在使用时需要做一下转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">datacenterId=apollo.node.id &gt;&gt; 5</span><br><span class="line">workerId=apolo.node.id &amp; 31</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>取高五位的值作为datacenterId，取低五位的值作为workerId。</p>
+<ul>
+<li>一个workerId参数的雪花算法，workerId最大1023，二进制为1111111111；</li>
+<li>datacenterId和workerId两个参数的雪花算法，datacenterId最大31，二进制为11111，workerId最大31，二进制为11111，datacenterId作为二进制的高5位，workerId作为二进制的低5位，组合起来1111111111，十进制为1023。</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-常用的IntelliJ IDEA 插件推荐" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/">常用的IntelliJ IDEA 插件推荐</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、Free-Mybatis-plugin"><a href="#一、Free-Mybatis-plugin" class="headerlink" title="一、Free Mybatis plugin"></a>一、Free Mybatis plugin</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/</a></p>
+</blockquote>
+<p>1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。</p>
+<p><img src="http://image.sunshanpeng.com/201908181216_569.png" alt="mybatis"></p>
+<p>2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。</p>
+<p><img src="http://image.sunshanpeng.com/201908181217_431.png" alt="sql"></p>
+<h3 id="二、Maven-Helper"><a href="#二、Maven-Helper" class="headerlink" title="二、Maven Helper"></a>二、Maven Helper</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7179-maven-helper/</a></p>
+</blockquote>
+<p>简单、方便的查看maven依赖和冲突</p>
+<p><img src="http://image.sunshanpeng.com/201908181217_88.png" alt="maven helper"></p>
+<p><img src="http://image.sunshanpeng.com/201908181218_140.png" alt="maven helper"></p>
+<h3 id="三、GenerateAllSetter"><a href="#三、GenerateAllSetter" class="headerlink" title="三、GenerateAllSetter"></a>三、GenerateAllSetter</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9360-generateallsetter/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9360-generateallsetter/</a></p>
+</blockquote>
+<p>一键调用一个对象的所有的set方法</p>
+<p><img src="http://image.sunshanpeng.com/201908181219_563.png" alt="generateAllSetter"></p>
+<h3 id="四、RestfulToolkit"><a href="#四、RestfulToolkit" class="headerlink" title="四、RestfulToolkit"></a>四、RestfulToolkit</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10292-restfultoolkit/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10292-restfultoolkit/</a></p>
+</blockquote>
+<p>通过URL查询对应的方法，可以根据请求方法过滤，另外支持简单的HTTP调用。</p>
+<p><img src="http://image.sunshanpeng.com/201908181219_755.png" alt="restfulToolkit"></p>
+<p><img src="http://image.sunshanpeng.com/201908181220_291.png" alt></p>
+<h3 id="五、Key-Promoter-X"><a href="#五、Key-Promoter-X" class="headerlink" title="五、Key Promoter X"></a>五、Key Promoter X</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9792-key-promoter-x/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9792-key-promoter-x/</a></p>
+</blockquote>
+<p>帮助我们快速的掌握 <strong>IntelliJ IDEA</strong>的快捷键。</p>
+<p><img src="http://image.sunshanpeng.com/201908181221_36.gif" alt></p>
+<h3 id="六、GsonFormat"><a href="#六、GsonFormat" class="headerlink" title="六、GsonFormat"></a>六、GsonFormat</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7654-gsonformat/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7654-gsonformat/</a></p>
+</blockquote>
+<p>快速方便的把json字符串转换为实体类（快捷键ALT+S）。</p>
+<p><img src="http://image.sunshanpeng.com/201908181221_537.png" alt></p>
+<h3 id="七、String-Manipulation"><a href="#七、String-Manipulation" class="headerlink" title="七、String Manipulation"></a>七、String Manipulation</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/2162-string-manipulation/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/2162-string-manipulation/</a></p>
+</blockquote>
+<p>快捷方便的把字符串在驼峰、大小写等格式之间转换（快捷键Alt+M)。</p>
+<p><img src="http://image.sunshanpeng.com/201908181222_332.png" alt></p>
+<p><img src="https://plugins.jetbrains.com/files/2162/screenshot_16015.png" alt="Screenshot 2"></p>
+<h3 id="八、Alibaba-Java-Coding-Guidelines"><a href="#八、Alibaba-Java-Coding-Guidelines" class="headerlink" title="八、Alibaba Java Coding Guidelines"></a>八、Alibaba Java Coding Guidelines</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/</a></p>
+</blockquote>
+<p>扫描代码是否符合规范</p>
+<p><img src="http://image.sunshanpeng.com/201908181222_445.png" alt></p>
+<h3 id="九、Lombok"><a href="#九、Lombok" class="headerlink" title="九、Lombok"></a>九、Lombok</h3><p>简化java bean的代码量，自动生成get set toString EqualsAndHashCode 构造器。</p>
+<blockquote>
+<p>需要引入依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;dependency&gt;  </span><br><span class="line">&gt;           &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  </span><br><span class="line">&gt;           &lt;artifactId&gt;lombok&lt;/artifactId&gt;   </span><br><span class="line">&gt; &lt;/dependency&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="十、-ignore"><a href="#十、-ignore" class="headerlink" title="十、.ignore"></a>十、.ignore</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7495--ignore/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7495--ignore/</a></p>
+</blockquote>
+<p>使用协作或者打包工具时，方便的处理要忽略的文件和文件夹。</p>
+<p><img src="https://plugins.jetbrains.com/files/7495/screenshot_14958.png" alt="Screenshot 1"></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/idea/">idea</a></li></ul>
 
       
     </footer>
@@ -815,110 +900,6 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-常用的IntelliJ IDEA 插件推荐" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/">常用的IntelliJ IDEA 插件推荐</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="一、Free-Mybatis-plugin"><a href="#一、Free-Mybatis-plugin" class="headerlink" title="一、Free Mybatis plugin"></a>一、Free Mybatis plugin</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/</a></p>
-</blockquote>
-<p>1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/212554_ab15da27_1878326.png" alt="mybatis" title="1565093569766.png"></p>
-<p>2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/212635_416e2f83_1878326.png" alt="sql" title="1565093752482.png"></p>
-<h3 id="二、Maven-Helper"><a href="#二、Maven-Helper" class="headerlink" title="二、Maven Helper"></a>二、Maven Helper</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7179-maven-helper/</a></p>
-</blockquote>
-<p>简单、方便的查看maven依赖和冲突</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_393ef6cd_1878326.png" alt="Screenshot 1"></p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_b3cf731e_1878326.png" alt="Screenshot 2"></p>
-<h3 id="三、GenerateAllSetter"><a href="#三、GenerateAllSetter" class="headerlink" title="三、GenerateAllSetter"></a>三、GenerateAllSetter</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/9360-generateallsetter/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9360-generateallsetter/</a></p>
-</blockquote>
-<p>一键调用一个对象的所有的set方法</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_2821a886_1878326.png" alt="Screenshot 2"></p>
-<h3 id="四、RestfulToolkit"><a href="#四、RestfulToolkit" class="headerlink" title="四、RestfulToolkit"></a>四、RestfulToolkit</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/10292-restfultoolkit/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10292-restfultoolkit/</a></p>
-</blockquote>
-<p>通过URL查询对应的方法，可以根据请求方法过滤，另外支持简单的HTTP调用。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_053e3326_1878326.png" alt="Screenshot 1"></p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_9bb92a4c_1878326.png" alt="Screenshot 2"></p>
-<h3 id="五、Key-Promoter-X"><a href="#五、Key-Promoter-X" class="headerlink" title="五、Key Promoter X"></a>五、Key Promoter X</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/9792-key-promoter-x/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9792-key-promoter-x/</a></p>
-</blockquote>
-<p>帮助我们快速的掌握 <strong>IntelliJ IDEA</strong>的快捷键。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213032_1948eb2a_1878326.gif" alt="Screenshot 2"></p>
-<h3 id="六、GsonFormat"><a href="#六、GsonFormat" class="headerlink" title="六、GsonFormat"></a>六、GsonFormat</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/7654-gsonformat/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7654-gsonformat/</a></p>
-</blockquote>
-<p>快速方便的把json字符串转换为实体类（快捷键ALT+S）。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_7f2b2251_1878326.png" alt="Screenshot 1"></p>
-<h3 id="七、String-Manipulation"><a href="#七、String-Manipulation" class="headerlink" title="七、String Manipulation"></a>七、String Manipulation</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/2162-string-manipulation/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/2162-string-manipulation/</a></p>
-</blockquote>
-<p>快捷方便的把字符串在驼峰、大小写等格式之间转换（快捷键Alt+M)。</p>
-<p><img src="https://images.gitee.com/uploads/images/2019/0806/213033_ec2c7097_1878326.png" alt="Screenshot 1"></p>
-<p><img src="https://plugins.jetbrains.com/files/2162/screenshot_16015.png" alt="Screenshot 2"></p>
-<h3 id="八、Alibaba-Java-Coding-Guidelines"><a href="#八、Alibaba-Java-Coding-Guidelines" class="headerlink" title="八、Alibaba Java Coding Guidelines"></a>八、Alibaba Java Coding Guidelines</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/</a></p>
-</blockquote>
-<p>扫描代码是否符合规范<br><img src="https://images.gitee.com/uploads/images/2019/0806/213031_3215a036_1878326.png" alt="输入图片说明" title="屏幕截图.png"></p>
-<h3 id="九、Lombok"><a href="#九、Lombok" class="headerlink" title="九、Lombok"></a>九、Lombok</h3><p>简化java bean的代码量，自动生成get set toString EqualsAndHashCode 构造器。</p>
-<blockquote>
-<p>需要引入依赖包</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;dependency&gt;  </span><br><span class="line">&gt;           &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  </span><br><span class="line">&gt;           &lt;artifactId&gt;lombok&lt;/artifactId&gt;   </span><br><span class="line">&gt; &lt;/dependency&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
-</blockquote>
-<h3 id="十、-ignore"><a href="#十、-ignore" class="headerlink" title="十、.ignore"></a>十、.ignore</h3><blockquote>
-<p><a href="https://plugins.jetbrains.com/plugin/7495--ignore/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7495--ignore/</a></p>
-</blockquote>
-<p>使用协作或者打包工具时，方便的处理要忽略的文件和文件夹。</p>
-<p><img src="https://plugins.jetbrains.com/files/7495/screenshot_14958.png" alt="Screenshot 1"></p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/idea/">idea</a></li></ul>
 
       
     </footer>
@@ -1217,7 +1198,7 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a></h6>
+              <h6 style="margin: 0;"><a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a></h6>
               <span>二月 24, 2019</span>
             </div>
 
@@ -1317,9 +1298,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

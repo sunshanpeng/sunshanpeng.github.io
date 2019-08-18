@@ -19,12 +19,12 @@
 <meta property="og:site_name" content="阿鹏的技术博客">
 <meta property="og:description" content="前言在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。 但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。 使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。 Apollo配置中心介绍Apo">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://images.gitee.com/uploads/images/2019/0803/171224_5adc3bd5_1878326.png">
-<meta property="og:updated_time" content="2019-08-16T18:36:21.688Z">
+<meta property="og:image" content="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png">
+<meta property="og:updated_time" content="2019-08-18T05:28:26.124Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="使用apollo配置中心生成雪花算法的workerId">
 <meta name="twitter:description" content="前言在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。 但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。 使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。 Apollo配置中心介绍Apo">
-<meta name="twitter:image" content="https://images.gitee.com/uploads/images/2019/0803/171224_5adc3bd5_1878326.png">
+<meta name="twitter:image" content="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png">
   
     <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
   
@@ -61,31 +61,9 @@
 
 
   
-  
-  <div class="site-header-image">
-    <img id="originBg" width="100%" alt="Hike News" src>
-  </div>
-
-  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
-    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
-  </div>
-
-  <script>
-        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
-        var random = Math.floor((Math.random() * imgUrls.length ));
-        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
-          document.getElementById("originBg").src=imgUrls[random];
-          document.getElementById("blurBg").src=imgUrls[random];
-        } else {
-          document.getElementById("originBg").src='/' + imgUrls[random];
-          document.getElementById("blurBg").src='/' + imgUrls[random];
-        }
-    </script>
 
 
-
-
-<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+<header id="allheader" class="site-header" role="banner">
   <div class="clearfix container">
       <div class="site-branding">
 
@@ -166,7 +144,7 @@
 <p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
 <p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
 <h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
-<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://images.gitee.com/uploads/images/2019/0803/171224_5adc3bd5_1878326.png" alt="Apollo架构图" title="Apollo架构图"></p>
+<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png" alt="Apollo架构图"></p>
 <p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
 <ul>
 <li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
@@ -241,19 +219,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/24/Pod的意义/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Pod的意义
+          使用同一个deployment实现金丝雀（灰度）发布
         
       </div>
     </a>
   
   
-    <a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">使用同一个deployment实现金丝雀（灰度）发布</div>
+      <div class="article-nav-title">常用的IntelliJ IDEA 插件推荐</div>
     </a>
   
 </nav>
@@ -320,9 +298,6 @@
 
 
     <!-- headerblur min height -->
-    
-      var headerblur = document.getElementById("header-blur");
-      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>
