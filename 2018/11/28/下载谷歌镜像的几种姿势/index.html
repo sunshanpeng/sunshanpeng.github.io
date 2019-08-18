@@ -3,29 +3,26 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Pod的意义 | 阿鹏的博客</title>
+  <title>下载谷歌镜像的几种姿势 | 阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="k8s">
+  <meta name="keywords" content="docker">
   
   
   
   
-  <meta name="description" content="Kubernetes 使用 Pod 来管理容器，每个 Pod 可以包含一个或多个紧密关联的容器。 Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 UTS namespace，是 Kubernetes 调度的基本单位。 Pod 内的多个容器共享网络和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务。  Pod的意义容器都是单进程运行的，不是因为容器">
-<meta name="keywords" content="k8s">
+  <meta name="description" content="前言在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站gcr.io，不过我们可以通过其他方式使用谷歌的镜像。 通过国内镜像站阿里云镜像站域名：registry.cn-hangzhou.aliyuncs.com/google_containers 微软镜像站域名：gcr.azk8s.cn/google_containers 中科大镜像站（拉取速度较慢）域名：gcr.mirrors.">
+<meta name="keywords" content="docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Pod的意义">
-<meta property="og:url" content="http://www.sunshanpeng.com/2019/02/24/Pod的意义/index.html">
+<meta property="og:title" content="下载谷歌镜像的几种姿势">
+<meta property="og:url" content="http://www.sunshanpeng.com/2018/11/28/下载谷歌镜像的几种姿势/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
-<meta property="og:description" content="Kubernetes 使用 Pod 来管理容器，每个 Pod 可以包含一个或多个紧密关联的容器。 Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 UTS namespace，是 Kubernetes 调度的基本单位。 Pod 内的多个容器共享网络和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务。  Pod的意义容器都是单进程运行的，不是因为容器">
+<meta property="og:description" content="前言在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站gcr.io，不过我们可以通过其他方式使用谷歌的镜像。 通过国内镜像站阿里云镜像站域名：registry.cn-hangzhou.aliyuncs.com/google_containers 微软镜像站域名：gcr.azk8s.cn/google_containers 中科大镜像站（拉取速度较慢）域名：gcr.mirrors.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://image.sunshanpeng.com/assets%252F-LDAOok5ngY4pc1lEDes%252F-LM_rqip-tinVoiFZE0I%252F-LM_sIwx4E3-69Ml-jNW%252Fpod.png">
-<meta property="og:image" content="http://image.sunshanpeng.com/image2018-10-17_19-22-48.png">
-<meta property="og:updated_time" content="2019-08-16T18:21:54.305Z">
+<meta property="og:updated_time" content="2019-08-18T12:49:58.168Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Pod的意义">
-<meta name="twitter:description" content="Kubernetes 使用 Pod 来管理容器，每个 Pod 可以包含一个或多个紧密关联的容器。 Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 UTS namespace，是 Kubernetes 调度的基本单位。 Pod 内的多个容器共享网络和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务。  Pod的意义容器都是单进程运行的，不是因为容器">
-<meta name="twitter:image" content="http://image.sunshanpeng.com/assets%252F-LDAOok5ngY4pc1lEDes%252F-LM_rqip-tinVoiFZE0I%252F-LM_sIwx4E3-69Ml-jNW%252Fpod.png">
+<meta name="twitter:title" content="下载谷歌镜像的几种姿势">
+<meta name="twitter:description" content="前言在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站gcr.io，不过我们可以通过其他方式使用谷歌的镜像。 通过国内镜像站阿里云镜像站域名：registry.cn-hangzhou.aliyuncs.com/google_containers 微软镜像站域名：gcr.azk8s.cn/google_containers 中科大镜像站（拉取速度较慢）域名：gcr.mirrors.">
   
     <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
@@ -131,7 +128,7 @@
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-Pod的意义" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+          <section id="main" style="float:none;"><article id="post-下载谷歌镜像的几种姿势" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -139,7 +136,7 @@
         
   
     <h1 class="thumb" itemprop="name">
-      Pod的意义
+      下载谷歌镜像的几种姿势
     </h1>
   
 
@@ -147,8 +144,8 @@
     
     <div class="article-meta">
       
-	<a href="/2019/02/24/Pod的意义/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	<a href="/2018/11/28/下载谷歌镜像的几种姿势/" class="article-date">
+	  <time datetime="2018-11-28T08:26:37.000Z" itemprop="datePublished">十一月 28, 2018</time>
 	</a>
 
       
@@ -163,32 +160,40 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <p>Kubernetes 使用 Pod 来管理容器，每个 Pod 可以包含一个或多个紧密关联的容器。</p>
-<p>Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 UTS namespace，是 Kubernetes 调度的基本单位。</p>
-<p>Pod 内的多个容器共享网络和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务。</p>
-<p><img src="http://image.sunshanpeng.com/assets%252F-LDAOok5ngY4pc1lEDes%252F-LM_rqip-tinVoiFZE0I%252F-LM_sIwx4E3-69Ml-jNW%252Fpod.png" alt="img"></p>
-<h2 id="Pod的意义"><a href="#Pod的意义" class="headerlink" title="Pod的意义"></a>Pod的意义</h2><p>容器都是单进程运行的，不是因为容器只能运行一个进程，而是容器没有管理多个进程的能力。</p>
-<p>容器里PID=1的进程就是应用本身，其他的进程都是这个PID=1进程的子进程。如果启动了第二个进程，那这第二个进程异常退出的时候，外部并不能感知，也就管理不了。</p>
-<p>在一个真正的操作系统里，进程并不是“孤苦伶仃”地独自运行的，应用之间可能有着密切的协作关系，必须部署在同一台机器上。</p>
-<p>这些密切关系包括但不限于：互相之间会发生直接的文件交换，使用localhost或者Socket文件进行本地通信，会发生非常频繁的远程调用，共享某些Linux Namespace。</p>
-<h2 id="Pod的实现原理"><a href="#Pod的实现原理" class="headerlink" title="Pod的实现原理"></a>Pod的实现原理</h2><p>首先，Pod只是一个逻辑概念，是一组共享了某些资源的容器。</p>
-<p>Kubernetes真正处理的，还是宿主机操作系统上Linux容器的Namespace和Cgroups，而并不存在一个所谓的Pod的边界或者隔离环境。</p>
-<p>Kubernetes里，Pod的实现需要使用一个中间容器，叫做Infra容器，在Pod中，Infra容器永远都是第一个被创建的容器。</p>
-<p>其他用户自定义的容器，通过Join Network Namespace的方式与Infra容器关联在一起。</p>
-<p><img src="http://image.sunshanpeng.com/image2018-10-17_19-22-48.png" alt="img"></p>
-<p>如图所示，这个Pod里除了两个用户容器，还有一个Infra容器。</p>
-<p>这个Infra容器占用极少的资源，使用了一个非常特殊的镜像：k8s.gcr.io/pause，这个镜像永远处于“暂停”状态，100-200KB左右大小。</p>
-<p>Infra容器生成NetWork Namespace后，用户容器加入Infra容器的Network Namespace中，用户容器和Infra容器在宿主机上的Namespace文件是一样的。</p>
-<p>这意味着，对Pod中的容器A和容器B来说：</p>
-<ul>
-<li>它们可以直接使用localhost进行通信；</li>
-<li>他们看到的网络设备和Infra容器的一样；</li>
-<li>一个Pod只有一个IP地址，也就是容器A、容器B、Infra容器的ip地址一致；</li>
-<li>所有的网络资源被改Pod中的所有容器共享；</li>
-<li>Pod的生命周期只跟Infra容器一致，与容器A和B无关。</li>
-</ul>
-<p>对于同一个Pod里面的所有用户容器来说，它们的进出流量，都是通过Infra容器完成的。</p>
-<p>Pod的本质，实际上是在扮演传统基础设施“虚拟机”的角色；容器则是这个虚拟机里运行的用户进程。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站<code>gcr.io</code>，不过我们可以通过其他方式使用谷歌的镜像。</p>
+<h2 id="通过国内镜像站"><a href="#通过国内镜像站" class="headerlink" title="通过国内镜像站"></a>通过国内镜像站</h2><h3 id="阿里云镜像站"><a href="#阿里云镜像站" class="headerlink" title="阿里云镜像站"></a>阿里云镜像站</h3><p>域名：<code>registry.cn-hangzhou.aliyuncs.com/google_containers</code></p>
+<h3 id="微软镜像站"><a href="#微软镜像站" class="headerlink" title="微软镜像站"></a>微软镜像站</h3><p>域名：<code>gcr.azk8s.cn/google_containers</code></p>
+<h3 id="中科大镜像站（拉取速度较慢）"><a href="#中科大镜像站（拉取速度较慢）" class="headerlink" title="中科大镜像站（拉取速度较慢）"></a>中科大镜像站（拉取速度较慢）</h3><p>域名：<code>gcr.mirrors.ustc.edu.cn/google_containers</code></p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>替换谷歌镜像地址为国内镜像站地址，比如：</p>
+<p><code>k8s.gcr.io</code>开头的<code>k8s.gcr.io/coredns:1.1.3</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.1.3</span><br><span class="line">docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/coredns:1.1.3 k8s.gcr.io/coredns:1.1.3</span><br></pre></td></tr></table></figure>
+<p><code>gcr.io</code>开头的<code>gcr.io/google_containers/heapster-amd64:v1.5.3</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker pull registry.cn-hangzhou.aliyuncs.com/google_containers/heapster-amd64:v1.5.3</span><br><span class="line">docker tag registry.cn-hangzhou.aliyuncs.com/google_containers/heapster-amd64:v1.5.3 gcr.io/google_containers/heapster-amd64:v1.5.3</span><br></pre></td></tr></table></figure>
+<h2 id="通过配置代理"><a href="#通过配置代理" class="headerlink" title="通过配置代理"></a>通过配置代理</h2><p>前提是有一台能够科学上网的机器，并且目标机器能访问到可以科学上网的机器。</p>
+<ol>
+<li>为docker服务创建systemd插件目录：</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /etc/systemd/system/docker.service.d</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>配置代理文件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cat &gt;/etc/systemd/system/docker.service.d/http-proxy.conf&lt;EOF </span><br><span class="line">[Service] </span><br><span class="line">Environment=<span class="string">"HTTP_PROXY=http://proxy.example.com:80/"</span></span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li>刷新配置并重启Docker</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li>严重配置是否加载</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl show --property=Environment docker</span><br><span class="line">Environment=HTTP_PROXY=http://proxy.example.com:80/</span><br></pre></td></tr></table></figure>
+<p>如果配置已经加载但还是不能下载谷歌镜像，可以试试把<code>HTTP_PROXY</code>改成<code>http_proxy</code>，我的配置是<code>Environment=&quot;http_proxy=http://10.208.204.147:1080/&quot;</code>才能使用。</p>
+<p><code>HTTPS_PROXY</code>和<code>NO_PROXY</code>配置类似，具体可以看官网<a href="https://docs.docker.com/config/daemon/systemd/#httphttps-proxy" target="_blank" rel="noopener">代理配置</a>。</p>
+<h2 id="通过脚本"><a href="#通过脚本" class="headerlink" title="通过脚本"></a>通过脚本</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -sSL https://git.io/getgcr | bash -s  k8s.gcr.io/kube-apiserver:v1.14.3</span><br></pre></td></tr></table></figure>
+<p>把<code>k8s.gcr.io/kube-apiserver:v1.14.3</code>替换成要下载的目标镜像即可。</p>
+<p>该方法本质上还是通过国内镜像站下载的。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://mirror.azure.cn/help/gcr-proxy-cache.html" target="_blank" rel="noopener">http://mirror.azure.cn/help/gcr-proxy-cache.html</a></p>
+<p><a href="https://blog.docker.com/2015/10/registry-proxy-cache-docker-open-source/" target="_blank" rel="noopener">https://blog.docker.com/2015/10/registry-proxy-cache-docker-open-source/</a></p>
+<p><a href="https://stackoverflow.com/questions/23111631/cannot-download-docker-images-behind-a-proxy" target="_blank" rel="noopener">https://stackoverflow.com/questions/23111631/cannot-download-docker-images-behind-a-proxy</a></p>
 
       
     </div>
@@ -199,7 +204,7 @@
 
       
   <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
 
       
         
@@ -234,19 +239,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/24/Kubernetes介绍/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/12/17/创建NFS的StorageClass/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Kubernetes介绍
+          创建NFS的StorageClass
         
       </div>
     </a>
   
   
-    <a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">使用apollo配置中心生成雪花算法的workerId</div>
+      <div class="article-nav-title">使用ephemeral-storage管理容器的临时存储</div>
     </a>
   
 </nav>
@@ -260,7 +265,7 @@
     <div id="toc" class="toc-article">
     <strong class="toc-title">Contents</strong>
     
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod的意义"><span class="nav-number">1.</span> <span class="nav-text">Pod的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pod的实现原理"><span class="nav-number">2.</span> <span class="nav-text">Pod的实现原理</span></a></li></ol>
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过国内镜像站"><span class="nav-number">2.</span> <span class="nav-text">通过国内镜像站</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#阿里云镜像站"><span class="nav-number">2.1.</span> <span class="nav-text">阿里云镜像站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#微软镜像站"><span class="nav-number">2.2.</span> <span class="nav-text">微软镜像站</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#中科大镜像站（拉取速度较慢）"><span class="nav-number">2.3.</span> <span class="nav-text">中科大镜像站（拉取速度较慢）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用方式"><span class="nav-number">2.4.</span> <span class="nav-text">使用方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过配置代理"><span class="nav-number">3.</span> <span class="nav-text">通过配置代理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过脚本"><span class="nav-number">4.</span> <span class="nav-text">通过脚本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol>
     
     </div>
   </aside>

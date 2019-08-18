@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Kubectl常用命令 | 阿鹏的技术博客</title>
+  <title>Kubectl常用命令 | 阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   <meta name="keywords" content="k8s">
@@ -15,8 +15,8 @@
 <meta name="keywords" content="k8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubectl常用命令">
-<meta property="og:url" content="http://sunshanpeng.com/2019/02/24/Kubectl常用命令/index.html">
-<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:url" content="http://www.sunshanpeng.com/2019/02/24/Kubectl常用命令/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="运行容器前台运行的容器1kubectl run -it --rm --image=centos --restart=Never test bash 常驻后台的容器1kubectl run nginx --image=nginx --replicas=2 通常使用yaml文件创建容器，只在调试或者排错的时候使用kubectl run临时创建容器。 比如： 创建网络排查容器1kubectl run -">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:updated_time" content="2019-08-16T18:19:38.363Z">
@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="Kubectl常用命令">
 <meta name="twitter:description" content="运行容器前台运行的容器1kubectl run -it --rm --image=centos --restart=Never test bash 常驻后台的容器1kubectl run nginx --image=nginx --replicas=2 通常使用yaml文件创建容器，只在调试或者排错的时候使用kubectl run临时创建容器。 比如： 创建网络排查容器1kubectl run -">
   
-    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
   <link rel="icon" href="/css/images/favicon.ico">
   
@@ -59,15 +59,37 @@
 
 
   
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
 
 
-<header id="allheader" class="site-header" role="banner">
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
   <div class="clearfix container">
       <div class="site-branding">
 
           <h1 class="site-title">
             
-              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
             
           </h1>
           
@@ -243,6 +265,11 @@
     </a>
   
   
+    <a href="/2019/01/17/CentOS升级内核kernel的几种方式/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">CentOS升级内核kernel的几种方式</div>
+    </a>
+  
 </nav>
 
   
@@ -281,7 +308,7 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
               本站访客数<span id="busuanzi_value_site_uv"></span>人次  
@@ -307,6 +334,9 @@
 
 
     <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

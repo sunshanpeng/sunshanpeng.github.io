@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Kubernetes集群配置优化 | 阿鹏的技术博客</title>
+  <title>Kubernetes集群配置优化 | 阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   <meta name="keywords" content="dockerk8s">
@@ -15,8 +15,8 @@
 <meta name="keywords" content="docker,k8s">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Kubernetes集群配置优化">
-<meta property="og:url" content="http://sunshanpeng.com/2019/03/24/Kubernetes集群配置优化/index.html">
-<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:url" content="http://www.sunshanpeng.com/2019/03/24/Kubernetes集群配置优化/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="一、Docker配置123456789101112131415&amp;#123;    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    &quot;log-driver&quot;: &quot;json-file&quot;,    &quot;log-opts&quot;: &amp;#123;        &quot;max-size&quot;: &quot;100m&quot;,        &quot;max-file&quot;: &quot;10&quot;    &amp;#125;,">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:updated_time" content="2019-08-16T18:20:56.314Z">
@@ -24,7 +24,7 @@
 <meta name="twitter:title" content="Kubernetes集群配置优化">
 <meta name="twitter:description" content="一、Docker配置123456789101112131415&amp;#123;    &quot;exec-opts&quot;: [&quot;native.cgroupdriver=systemd&quot;],    &quot;log-driver&quot;: &quot;json-file&quot;,    &quot;log-opts&quot;: &amp;#123;        &quot;max-size&quot;: &quot;100m&quot;,        &quot;max-file&quot;: &quot;10&quot;    &amp;#125;,">
   
-    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
   <link rel="icon" href="/css/images/favicon.ico">
   
@@ -59,15 +59,37 @@
 
 
   
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
 
 
-<header id="allheader" class="site-header" role="banner">
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
   <div class="clearfix container">
       <div class="site-branding">
 
           <h1 class="site-title">
             
-              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
             
           </h1>
           
@@ -282,7 +304,7 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
               本站访客数<span id="busuanzi_value_site_uv"></span>人次  
@@ -308,6 +330,9 @@
 
 
     <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>

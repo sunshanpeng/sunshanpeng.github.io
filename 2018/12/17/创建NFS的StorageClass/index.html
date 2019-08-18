@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>创建NFS的StorageClass | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="k8s">
+  
+  
+  
+  
+  <meta name="description" content="前言在Kubernetes的几种网络存储中，NFS是成本较低、使用简单的一种方案。 但是NFS存储不建议用在生产环境，因为我们测试环境的MySQL数据库部署在NFS上都经常出问题，比如nfs4_reclaim_open_state: Lock reclaim failed和kernel:NMI watchdog: BUG: soft lockup - CPU#0 stuck for 26s。 NF">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="创建NFS的StorageClass">
+<meta property="og:url" content="http://www.sunshanpeng.com/2018/12/17/创建NFS的StorageClass/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="前言在Kubernetes的几种网络存储中，NFS是成本较低、使用简单的一种方案。 但是NFS存储不建议用在生产环境，因为我们测试环境的MySQL数据库部署在NFS上都经常出问题，比如nfs4_reclaim_open_state: Lock reclaim failed和kernel:NMI watchdog: BUG: soft lockup - CPU#0 stuck for 26s。 NF">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2019-08-18T13:54:01.327Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="创建NFS的StorageClass">
+<meta name="twitter:description" content="前言在Kubernetes的几种网络存储中，NFS是成本较低、使用简单的一种方案。 但是NFS存储不建议用在生产环境，因为我们测试环境的MySQL数据库部署在NFS上都经常出问题，比如nfs4_reclaim_open_state: Lock reclaim failed和kernel:NMI watchdog: BUG: soft lockup - CPU#0 stuck for 26s。 NF">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-创建NFS的StorageClass" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      创建NFS的StorageClass
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2018/12/17/创建NFS的StorageClass/" class="article-date">
+	  <time datetime="2018-12-17T08:26:37.000Z" itemprop="datePublished">十二月 17, 2018</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Kubernetes的几种网络存储中，NFS是成本较低、使用简单的一种方案。</p>
+<p>但是NFS存储不建议用在生产环境，因为我们测试环境的MySQL数据库部署在NFS上都经常出问题，比如<code>nfs4_reclaim_open_state: Lock reclaim failed</code>和<code>kernel:NMI watchdog: BUG: soft lockup - CPU#0 stuck for 26s</code>。</p>
+<h2 id="NFS服务端"><a href="#NFS服务端" class="headerlink" title="NFS服务端"></a>NFS服务端</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">yum install -y net-tools lsof nfs-utils rpcbind</span><br><span class="line">mkdir /data/nfs -p</span><br><span class="line">vi /etc/exports</span><br><span class="line"><span class="comment">#挂载NFS服务器上的/data/nfs/目录到自己的文件系统中，rw表示可读写，no_root_squash 是让root保持权限</span></span><br><span class="line">/data/nfs/ *(insecure,rw,no_root_squash)</span><br><span class="line"></span><br><span class="line">关闭防火墙</span><br><span class="line">systemctl stop firewalld</span><br><span class="line">先为rpcbind和nfs做开机启动：(必须先启动rpcbind服务)</span><br><span class="line">systemctl <span class="built_in">enable</span> rpcbind.service</span><br><span class="line">systemctl <span class="built_in">enable</span> nfs-server.service</span><br><span class="line">然后分别启动rpcbind和nfs服务：</span><br><span class="line">systemctl start rpcbind.service</span><br><span class="line">systemctl start nfs-server.service</span><br><span class="line"> </span><br><span class="line">exportfs -r</span><br><span class="line"><span class="comment">#可以查看到已经ok</span></span><br><span class="line">exportfs</span><br><span class="line">/home/nfs 192.168.248.0/24</span><br></pre></td></tr></table></figure>
+<h2 id="NFS客户端"><a href="#NFS客户端" class="headerlink" title="NFS客户端"></a>NFS客户端</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#安装nfs工具</span></span><br><span class="line">yum  install -y nfs-utils</span><br><span class="line"><span class="comment">#建立挂载目录</span></span><br><span class="line">mkdir /data</span><br><span class="line"><span class="comment">#挂载nfs</span></span><br><span class="line">mount -t nfs 192.168.80.145:/data/nfs /data</span><br><span class="line">卸载挂载</span><br><span class="line">umount /data</span><br><span class="line"> </span><br><span class="line">查看是目录挂载状态</span><br><span class="line">df -h</span><br><span class="line">showmount  -e 192.168.80.145</span><br></pre></td></tr></table></figure>
+<h2 id="创建NFS-StorageClass"><a href="#创建NFS-StorageClass" class="headerlink" title="创建NFS-StorageClass"></a>创建NFS-StorageClass</h2><h3 id="nfs-rbac-yaml"><a href="#nfs-rbac-yaml" class="headerlink" title="nfs-rbac.yaml"></a>nfs-rbac.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="attr">  - apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">    resources:</span> <span class="string">["persistentvolumes"]</span></span><br><span class="line"><span class="attr">    verbs:</span> <span class="string">["get",</span> <span class="string">"list"</span><span class="string">,</span> <span class="string">"watch"</span><span class="string">,</span> <span class="string">"create"</span><span class="string">,</span> <span class="string">"delete"</span><span class="string">]</span></span><br><span class="line"><span class="attr">  - apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">    resources:</span> <span class="string">["persistentvolumeclaims"]</span></span><br><span class="line"><span class="attr">    verbs:</span> <span class="string">["get",</span> <span class="string">"list"</span><span class="string">,</span> <span class="string">"watch"</span><span class="string">,</span> <span class="string">"update"</span><span class="string">]</span></span><br><span class="line"><span class="attr">  - apiGroups:</span> <span class="string">["storage.k8s.io"]</span></span><br><span class="line"><span class="attr">    resources:</span> <span class="string">["storageclasses"]</span></span><br><span class="line"><span class="attr">    verbs:</span> <span class="string">["get",</span> <span class="string">"list"</span><span class="string">,</span> <span class="string">"watch"</span><span class="string">]</span></span><br><span class="line"><span class="attr">  - apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">    resources:</span> <span class="string">["events"]</span></span><br><span class="line"><span class="attr">    verbs:</span> <span class="string">["create",</span> <span class="string">"update"</span><span class="string">,</span> <span class="string">"patch"</span><span class="string">]</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">run-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="attr">  - kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">    namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">  kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nfs-client-provisioner-runner</span></span><br><span class="line"><span class="attr">  apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">rules:</span></span><br><span class="line"><span class="attr">  - apiGroups:</span> <span class="string">[""]</span></span><br><span class="line"><span class="attr">    resources:</span> <span class="string">["endpoints"]</span></span><br><span class="line"><span class="attr">    verbs:</span> <span class="string">["get",</span> <span class="string">"list"</span><span class="string">,</span> <span class="string">"watch"</span><span class="string">,</span> <span class="string">"create"</span><span class="string">,</span> <span class="string">"update"</span><span class="string">,</span> <span class="string">"patch"</span><span class="string">]</span></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">RoleBinding</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="attr">  - kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">    name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">    namespace:</span> <span class="string">default</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">  kind:</span> <span class="string">Role</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">leader-locking-nfs-client-provisioner</span></span><br><span class="line"><span class="attr">  apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br></pre></td></tr></table></figure>
+<h3 id="nfs-deployment-yaml"><a href="#nfs-deployment-yaml" class="headerlink" title="nfs-deployment.yaml"></a>nfs-deployment.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">Deployment</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">extensions/v1beta1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  replicas:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">  strategy:</span></span><br><span class="line"><span class="attr">    type:</span> <span class="string">Recreate</span></span><br><span class="line"><span class="attr">  template:</span></span><br><span class="line"><span class="attr">    metadata:</span></span><br><span class="line"><span class="attr">      labels:</span></span><br><span class="line"><span class="attr">        app:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">    spec:</span></span><br><span class="line"><span class="attr">      tolerations:</span></span><br><span class="line"><span class="attr">        - key:</span> <span class="string">node-env</span></span><br><span class="line"><span class="attr">          value:</span> <span class="string">pre</span></span><br><span class="line"><span class="attr">          effect:</span> <span class="string">NoSchedule</span></span><br><span class="line"><span class="attr">          operator:</span> <span class="string">Equal</span></span><br><span class="line"><span class="attr">      priorityClassName:</span> <span class="string">cluster</span></span><br><span class="line"><span class="attr">      serviceAccountName:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">      containers:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">nfs-client-provisioner</span></span><br><span class="line"><span class="attr">          image:</span> <span class="string">quay.io/external_storage/nfs-client-provisioner:latest</span></span><br><span class="line"><span class="attr">          volumeMounts:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">nfs-client-root</span></span><br><span class="line"><span class="attr">              mountPath:</span> <span class="string">/persistentvolumes</span></span><br><span class="line"><span class="attr">          env:</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">PROVISIONER_NAME</span></span><br><span class="line"><span class="attr">              value:</span> <span class="string">nfs-provisioner</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">NFS_SERVER</span></span><br><span class="line"><span class="attr">              value:</span> <span class="comment">##NFS_SERVER_IP##</span></span><br><span class="line"><span class="attr">            - name:</span> <span class="string">NFS_PATH</span></span><br><span class="line"><span class="attr">              value:</span> <span class="comment">##NFS_PATH##</span></span><br><span class="line"><span class="attr">      volumes:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">nfs-client-root</span></span><br><span class="line"><span class="attr">          nfs:</span></span><br><span class="line"><span class="attr">            server:</span> <span class="comment">##NFS_SERVER_IP##</span></span><br><span class="line"><span class="attr">            path:</span> <span class="comment">##NFS_PATH##</span></span><br></pre></td></tr></table></figure>
+<h3 id="nfs-storage-yaml"><a href="#nfs-storage-yaml" class="headerlink" title="nfs-storage.yaml"></a>nfs-storage.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">storage.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">StorageClass</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">nfs-storage</span></span><br><span class="line"><span class="attr">provisioner:</span> <span class="string">nfs-provisioner</span> <span class="comment"># or choose another name, must match deployment's env PROVISIONER_NAME'</span></span><br><span class="line"><span class="attr">parameters:</span></span><br><span class="line"><span class="attr">  archiveOnDelete:</span> <span class="string">"false"</span></span><br></pre></td></tr></table></figure>
+<h3 id="test-nfs-storage-yaml"><a href="#test-nfs-storage-yaml" class="headerlink" title="test-nfs-storage.yaml"></a>test-nfs-storage.yaml</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">kind:</span> <span class="string">PersistentVolumeClaim</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">test-claim</span></span><br><span class="line"><span class="attr">  annotations:</span></span><br><span class="line">    <span class="string">volume.beta.kubernetes.io/storage-class:</span> <span class="string">"nfs-storage"</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  accessModes:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">ReadWriteMany</span></span><br><span class="line"><span class="attr">  resources:</span></span><br><span class="line"><span class="attr">    requests:</span></span><br><span class="line"><span class="attr">      storage:</span> <span class="number">1</span><span class="string">Mi</span></span><br><span class="line"></span><br><span class="line"><span class="meta">---</span></span><br><span class="line"></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">test-pod</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">test-pod</span></span><br><span class="line"><span class="attr">      image:</span> <span class="string">busybox</span></span><br><span class="line"><span class="attr">      command:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"/bin/sh"</span></span><br><span class="line"><span class="attr">      args:</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"-c"</span></span><br><span class="line"><span class="bullet">        -</span> <span class="string">"touch /mnt/SUCCESS &amp;&amp; exit 0 || exit 1"</span></span><br><span class="line"><span class="attr">      volumeMounts:</span></span><br><span class="line"><span class="attr">        - name:</span> <span class="string">nfs-pvc</span></span><br><span class="line"><span class="attr">          mountPath:</span> <span class="string">"/mnt"</span></span><br><span class="line"><span class="attr">  restartPolicy:</span> <span class="string">"Never"</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="attr">    - name:</span> <span class="string">nfs-pvc</span></span><br><span class="line"><span class="attr">      persistentVolumeClaim:</span></span><br><span class="line"><span class="attr">        claimName:</span> <span class="string">test-claim</span></span><br></pre></td></tr></table></figure>
+<h3 id="创建顺序"><a href="#创建顺序" class="headerlink" title="创建顺序"></a>创建顺序</h3><ol>
+<li>nfs-rbac.yaml</li>
+<li>nfs-deployment.yaml</li>
+<li>nfs-storage.yaml</li>
+</ol>
+<h3 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h3><h4 id="nfs-deployment-yaml-1"><a href="#nfs-deployment-yaml-1" class="headerlink" title="nfs-deployment.yaml"></a>nfs-deployment.yaml</h4><ul>
+<li><code>##NFS_SERVER_IP##</code>是NFS服务端的IP，根据实际IP进行替换。</li>
+<li><code>##NFS_PATH##</code>是NFS服务端的目录，根据实际目录进行替换。</li>
+</ul>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NFS_SERVER_IP=192.168.80.145  <span class="comment">#换成自己的实际IP</span></span><br><span class="line">NFS_PATH=/data/nfs  <span class="comment"># 换成自己的实际目录</span></span><br><span class="line">kubectl apply -f nfs-rbac.yaml</span><br><span class="line">sed <span class="string">"s|##NFS_SERVER_IP##|<span class="variable">$&#123;NFS_SERVER_IP&#125;</span>|g;s|##NFS_PATH##|<span class="variable">$&#123;NFS_PATH&#125;</span>|g"</span> nfs-deployment.yaml | kubectl apply -f -</span><br><span class="line">kubectl apply -f nfs-storage.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="验证方法"><a href="#验证方法" class="headerlink" title="验证方法"></a>验证方法</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f <span class="built_in">test</span>-nfs-storage.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="可选：设置默认存储"><a href="#可选：设置默认存储" class="headerlink" title="可选：设置默认存储"></a>可选：设置默认存储</h3><p>设置这个StorageClass为Kubernetes的默认存储<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> kubectl patch storageclass nfs-storage -p <span class="string">'&#123;"metadata": &#123;"annotations":&#123;"storageclass.kubernetes.io/is-default-class":"true"&#125;&#125;&#125;'</span></span><br><span class="line"> [root@master1 nfs-storage]<span class="comment"># kubectl get sc</span></span><br><span class="line">NAME                    PROVISIONER                    AGE</span><br><span class="line">nfs-storage (default)   nfs-provisioner                12m</span><br></pre></td></tr></table></figure></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.cnblogs.com/lixiuran/p/7117000.html" target="_blank" rel="noopener">https://www.cnblogs.com/lixiuran/p/7117000.html</a></p>
+<p><a href="https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client" target="_blank" rel="noopener">https://github.com/kubernetes-incubator/external-storage/tree/master/nfs-client</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/01/17/CentOS升级内核kernel的几种方式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          CentOS升级内核kernel的几种方式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/11/28/下载谷歌镜像的几种姿势/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">下载谷歌镜像的几种姿势</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NFS服务端"><span class="nav-number">2.</span> <span class="nav-text">NFS服务端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NFS客户端"><span class="nav-number">3.</span> <span class="nav-text">NFS客户端</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建NFS-StorageClass"><span class="nav-number">4.</span> <span class="nav-text">创建NFS-StorageClass</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nfs-rbac-yaml"><span class="nav-number">4.1.</span> <span class="nav-text">nfs-rbac.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nfs-deployment-yaml"><span class="nav-number">4.2.</span> <span class="nav-text">nfs-deployment.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#nfs-storage-yaml"><span class="nav-number">4.3.</span> <span class="nav-text">nfs-storage.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#test-nfs-storage-yaml"><span class="nav-number">4.4.</span> <span class="nav-text">test-nfs-storage.yaml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建顺序"><span class="nav-number">4.5.</span> <span class="nav-text">创建顺序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数说明"><span class="nav-number">4.6.</span> <span class="nav-text">参数说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#nfs-deployment-yaml-1"><span class="nav-number">4.6.1.</span> <span class="nav-text">nfs-deployment.yaml</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署"><span class="nav-number">4.7.</span> <span class="nav-text">部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#验证方法"><span class="nav-number">4.8.</span> <span class="nav-text">验证方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可选：设置默认存储"><span class="nav-number">4.9.</span> <span class="nav-text">可选：设置默认存储</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

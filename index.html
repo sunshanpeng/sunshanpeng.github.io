@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Page 1 | 阿鹏的技术博客</title>
+  <title>Page 1 | 阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   
@@ -12,16 +12,16 @@
   <meta name="description" content="java go devops kubernetes docker">
 <meta name="keywords" content="java go devops kubernetes docker">
 <meta property="og:type" content="website">
-<meta property="og:title" content="阿鹏的技术博客">
-<meta property="og:url" content="http://sunshanpeng.com/index.html">
-<meta property="og:site_name" content="阿鹏的技术博客">
+<meta property="og:title" content="阿鹏的博客">
+<meta property="og:url" content="http://www.sunshanpeng.com/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="java go devops kubernetes docker">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿鹏的技术博客">
+<meta name="twitter:title" content="阿鹏的博客">
 <meta name="twitter:description" content="java go devops kubernetes docker">
   
-    <link rel="alternate" href="/atom.xml" title="阿鹏的技术博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
   <link rel="icon" href="/css/images/favicon.ico">
   
@@ -56,15 +56,37 @@
 
 
   
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
 
 
-<header id="allheader" class="site-header" role="banner">
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
   <div class="clearfix container">
       <div class="site-branding">
 
           <h1 class="site-title">
             
-              <a href="/" title="阿鹏的技术博客" rel="home"> 阿鹏的技术博客 </a>
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
             
           </h1>
           
@@ -180,8 +202,14 @@
 <h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
+<h2 id="重命名容器"><a href="#重命名容器" class="headerlink" title="重命名容器"></a>重命名容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename mysql mysql1</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker rename CONTAINER NEW_NAME</code>。</p>
 <h2 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mysql</span><br></pre></td></tr></table></figure>
 <p>格式：<code>docker stop [OPTIONS] CONTAINER [CONTAINER...]</code>，停止多个容器用空格分隔容器名字或者容器id。</p>
+<h2 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker kill [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
+<h2 id="启动-重启容器"><a href="#启动-重启容器" class="headerlink" title="启动/重启容器"></a>启动/重启容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start/restart mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker start/restart [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
 <h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm mysql</span><br></pre></td></tr></table></figure>
 <p>格式：<code>docker rm [OPTIONS] CONTAINER [CONTAINER...]</code>，不带参数时只能删除已停止的容器，带上参数<code>-f</code>可以强制删除运行中的容器。</p>
 <h2 id="更新容器"><a href="#更新容器" class="headerlink" title="更新容器"></a>更新容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker update --restart always mysql</span><br></pre></td></tr></table></figure>
@@ -201,6 +229,7 @@
 <h2 id="导入镜像文件"><a href="#导入镜像文件" class="headerlink" title="导入镜像文件"></a>导入镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i /root/rook-ceph-093.tar</span><br></pre></td></tr></table></figure>
 <p>格式：<code>docker load [OPTIONS]</code></p>
 <p>当不方便使用自建的镜像仓库来传输镜像时，可以用镜像的导出导入功能来移动镜像。</p>
+<h2 id="查看容器资源消耗"><a href="#查看容器资源消耗" class="headerlink" title="查看容器资源消耗"></a>查看容器资源消耗</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br><span class="line">CONTAINER ID        NAME                               CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS</span><br><span class="line">63ebc0e88e5a        happy_volhard                      0.02%               35.3MiB / 15.46GiB    0.22%               11.5MB / 19MB       13.3MB / 45MB       22</span><br><span class="line">7ed66f584a25        redis                              0.08%               7.82MiB / 15.46GiB    0.05%               304kB / 274kB       5.59MB / 0B         3</span><br><span class="line">500eed21d914        dockercompose_mqbroker_1           2.98%               752.3MiB / 15.46GiB   4.75%               0B / 0B             3.07GB / 19GB       204</span><br><span class="line">ddd919a5bf52        dockercompose_mqnamesrv_1          0.21%               329.2MiB / 15.46GiB   2.08%               0B / 0B             60.3MB / 16.4kB     41</span><br></pre></td></tr></table></figure>
 <h2 id="查看Docker占用磁盘"><a href="#查看Docker占用磁盘" class="headerlink" title="查看Docker占用磁盘"></a>查看Docker占用磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker system df</span><br><span class="line"></span><br><span class="line">TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE</span><br><span class="line">Images              29                  28                  8.575GB             1.873GB (21%)</span><br><span class="line">Containers          29                  17                  7.545GB             410.8MB (5%)</span><br><span class="line">Local Volumes       303                 23                  6.339GB             4.138GB (65%)</span><br><span class="line">Build Cache         0                   0                   0B                  0B</span><br></pre></td></tr></table></figure>
 <p>可以查看镜像文件大小、容器大小、本地存储使用的磁盘大小。</p>
 <h2 id="清理Docker镜像和容器"><a href="#清理Docker镜像和容器" class="headerlink" title="清理Docker镜像和容器"></a>清理Docker镜像和容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -a</span><br></pre></td></tr></table></figure>
@@ -567,6 +596,90 @@
 <!-- Table of Contents -->
 
   
+    <article id="post-使用apollo配置中心生成雪花算法的workerId" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。</p>
+<p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
+<p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
+<h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
+<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png" alt="Apollo架构图"></p>
+<p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
+<ul>
+<li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
+<li>Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端（Client）；</li>
+<li>Admin Service提供配置的修改、发布等功能，服务对象是Apollo管理界面（Portal）；</li>
+<li>Portal通过Meta Server连接Admin Service修改、发布配置信息。</li>
+</ul>
+<blockquote>
+<p>ConfigDB存储配置信息，由Config Service和Admin Service使用；</p>
+</blockquote>
+<blockquote>
+<p>PortalDB存储权限和审计信息，由Portal使用。</p>
+</blockquote>
+<h2 id="改造Config-Service生成workerId"><a href="#改造Config-Service生成workerId" class="headerlink" title="改造Config Service生成workerId"></a>改造Config Service生成workerId</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>Client端通过<code>/configs/{appId}/{clusterName}/{namespace:.+}</code>接口拉取全量配置信息，对应方法是<code>com.ctrip.framework.apollo.configservice.controller.ConfigController#queryConfig</code>。方法的返回值ApolloConfig有5个属性：<code>appId</code>、<code>cluster</code>、<code>namespaceName</code>、<code>configurations</code>、<code>releaseKey</code>,只要把生成的workerId放到<code>configurations</code>这个Map类型的属性中，Client端就能直接通过Key值拿到workerId来使用。</p>
+<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="一、数据库改动"><a href="#一、数据库改动" class="headerlink" title="一、数据库改动"></a>一、数据库改动</h4><p>ConfigDB库的instance表存储了使用配置的应用实例。</p>
+<p>在Instance表新加一个NodeId字段用来存储生成的workerId，并且将AppId和NodeId设置为唯一索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `instance` (</span><br><span class="line">  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;自增Id&apos;,</span><br><span class="line">  `AppId` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;AppID&apos;,</span><br><span class="line">  `ClusterName` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;ClusterName&apos;,</span><br><span class="line">  `DataCenter` varchar(64) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;Data Center Name&apos;,</span><br><span class="line">  `Ip` varchar(32) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;instance ip&apos;,</span><br><span class="line">  `NodeId` int(5) DEFAULT NULL COMMENT &apos;节点id&apos;,</span><br><span class="line">  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</span><br><span class="line">  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;最后修改时间&apos;,</span><br><span class="line">  PRIMARY KEY (`Id`),</span><br><span class="line">  UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),</span><br><span class="line">  UNIQUE KEY `uk_appId_nodeId` (`AppId`,`NodeId`) USING BTREE,</span><br><span class="line">  KEY `IX_IP` (`Ip`),</span><br><span class="line">  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=6779 DEFAULT CHARSET=utf8mb4 COMMENT=&apos;使用配置的应用实例&apos;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="二、代码改动"><a href="#二、代码改动" class="headerlink" title="二、代码改动"></a>二、代码改动</h4><p>原来Instance表的记录是在获取配置时调用<code>com.ctrip.framework.apollo.configservice.util.InstanceConfigAuditUtil#audit</code>异步添加的，这里需要改成获取配置时同步添加实例信息并且放到<code>ApolloConfig</code>的<code>configurations</code>属性中。</p>
+<p>1.<code>com.ctrip.framework.apollo.configservice.controller.ConfigController</code></p>
+<p><code>queryConfig</code>方法返回前获取实例信息并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Instance instance = instanceService.findInstance(appId, clusterName, dataCenter, clientIp);</span><br><span class="line">Integer nodeId = instance.getNodeId();</span><br><span class="line"><span class="keyword">if</span> (nodeId == <span class="keyword">null</span>) &#123;</span><br><span class="line">  nodeId = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line">apolloConfig.addConfig(<span class="string">"apollo.node.id"</span>, String.valueOf(nodeId));</span><br></pre></td></tr></table></figure></p>
+<p>2.<code>com.ctrip.framework.apollo.biz.service.InstanceService</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.minId&#125;"</span>)<span class="comment">//workerId最小值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer minId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.maxId&#125;"</span>)<span class="comment">//workerId最大值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer maxId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer DEFAULT_NODE_ID = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Instance <span class="title">findInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = instanceRepository.findByAppIdAndClusterNameAndDataCenterAndIp(appId, clusterName,</span><br><span class="line">          dataCenter, ip);</span><br><span class="line">  <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">    instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (instance.getNodeId() == <span class="keyword">null</span>) &#123;</span><br><span class="line">    updateInstance(instance);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Instance <span class="title">createInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">  instance.setAppId(appId);</span><br><span class="line">  instance.setClusterName(clusterName);</span><br><span class="line">  instance.setDataCenter(dataCenter);</span><br><span class="line">  instance.setIp(ip);</span><br><span class="line">  instance.setNodeId(generateNodeId(appId));</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    instance = createInstance(instance);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">    <span class="comment">//使用数据库的唯一约束来保证workerId的唯一性</span></span><br><span class="line">    logger.error(<span class="string">"createInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">    instance = findInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateInstance</span><span class="params">(Instance instance)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        instance.setNodeId(generateNodeId(instance.getAppId()));</span><br><span class="line">        instanceRepository.save(instance);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">        logger.error(<span class="string">"updateInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">        updateInstance(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Integer <span class="title">generateNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//生成规则是当前appId最大workerId + 1</span></span><br><span class="line">  <span class="comment">//如果workerId已经到最大值了就拿最早的workerId（这里假设一个应用不会同时有1023（maxId）个实例在运行）</span></span><br><span class="line">  Integer maxNodeId = instanceRepository.maxNodeIdByAppId(appId);</span><br><span class="line">  <span class="keyword">if</span> (maxNodeId == <span class="keyword">null</span> || minId &gt; maxNodeId) &#123;</span><br><span class="line">    <span class="keyword">return</span> minId;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (maxNodeId &lt; maxId) &#123;</span><br><span class="line">    <span class="keyword">return</span> maxNodeId + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getEarliestNodeId(appId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Integer <span class="title">getEarliestNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">      InstanceConfig instanceConfig = instanceConfigRepository.findTopByConfigAppIdOrderByReleaseDeliveryTime(appId);</span><br><span class="line">      <span class="keyword">if</span> (instanceConfig == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Instance instance = instanceRepository.findOne(instanceConfig.getInstanceId());</span><br><span class="line">      <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Integer nodeId = instance.getNodeId();</span><br><span class="line">      instance.setNodeId(<span class="keyword">null</span>);</span><br><span class="line">      instanceRepository.save(instance);</span><br><span class="line">      <span class="keyword">return</span> nodeId;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="三、使用方式"><a href="#三、使用方式" class="headerlink" title="三、使用方式"></a>三、使用方式</h4><p>和其他配置的使用方式一样，直接用<code>@Value(&quot;${apollo.node.id}&quot;)</code>。</p>
+<p>这种方式生成的workerId可以直接使用在只需要一个workerId参数的雪花算法，另一种需要datacenterId和workerId两个参数的雪花算法在使用时需要做一下转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">datacenterId=apollo.node.id &gt;&gt; 5</span><br><span class="line">workerId=apolo.node.id &amp; 31</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>取高五位的值作为datacenterId，取低五位的值作为workerId。</p>
+<ul>
+<li>一个workerId参数的雪花算法，workerId最大1023，二进制为1111111111；</li>
+<li>datacenterId和workerId两个参数的雪花算法，datacenterId最大31，二进制为11111，workerId最大31，二进制为11111，datacenterId作为二进制的高5位，workerId作为二进制的低5位，组合起来1111111111，十进制为1023。</li>
+</ul>
+</blockquote>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
     <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -644,7 +757,7 @@
 <!-- Table of Contents -->
 
   
-    <article id="post-使用apollo配置中心生成雪花算法的workerId" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-修改Kubernetes集群Pod容器的内核参数" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -652,7 +765,7 @@
         
   
     <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a>
+      <a class="article-title" href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/">修改Kubernetes集群Pod容器的内核参数</a>
     </h1>
   
 
@@ -660,63 +773,57 @@
     
     <div class="article-meta">
       
-	<a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" class="article-date">
+	<a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" class="article-date">
 	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
 	</a>
 
       
 	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
  
       
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。</p>
-<p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
-<p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
-<h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
-<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png" alt="Apollo架构图"></p>
-<p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
-<ul>
-<li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
-<li>Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端（Client）；</li>
-<li>Admin Service提供配置的修改、发布等功能，服务对象是Apollo管理界面（Portal）；</li>
-<li>Portal通过Meta Server连接Admin Service修改、发布配置信息。</li>
+        <p>容器的本质是一个进程，共享Node的内核。原以为修改了Node的内核参数容器中也会改，但实际上并不是这样，容器的内核参数可以和Node不同。</p>
+<h2 id="Docker-Daemon"><a href="#Docker-Daemon" class="headerlink" title="Docker Daemon"></a>Docker Daemon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --sysctl net.core.somaxconn=65535 busybox cat /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
+<p>多个参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --restart=always --net=host \</span><br><span class="line">--name=centos01 --hostname=centos01 \</span><br><span class="line">--sysctl kernel.msgmnb=13107200 \</span><br><span class="line">--sysctl kernel.msgmni=256 \</span><br><span class="line">--sysctl kernel.msgmax=65536 \</span><br><span class="line">--sysctl kernel.shmmax=69719476736 \</span><br><span class="line">--sysctl kernel.sem=<span class="string">'500 256000 250 1024'</span> \</span><br><span class="line">-v /mnt:/update \</span><br><span class="line">centos /bin/bash</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">docker <span class="built_in">exec</span> centos01 sysctl -a |grep -E \</span><br><span class="line"><span class="string">'kernel.msgmnb|kernel.msgmni|kernel.msgmax|kernel.shmmax|kernel.sem'</span></span><br></pre></td></tr></table></figure>
+<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><h3 id="Kubernetes-Sysctls"><a href="#Kubernetes-Sysctls" class="headerlink" title="Kubernetes Sysctls"></a>Kubernetes Sysctls</h3><ol>
+<li><p>增加Kubelet启动参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubelet --allowed-unsafe-sysctls=net.*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新加载配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置Pod的securityContext参数（注意是pod不是container）</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">securityContext:</span><br><span class="line">  sysctls:</span><br><span class="line">  - name: net.ipv4.tcp_keepalive_time</span><br><span class="line">    value: &quot;180&quot;</span><br></pre></td></tr></table></figure>
+<p>Kubernetes允许配置的内核参数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kernel.shm*,</span><br><span class="line">kernel.msg*,</span><br><span class="line">kernel.sem,</span><br><span class="line">fs.mqueue.*,</span><br><span class="line">net.*.</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>使用Kubernetes Sysctls推荐指定几台Node，利用污点或者节点亲和性把需要修改内核参数的pod调度到指定节点，而不是修改所有Node。</p>
+</blockquote>
+<h3 id="Kubernetes-Init-Container"><a href="#Kubernetes-Init-Container" class="headerlink" title="Kubernetes Init Container"></a>Kubernetes Init Container</h3><p>使用init container不需要修改kubelet参数<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">initContainers:</span></span><br><span class="line"><span class="attr">- command:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">sysctl</span></span><br><span class="line"><span class="bullet">  -</span> <span class="bullet">-w</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">net.ipv4.tcp_keepalive_time=180</span></span><br><span class="line"><span class="attr">  image:</span> <span class="attr">busybox:1.27</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">init-sysctl</span></span><br><span class="line"><span class="attr">  securityContext:</span></span><br><span class="line"><span class="attr">    privileged:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.cnblogs.com/DaweiJ/articles/8528687.html" target="_blank" rel="noopener">https://www.cnblogs.com/DaweiJ/articles/8528687.html</a></li>
+<li><a href="https://yq.aliyun.com/articles/603745?utm_content=m_1000003707" target="_blank" rel="noopener">https://yq.aliyun.com/articles/603745?utm_content=m_1000003707</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/</a></li>
 </ul>
-<blockquote>
-<p>ConfigDB存储配置信息，由Config Service和Admin Service使用；</p>
-</blockquote>
-<blockquote>
-<p>PortalDB存储权限和审计信息，由Portal使用。</p>
-</blockquote>
-<h2 id="改造Config-Service生成workerId"><a href="#改造Config-Service生成workerId" class="headerlink" title="改造Config Service生成workerId"></a>改造Config Service生成workerId</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>Client端通过<code>/configs/{appId}/{clusterName}/{namespace:.+}</code>接口拉取全量配置信息，对应方法是<code>com.ctrip.framework.apollo.configservice.controller.ConfigController#queryConfig</code>。方法的返回值ApolloConfig有5个属性：<code>appId</code>、<code>cluster</code>、<code>namespaceName</code>、<code>configurations</code>、<code>releaseKey</code>,只要把生成的workerId放到<code>configurations</code>这个Map类型的属性中，Client端就能直接通过Key值拿到workerId来使用。</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="一、数据库改动"><a href="#一、数据库改动" class="headerlink" title="一、数据库改动"></a>一、数据库改动</h4><p>ConfigDB库的instance表存储了使用配置的应用实例。</p>
-<p>在Instance表新加一个NodeId字段用来存储生成的workerId，并且将AppId和NodeId设置为唯一索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `instance` (</span><br><span class="line">  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;自增Id&apos;,</span><br><span class="line">  `AppId` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;AppID&apos;,</span><br><span class="line">  `ClusterName` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;ClusterName&apos;,</span><br><span class="line">  `DataCenter` varchar(64) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;Data Center Name&apos;,</span><br><span class="line">  `Ip` varchar(32) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;instance ip&apos;,</span><br><span class="line">  `NodeId` int(5) DEFAULT NULL COMMENT &apos;节点id&apos;,</span><br><span class="line">  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</span><br><span class="line">  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;最后修改时间&apos;,</span><br><span class="line">  PRIMARY KEY (`Id`),</span><br><span class="line">  UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),</span><br><span class="line">  UNIQUE KEY `uk_appId_nodeId` (`AppId`,`NodeId`) USING BTREE,</span><br><span class="line">  KEY `IX_IP` (`Ip`),</span><br><span class="line">  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=6779 DEFAULT CHARSET=utf8mb4 COMMENT=&apos;使用配置的应用实例&apos;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="二、代码改动"><a href="#二、代码改动" class="headerlink" title="二、代码改动"></a>二、代码改动</h4><p>原来Instance表的记录是在获取配置时调用<code>com.ctrip.framework.apollo.configservice.util.InstanceConfigAuditUtil#audit</code>异步添加的，这里需要改成获取配置时同步添加实例信息并且放到<code>ApolloConfig</code>的<code>configurations</code>属性中。</p>
-<p>1.<code>com.ctrip.framework.apollo.configservice.controller.ConfigController</code></p>
-<p><code>queryConfig</code>方法返回前获取实例信息并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Instance instance = instanceService.findInstance(appId, clusterName, dataCenter, clientIp);</span><br><span class="line">Integer nodeId = instance.getNodeId();</span><br><span class="line"><span class="keyword">if</span> (nodeId == <span class="keyword">null</span>) &#123;</span><br><span class="line">  nodeId = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line">apolloConfig.addConfig(<span class="string">"apollo.node.id"</span>, String.valueOf(nodeId));</span><br></pre></td></tr></table></figure></p>
-<p>2.<code>com.ctrip.framework.apollo.biz.service.InstanceService</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.minId&#125;"</span>)<span class="comment">//workerId最小值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer minId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.maxId&#125;"</span>)<span class="comment">//workerId最大值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer maxId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer DEFAULT_NODE_ID = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Instance <span class="title">findInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = instanceRepository.findByAppIdAndClusterNameAndDataCenterAndIp(appId, clusterName,</span><br><span class="line">          dataCenter, ip);</span><br><span class="line">  <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">    instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (instance.getNodeId() == <span class="keyword">null</span>) &#123;</span><br><span class="line">    updateInstance(instance);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Instance <span class="title">createInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">  instance.setAppId(appId);</span><br><span class="line">  instance.setClusterName(clusterName);</span><br><span class="line">  instance.setDataCenter(dataCenter);</span><br><span class="line">  instance.setIp(ip);</span><br><span class="line">  instance.setNodeId(generateNodeId(appId));</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    instance = createInstance(instance);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">    <span class="comment">//使用数据库的唯一约束来保证workerId的唯一性</span></span><br><span class="line">    logger.error(<span class="string">"createInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">    instance = findInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateInstance</span><span class="params">(Instance instance)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        instance.setNodeId(generateNodeId(instance.getAppId()));</span><br><span class="line">        instanceRepository.save(instance);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">        logger.error(<span class="string">"updateInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">        updateInstance(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Integer <span class="title">generateNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//生成规则是当前appId最大workerId + 1</span></span><br><span class="line">  <span class="comment">//如果workerId已经到最大值了就拿最早的workerId（这里假设一个应用不会同时有1023（maxId）个实例在运行）</span></span><br><span class="line">  Integer maxNodeId = instanceRepository.maxNodeIdByAppId(appId);</span><br><span class="line">  <span class="keyword">if</span> (maxNodeId == <span class="keyword">null</span> || minId &gt; maxNodeId) &#123;</span><br><span class="line">    <span class="keyword">return</span> minId;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (maxNodeId &lt; maxId) &#123;</span><br><span class="line">    <span class="keyword">return</span> maxNodeId + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getEarliestNodeId(appId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Integer <span class="title">getEarliestNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">      InstanceConfig instanceConfig = instanceConfigRepository.findTopByConfigAppIdOrderByReleaseDeliveryTime(appId);</span><br><span class="line">      <span class="keyword">if</span> (instanceConfig == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Instance instance = instanceRepository.findOne(instanceConfig.getInstanceId());</span><br><span class="line">      <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Integer nodeId = instance.getNodeId();</span><br><span class="line">      instance.setNodeId(<span class="keyword">null</span>);</span><br><span class="line">      instanceRepository.save(instance);</span><br><span class="line">      <span class="keyword">return</span> nodeId;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="三、使用方式"><a href="#三、使用方式" class="headerlink" title="三、使用方式"></a>三、使用方式</h4><p>和其他配置的使用方式一样，直接用<code>@Value(&quot;${apollo.node.id}&quot;)</code>。</p>
-<p>这种方式生成的workerId可以直接使用在只需要一个workerId参数的雪花算法，另一种需要datacenterId和workerId两个参数的雪花算法在使用时需要做一下转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">datacenterId=apollo.node.id &gt;&gt; 5</span><br><span class="line">workerId=apolo.node.id &amp; 31</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>取高五位的值作为datacenterId，取低五位的值作为workerId。</p>
-<ul>
-<li>一个workerId参数的雪花算法，workerId最大1023，二进制为1111111111；</li>
-<li>datacenterId和workerId两个参数的雪花算法，datacenterId最大31，二进制为11111，workerId最大31，二进制为11111，datacenterId作为二进制的高5位，workerId作为二进制的低5位，组合起来1111111111，十进制为1023。</li>
-</ul>
-</blockquote>
 
       
     </div>
     <footer class="entry-meta entry-footer">
       
 	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
 
       
   <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
 
       
     </footer>
@@ -822,84 +929,6 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/idea/">idea</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-修改Kubernetes集群Pod容器的内核参数" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/">修改Kubernetes集群Pod容器的内核参数</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>容器的本质是一个进程，共享Node的内核。原以为修改了Node的内核参数容器中也会改，但实际上并不是这样，容器的内核参数可以和Node不同。</p>
-<h2 id="Docker-Daemon"><a href="#Docker-Daemon" class="headerlink" title="Docker Daemon"></a>Docker Daemon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --sysctl net.core.somaxconn=65535 busybox cat /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
-<p>多个参数：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --restart=always --net=host \</span><br><span class="line">--name=centos01 --hostname=centos01 \</span><br><span class="line">--sysctl kernel.msgmnb=13107200 \</span><br><span class="line">--sysctl kernel.msgmni=256 \</span><br><span class="line">--sysctl kernel.msgmax=65536 \</span><br><span class="line">--sysctl kernel.shmmax=69719476736 \</span><br><span class="line">--sysctl kernel.sem=<span class="string">'500 256000 250 1024'</span> \</span><br><span class="line">-v /mnt:/update \</span><br><span class="line">centos /bin/bash</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">docker <span class="built_in">exec</span> centos01 sysctl -a |grep -E \</span><br><span class="line"><span class="string">'kernel.msgmnb|kernel.msgmni|kernel.msgmax|kernel.shmmax|kernel.sem'</span></span><br></pre></td></tr></table></figure>
-<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><h3 id="Kubernetes-Sysctls"><a href="#Kubernetes-Sysctls" class="headerlink" title="Kubernetes Sysctls"></a>Kubernetes Sysctls</h3><ol>
-<li><p>增加Kubelet启动参数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubelet --allowed-unsafe-sysctls=net.*</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重新加载配置</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>重启kubelet</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置Pod的securityContext参数（注意是pod不是container）</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">securityContext:</span><br><span class="line">  sysctls:</span><br><span class="line">  - name: net.ipv4.tcp_keepalive_time</span><br><span class="line">    value: &quot;180&quot;</span><br></pre></td></tr></table></figure>
-<p>Kubernetes允许配置的内核参数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kernel.shm*,</span><br><span class="line">kernel.msg*,</span><br><span class="line">kernel.sem,</span><br><span class="line">fs.mqueue.*,</span><br><span class="line">net.*.</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>使用Kubernetes Sysctls推荐指定几台Node，利用污点或者节点亲和性把需要修改内核参数的pod调度到指定节点，而不是修改所有Node。</p>
-</blockquote>
-<h3 id="Kubernetes-Init-Container"><a href="#Kubernetes-Init-Container" class="headerlink" title="Kubernetes Init Container"></a>Kubernetes Init Container</h3><p>使用init container不需要修改kubelet参数<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">initContainers:</span></span><br><span class="line"><span class="attr">- command:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">sysctl</span></span><br><span class="line"><span class="bullet">  -</span> <span class="bullet">-w</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">net.ipv4.tcp_keepalive_time=180</span></span><br><span class="line"><span class="attr">  image:</span> <span class="attr">busybox:1.27</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">init-sysctl</span></span><br><span class="line"><span class="attr">  securityContext:</span></span><br><span class="line"><span class="attr">    privileged:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
-<li><a href="https://www.cnblogs.com/DaweiJ/articles/8528687.html" target="_blank" rel="noopener">https://www.cnblogs.com/DaweiJ/articles/8528687.html</a></li>
-<li><a href="https://yq.aliyun.com/articles/603745?utm_content=m_1000003707" target="_blank" rel="noopener">https://yq.aliyun.com/articles/603745?utm_content=m_1000003707</a></li>
-<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
 
       
     </footer>
@@ -1198,7 +1227,7 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a></h6>
+              <h6 style="margin: 0;"><a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a></h6>
               <span>二月 24, 2019</span>
             </div>
 
@@ -1213,7 +1242,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">8</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">11</span></li></ul>
     </div>
   </div>
 
@@ -1223,7 +1252,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">6</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1233,7 +1262,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a>
+      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a>
     </div>
   </div>
 
@@ -1243,7 +1272,7 @@
     <h3 class="widget-title">Archives</h3>
 
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li></ul>
     </div>
   </div>
 
@@ -1272,7 +1301,7 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2019 阿鹏的技术博客 All Rights Reserved.
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
               本站访客数<span id="busuanzi_value_site_uv"></span>人次  
@@ -1298,6 +1327,9 @@
 
 
     <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
     
     
 </script>
