@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>Kubernetes高可用部署 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="k8s">
+  
+  
+  
+  
+  <meta name="description" content="基本架构 Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。 Master Node api-server 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它">
+<meta name="keywords" content="k8s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes高可用部署">
+<meta property="og:url" content="http://sunshanpeng.com/2019/08/24/Kubernetes高可用架构/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="基本架构 Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。 Master Node api-server 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://image.sunshanpeng.com/Yrdoo02.jpg">
+<meta property="og:image" content="http://image.sunshanpeng.com/201908251648_290.png">
+<meta property="og:image" content="http://image.sunshanpeng.com/201908251741_884.png">
+<meta property="og:updated_time" content="2019-08-25T10:38:36.660Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes高可用部署">
+<meta name="twitter:description" content="基本架构 Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。 Master Node api-server 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它">
+<meta name="twitter:image" content="http://image.sunshanpeng.com/Yrdoo02.jpg">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-Kubernetes高可用架构" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      Kubernetes高可用部署
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/08/24/Kubernetes高可用架构/" class="article-date">
+	  <time datetime="2019-08-24T04:29:30.000Z" itemprop="datePublished">八月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><p><img src="http://image.sunshanpeng.com/Yrdoo02.jpg" alt="kubernetes"></p>
+<p>Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。</p>
+<h3 id="Master-Node"><a href="#Master-Node" class="headerlink" title="Master Node"></a>Master Node</h3><ul>
+<li><h4 id="api-server"><a href="#api-server" class="headerlink" title="api-server"></a>api-server</h4><p> 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它维护的REST对象将持久化到etcd(一个分布式强一致性的key/value存储)。</p>
+</li>
+<li><h4 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h4><p> 负责集群的资源调度，为新建的pod分配机器。这部分工作分出来变成一个组件，意味着可以很方便地替换成其他的调度器。</p>
+</li>
+<li><h4 id="controller-manager"><a href="#controller-manager" class="headerlink" title="controller-manager"></a>controller-manager</h4><p> 运行控制器，它们是处理集群中常规任务的后台线程。逻辑上，每个控制器是一个单独的进程，但为了降低复杂性，它们都被编译成独立的可执行文件，并在单个进程中运行。<br> 这些控制器包括:</p>
+<ul>
+<li>节点控制器: 当节点移除时，负责注意和响应。</li>
+<li>副本控制器: 负责维护系统中每个副本控制器对象正确数量的 Pod。</li>
+<li>端点控制器: 填充 端点(Endpoints) 对象(即连接 Services &amp; Pods)。</li>
+<li>服务帐户和令牌控制器: 为新的命名空间创建默认帐户和 API 访问令牌</li>
+</ul>
+</li>
+</ul>
+<h3 id="Worker-Node"><a href="#Worker-Node" class="headerlink" title="Worker Node"></a>Worker Node</h3><ul>
+<li><h4 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h4><p>kubelet是主要的节点代理,它监测已分配给其节点的 Pod(通过 apiserver 或通过本地配置文件)，提供如下功能:</p>
+<ul>
+<li>挂载 Pod 所需要的数据卷(Volume)。</li>
+<li>下载 Pod 的 secrets。</li>
+<li>通过 Docker 运行(或通过其他容器运行时)运行 Pod 的容器。</li>
+<li>周期性的对容器生命周期进行探测。</li>
+<li>如果需要，通过创建 镜像 Pod（Mirror Pod） 将 Pod 的状态报告回系统的其余部分。<br>将节点的状态报告回系统的其余部分。</li>
+</ul>
+</li>
+<li><h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><p>通过维护主机上的网络规则并执行连接转发，实现了Kubernetes服务抽象。</p>
+</li>
+</ul>
+<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h3><p>Kubernetes 所有集群数据都存储在etcd里。</p>
+<p>etcd通常部署在Master Node上，也可以单独部署。</p>
+<p>官网地址：<a href="https://github.com/etcd-io/etcd" target="_blank" rel="noopener">https://github.com/etcd-io/etcd</a></p>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>CNI（Container Network Interface）是CNCF旗下的一个项目，由一组用于配置Linux容器的网络接口的规范和库组成，同时还包含了一些插件。CNI仅关心容器创建时的网络分配，和当容器被删除时释放网络资源。</p>
+<p>每个pod都会有一个集群内唯一的IP，不同Node上的Pod可以互相访问。</p>
+<p>常用的网络插件有<a href="https://github.com/projectcalico/calico" target="_blank" rel="noopener">Calico</a>和<a href="https://github.com/coreos/flannel" target="_blank" rel="noopener">Flannel</a>。</p>
+<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>CRI（Container Runtime Interface）是容器运行时接口，kubelet可以运行实现了CRI的各种容器运行时而不仅仅是Docker。</p>
+<h2 id="高可用架构"><a href="#高可用架构" class="headerlink" title="高可用架构"></a>高可用架构</h2><p>要实现高可用，就要实现所有Node没有单点故障，任何一台服务器宕机均不影响Kubernetes的正常工作。Kubernetes的高可用主要是Master Node和存储的高可用，包括以下几个组件：</p>
+<ul>
+<li>etcd属于CP架构，保证一致性和分区容错性。因为其内部使用 Raft 协议进行选举，所以需要部署基数个实例，比如3、5、7个。可以和Master Node一起部署也可以外置部署。</li>
+<li>controller-manager和scheduler的高可用相对容易，是基于etcd的锁进行leader election。相当于基于etcd的分布式锁，谁拿到谁干活，同时只会有一个实例在工作，部署2个及以上的实例数量。</li>
+<li>api-server是无状态的，需要部署2个及以上的实例数量，然后使用HAProxy和Keepalived作为负载均衡实现高可用。除了HAProxy也可以使用Nginx或其他负载均衡策略。</li>
+</ul>
+<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p><img src="http://image.sunshanpeng.com/201908251648_290.png" alt="Kubernetes HA1"></p>
+<p>使用三台4核8G的服务器当Master Node，上面部署api-server、scheduler、controller-manager、kubelet、kube-proxy、docker、calico、etcd、HAProxy、keepalived。</p>
+<p>Worker Node的配置根据实际情况，最好CPU和内存的大小、比例都一样。上面部署kubelet、kube-proxy、docker、calico。</p>
+<p>该方案集群内外连接api-server都是高可用，使用方便。但是公有云不能用虚拟IP所以不能用该方案。另外所有的网络请求都会集中到一台服务器（虚拟IP所在的服务器）进行转发，负载不均衡，HAProxy的上限即api-server的上限。</p>
+<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p><img src="http://image.sunshanpeng.com/201908251741_884.png" alt="Kubernetes HA2"></p>
+<p>使用三台4核8G的服务器当Master Node，上面部署api-server、scheduler、controller-manager、kubelet、kube-proxy、docker、calico、etcd。</p>
+<p>Worker Node的配置根据实际情况，最好CPU和内存的大小、比例都一样。上面部署kubelet、kube-proxy、docker、calico、HAProxy。</p>
+<p>该方案兼容自有机房和公有云，Master Node负载比较均衡。但是集群外访问api-server没有做到高可用，需要额外解决。如果Worker Node上的HAProxy宕机则该节点不能正常工作。另外如果添加和删除Master Node需要更新所有Worker Node的负载均衡配置（可选项，不修改也可以）。</p>
+<h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><h3 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h3><p>所有组件均使用二进制文件部署，手动部署可以参考：<a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster；ansible脚本部署可以用：https://github.com/easzlab/kubeasz。" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster；ansible脚本部署可以用：https://github.com/easzlab/kubeasz。</a></p>
+<h3 id="容器化部署"><a href="#容器化部署" class="headerlink" title="容器化部署"></a>容器化部署</h3><p>kubernetes的所有组件中，除了docker和kubelet是运行和管理容器的，其他组件都可以使用容器化的方式部署，最流行的方式就是使用kubeadm。</p>
+<p>官网地址：<a href="https://github.com/kubernetes/kubeadm。" target="_blank" rel="noopener">https://github.com/kubernetes/kubeadm。</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://kubernetes.io/zh/docs/concepts/overview/components/" target="_blank" rel="noopener">https://kubernetes.io/zh/docs/concepts/overview/components/</a></p>
+<p><a href="https://www.kubernetes.org.cn/2931.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/2931.html</a></p>
+<p><a href="https://jimmysong.io/kubernetes-handbook/concepts/cni.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/cni.html</a></p>
+<p><a href="https://jimmysong.io/kubernetes-handbook/concepts/cri.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/cri.html</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/03/24/Docker常用命令/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Docker常用命令</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本架构"><span class="nav-number">1.</span> <span class="nav-text">基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Master-Node"><span class="nav-number">1.1.</span> <span class="nav-text">Master Node</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#api-server"><span class="nav-number">1.1.1.</span> <span class="nav-text">api-server</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scheduler"><span class="nav-number">1.1.2.</span> <span class="nav-text">scheduler</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#controller-manager"><span class="nav-number">1.1.3.</span> <span class="nav-text">controller-manager</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Worker-Node"><span class="nav-number">1.2.</span> <span class="nav-text">Worker Node</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#kubelet"><span class="nav-number">1.2.1.</span> <span class="nav-text">kubelet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#kube-proxy"><span class="nav-number">1.2.2.</span> <span class="nav-text">kube-proxy</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#存储"><span class="nav-number">1.3.</span> <span class="nav-text">存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络"><span class="nav-number">1.4.</span> <span class="nav-text">网络</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器"><span class="nav-number">1.5.</span> <span class="nav-text">容器</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#高可用架构"><span class="nav-number">2.</span> <span class="nav-text">高可用架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方案一"><span class="nav-number">2.1.</span> <span class="nav-text">方案一</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方案二"><span class="nav-number">2.2.</span> <span class="nav-text">方案二</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署方式"><span class="nav-number">3.</span> <span class="nav-text">部署方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制部署"><span class="nav-number">3.1.</span> <span class="nav-text">二进制部署</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#容器化部署"><span class="nav-number">3.2.</span> <span class="nav-text">容器化部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>
