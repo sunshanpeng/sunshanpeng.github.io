@@ -3,23 +3,32 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Page 1 | 阿鹏的博客</title>
+  <title>Eureka服务注册发现 | 阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
+  <meta name="keywords" content="eureka">
   
   
   
-  <meta name="description" content="java go devops kubernetes docker">
-<meta name="keywords" content="java go devops kubernetes docker">
-<meta property="og:type" content="website">
-<meta property="og:title" content="阿鹏的博客">
-<meta property="og:url" content="http://sunshanpeng.com/index.html">
+  
+  <meta name="description" content="注册发现流程通常服务注册发现都分为服务提供者（provider）、服务消费者（consumer）、注册中心（register）三个部分。   一个服务可以是服务提供者可以是服务消费者，也可以即是提供者也是消费者  其中provider和consumer作为客户端client，注册中心作为服务端server，都可以同时存在多个实例。 服务提供者把自身的实例信息（比如IP、PORT、状态等）在注册中心">
+<meta name="keywords" content="eureka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Eureka服务注册发现">
+<meta property="og:url" content="http://sunshanpeng.com/2019/09/17/Eureka服务注册发现/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
-<meta property="og:description" content="java go devops kubernetes docker">
+<meta property="og:description" content="注册发现流程通常服务注册发现都分为服务提供者（provider）、服务消费者（consumer）、注册中心（register）三个部分。   一个服务可以是服务提供者可以是服务消费者，也可以即是提供者也是消费者  其中provider和consumer作为客户端client，注册中心作为服务端server，都可以同时存在多个实例。 服务提供者把自身的实例信息（比如IP、PORT、状态等）在注册中心">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://image.sunshanpeng.com/201909061100_956.png">
+<meta property="og:image" content="http://image.sunshanpeng.com/201909061105_502.png">
+<meta property="og:image" content="http://image.sunshanpeng.com/201909061109_474.png">
+<meta property="og:image" content="http://image.sunshanpeng.com/201909061114_23.png">
+<meta property="og:image" content="http://image.sunshanpeng.com/201909061120_303.png">
+<meta property="og:updated_time" content="2019-10-08T00:27:30.802Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿鹏的博客">
-<meta name="twitter:description" content="java go devops kubernetes docker">
+<meta name="twitter:title" content="Eureka服务注册发现">
+<meta name="twitter:description" content="注册发现流程通常服务注册发现都分为服务提供者（provider）、服务消费者（consumer）、注册中心（register）三个部分。   一个服务可以是服务提供者可以是服务消费者，也可以即是提供者也是消费者  其中provider和consumer作为客户端client，注册中心作为服务端server，都可以同时存在多个实例。 服务提供者把自身的实例信息（比如IP、PORT、状态等）在注册中心">
+<meta name="twitter:image" content="http://image.sunshanpeng.com/201909061100_956.png">
   
     <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
@@ -52,7 +61,7 @@
 </html>
 
 
-  <body>
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
 
 
   
@@ -125,9 +134,7 @@
             
       <div id="content" class="outer">
         
-          <section id="main">
-  
-    <article id="post-在k8s中使用eureka的几种姿势" class="article article-type-post" itemscope itemprop="blogPost">
+          <section id="main" style="float:none;"><article id="post-Eureka服务注册发现" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -135,113 +142,7 @@
         
   
     <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/09/17/在k8s中使用eureka的几种姿势/">在k8s中使用eureka的几种姿势</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/09/17/在k8s中使用eureka的几种姿势/" class="article-date">
-	  <time datetime="2019-09-17T11:29:37.000Z" itemprop="datePublished">九月 17, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Kubernetes中，service通过label关联pod，使用service的clusterIp即可访问到对应pod。</p>
-<p>如果觉得clusterIp不好记，可以用coredns将service name解析成service的clusterIp，通过访问service name来访问对应的pod。</p>
-<p>通过coredns+service，可以在单个kubernetes集群中无需其他依赖即可实现服务发现。</p>
-<p>但由于某些其他原因我们需要使用额外的注册中心eureka，本文列举了几种注册方式和注意事项。</p>
-<h2 id="使用Pod-IP注册"><a href="#使用Pod-IP注册" class="headerlink" title="使用Pod IP注册"></a>使用Pod IP注册</h2><p>因为Pod的IP是跟随生命周期的，重新发布以后IP就变更了。</p>
-<p>但是eureka的缓存机制相当长，重新发布后服务消费者很长一段时间会访问之前的Pod IP。</p>
-<p>要解决这个问题有以下几个优化点：</p>
-<h3 id="优雅停止Pod"><a href="#优雅停止Pod" class="headerlink" title="优雅停止Pod"></a>优雅停止Pod</h3><p>如果Pod被强杀掉，就不能立即从Eureka Server下线，直到Eureka Server的EvictionTask 来定时清理过期的客户端，默认60秒清理一次，清理掉之前还能被其他客户端发现并调用。</p>
-<p>kubernetes提供了生命周期回调函数，会在容器被终止前调用preStop，执行停止Java进程的命令</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">lifecycle:</span></span><br><span class="line"><span class="attr">  preStop:</span></span><br><span class="line"><span class="attr">    exec:</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">["/bin/bash",</span> <span class="string">"-c"</span><span class="string">,</span> <span class="string">"ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill"</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
-<p>因为遵循一个容器只运行一个进程的原则，所以可以直接查找Java的pid然后kill，也可以用pidof命令查找Java的pid。</p>
-<h3 id="缩短服务发现时间"><a href="#缩短服务发现时间" class="headerlink" title="缩短服务发现时间"></a>缩短服务发现时间</h3><p>Eureka客户端默认30秒的缓存时间，ribbon默认30秒的缓存时间，加上Eureka Server的三级缓存机制readOnlyCache也有30秒的缓存时间，在开启Eureka Server的自我保护模式时，即使客户端从Eureka Server下线了，极端情况下也有可能在90秒以后才能在其他客户端的缓存中清除。</p>
-<p>可以通过设置deployment中的环境变量修改默认的缓存时间：</p>
-<p>eureka client缓存（单位：秒）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.client.registryFetchIntervalSeconds = 10</span><br></pre></td></tr></table></figure>
-<p>ribbon缓存（单位：秒）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ribbon.ServerListRefreshInterval = 10</span><br></pre></td></tr></table></figure>
-<h3 id="关闭Eureka-Server的readOnlyCache（可选）"><a href="#关闭Eureka-Server的readOnlyCache（可选）" class="headerlink" title="关闭Eureka Server的readOnlyCache（可选）"></a>关闭Eureka Server的readOnlyCache（可选）</h3><p>因为<code>readWriteCacheMap</code>用的<code>LoadingCache</code>有读写锁，使用<code>readOnlyCacheMap</code>可以增加吞吐量，中小集群可以关闭<code>readOnlyCacheMap</code>。</p>
-<p>关闭<code>readWriteCacheMap</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.use-read-only-response-cache = false</span><br></pre></td></tr></table></figure>
-<p>也可以缩短readOnlyCache的刷新时间：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.response-cache-update-interval-ms = 10</span><br></pre></td></tr></table></figure>
-<h3 id="强制下线"><a href="#强制下线" class="headerlink" title="强制下线"></a>强制下线</h3><p>即使优雅停止Pod、缩短客户端和Eureka Server的缓存时间，但是Eureka客户端还是有几率请求到已下线的Pod。</p>
-<p>Eureka提供了强制下线的接口，可以先从Eureka Server强制下线，等待缓存时间过期再停止Pod。</p>
-<p>client强制下线接口:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /pause</span><br></pre></td></tr></table></figure>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /service-registry</span><br></pre></td></tr></table></figure>
-<p>比如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/pause"</span></span><br><span class="line">curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/service-registry/instance-status"</span> -H <span class="string">"Content-Type: text/plain; charset=utf-8"</span> -d <span class="string">"OUT_OF_SERVICE"</span></span><br></pre></td></tr></table></figure>
-<p>Eureka Server强制下线接口：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT /eureka/apps/$&#123;appId&#125;/$&#123;ip:port&#125;/status?value=OUT_OF_SERVICE</span><br></pre></td></tr></table></figure>
-<p>比如：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT http://eureka:8080/eureka/apps/EUREKA-1/192.168.0.10:8080/status?value=OUT_OF_SERVICE</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>关于强制下线可以看一下参考里的文章。</p>
-</blockquote>
-<h3 id="具体配置"><a href="#具体配置" class="headerlink" title="具体配置"></a>具体配置</h3><p>实践配置为Eureka客户端缓存10秒，ribbon缓存10秒，不关闭readOnlyCache（缓存30秒），加起来缓存时间50秒。</p>
-<p>将停止脚本放在指定目录，并在preStop调用。</p>
-<p>脚本逻辑：1.强制下线当前实例；2.暂停总缓存时间；3.停止服务。</p>
-<h4 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">eureka.client.registryFetchIntervalSeconds</span> <span class="comment"># Eureka客户端缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"10"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">ribbon.ServerListRefreshInterval</span> <span class="comment">#ribbon缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"10"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">MANAGEMENT_PORT</span> <span class="comment">#management.port的端口</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"$&#123;management.port&#125;"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">SLEEP_SECOND</span> <span class="comment">#总缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"50"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">management.endpoints.web.exposure.include</span> <span class="comment">#启用并暴露service-registry</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">service-registry</span></span><br></pre></td></tr></table></figure>
-<h4 id="preStop"><a href="#preStop" class="headerlink" title="preStop"></a>preStop</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">lifecycle:</span></span><br><span class="line"><span class="attr">  preStop:</span></span><br><span class="line"><span class="attr">    exec:</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">["/bin/sh",</span> <span class="string">"/app/script/stop.sh"</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
-<h4 id="stop-sh"><a href="#stop-sh" class="headerlink" title="stop.sh"></a>stop.sh</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 如果没有管理端口直接下线</span></span><br><span class="line">if [ -z $MANAGEMENT_PORT ];then</span><br><span class="line">  echo "MANAGEMENT_PORT is empty, kill java"</span><br><span class="line">  ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认暂停时间</span></span><br><span class="line">if [ -z $SLEEP_SECOND ];then</span><br><span class="line">  echo "SLEEP_SECOND is empty, set 50"</span><br><span class="line">  SLEEP_SECOND=50</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 从EUREKA下线</span></span><br><span class="line">echo "curl pause $MANAGEMENT_PORT"</span><br><span class="line"><span class="meta">#</span><span class="bash"> curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/pause"</span></span></span><br><span class="line">curl -X "POST" "http://localhost:$MANAGEMENT_PORT/service-registry/instance-status" -H "Content-Type: text/plain; charset=utf-8" -d "OUT_OF_SERVICE"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 等待SLEEP_SECOND秒，SLEEP_SECOND = 客户端缓存时间（eureka+ribbon）+ readOnlyCache时间</span></span><br><span class="line">echo ""</span><br><span class="line">echo "sleep $SLEEP_SECOND s"</span><br><span class="line">sleep $SLEEP_SECOND</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止服务</span></span><br><span class="line">echo "kill java"</span><br><span class="line">ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill</span><br></pre></td></tr></table></figure>
-<h2 id="使用Service的Cluster-IP注册"><a href="#使用Service的Cluster-IP注册" class="headerlink" title="使用Service的Cluster IP注册"></a>使用Service的Cluster IP注册</h2><p>Service的Cluster IP是一个虚拟IP，会经kube-proxy把流量负载均衡到后端endpoint。</p>
-<p>而且Service的Cluster IP是固定的，除非主动删除后重建，不然可以一直固定。</p>
-<p>使用Cluster IP等于使用了Kubernetes的服务发现，当Pod不可用时就会从service的endpoint列表中移除，流量就不会再负载均衡到该Pod。</p>
-<p>配置方式（properties）：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eureka.instance.ipAddress = $&#123;Cluster IP&#125;</span><br><span class="line">eureka.instance.nonSecurePort = $&#123;port&#125; #service的port</span><br></pre></td></tr></table></figure>
-<p><strong>使用Service注册虽然可以自动过滤下线的服务，但是ribbon内部使用keepalive进行会话保持，因为是客户端负载均衡所以A服务的A1实例所有请求都会经过service转发到同一个B服务的B1实例，从而出现负载不均衡的情况</strong></p>
-<h2 id="使用Service的NodePort注册"><a href="#使用Service的NodePort注册" class="headerlink" title="使用Service的NodePort注册"></a>使用Service的NodePort注册</h2><p>默认情况下Pod的IP只能在本集群内的Node上访问，非本集群的服务器访问不了。</p>
-<p><strong>可以通过写路由表或者BGP来发布Pod路由。</strong></p>
-<p>NodePort是Pod对外提供访问的一种方式，使用Host IP+NodePort可以简单实现跨集群及虚拟机之间的服务互相访问。</p>
-<p>配置方式（环境变量）：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">eureka.instance.ipAddress</span></span><br><span class="line"><span class="attr">  valueFrom:</span></span><br><span class="line"><span class="attr">    fieldRef:</span></span><br><span class="line"><span class="attr">      fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">eureka.instance.nonSecurePort</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"$&#123;NodePort&#125;"</span></span><br></pre></td></tr></table></figure>
-<p><strong>NodePort方式本质也是Service，所以也存在负载均衡的情况。</strong></p>
-<p><strong>另外管理NodePort也是件麻烦事。</strong></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/" target="_blank" rel="noopener">http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/</a></p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/eureka/">eureka</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Eureka服务注册发现" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/09/17/Eureka服务注册发现/">Eureka服务注册发现</a>
+      Eureka服务注册发现
     </h1>
   
 
@@ -258,6 +159,10 @@
     <a class="article-category-link" href="/categories/java/">java</a>
  
       
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
     </div>
     <div class="article-entry" itemprop="articleBody">
       
@@ -349,936 +254,69 @@
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/eureka/">eureka</a></li></ul>
 
       
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-配置Jenkins打包VUE项目" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-    <div class="article-meta">
-      
-	<a href="/2019/08/30/配置Jenkins打包VUE项目/" class="article-date">
-	  <time datetime="2019-08-30T12:50:03.464Z" itemprop="datePublished">八月 30, 2019</time>
-	</a>
-
-       
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、下载NodeJS插件"><a href="#一、下载NodeJS插件" class="headerlink" title="一、下载NodeJS插件"></a>一、下载NodeJS插件</h2><h3 id="进入插件管理"><a href="#进入插件管理" class="headerlink" title="进入插件管理"></a>进入插件管理</h3><p><img src="http://image.sunshanpeng.com/201908301902_419.png" alt></p>
-<h3 id="在可选插件里面安装NodeJS"><a href="#在可选插件里面安装NodeJS" class="headerlink" title="在可选插件里面安装NodeJS"></a>在可选插件里面安装NodeJS</h3><p><img src="http://image.sunshanpeng.com/201908301905_538.png" alt></p>
-<h3 id="等待安装完成"><a href="#等待安装完成" class="headerlink" title="等待安装完成"></a>等待安装完成</h3><p><img src="http://image.sunshanpeng.com/201908301906_385.png" alt></p>
-<h2 id="二、配置NodeJS插件"><a href="#二、配置NodeJS插件" class="headerlink" title="二、配置NodeJS插件"></a>二、配置NodeJS插件</h2><h3 id="进入全局工具配置"><a href="#进入全局工具配置" class="headerlink" title="进入全局工具配置"></a>进入全局工具配置</h3><p><img src="http://image.sunshanpeng.com/201908301908_350.png" alt></p>
-<h3 id="新增NodeJS"><a href="#新增NodeJS" class="headerlink" title="新增NodeJS"></a>新增NodeJS</h3><p><img src="http://image.sunshanpeng.com/201908301912_783.png" alt></p>
-<h2 id="三、配置Job"><a href="#三、配置Job" class="headerlink" title="三、配置Job"></a>三、配置Job</h2><h3 id="配置执行shell"><a href="#配置执行shell" class="headerlink" title="配置执行shell"></a>配置执行shell</h3><p><img src="http://image.sunshanpeng.com/201908301910_887.png" alt></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打包</span></span><br><span class="line">node -v</span><br><span class="line">npm -v </span><br><span class="line">npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver</span><br><span class="line">npm install</span><br><span class="line">rm -rf dist</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-      
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Kubernetes高可用架构" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
         
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a>
-    </h1>
-  
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
 
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/08/24/Kubernetes高可用架构/" class="article-date">
-	  <time datetime="2019-08-24T04:29:30.000Z" itemprop="datePublished">八月 24, 2019</time>
-	</a>
+		       if (typeof LivereTower === 'function') { return; }
 
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><p><img src="http://image.sunshanpeng.com/Yrdoo02.jpg" alt="kubernetes"></p>
-<p>Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。</p>
-<h3 id="Master-Node"><a href="#Master-Node" class="headerlink" title="Master Node"></a>Master Node</h3><ul>
-<li><h4 id="api-server"><a href="#api-server" class="headerlink" title="api-server"></a>api-server</h4><p> 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它维护的REST对象将持久化到etcd(一个分布式强一致性的key/value存储)。</p>
-</li>
-<li><h4 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h4><p> 负责集群的资源调度，为新建的pod分配机器。这部分工作分出来变成一个组件，意味着可以很方便地替换成其他的调度器。</p>
-</li>
-<li><h4 id="controller-manager"><a href="#controller-manager" class="headerlink" title="controller-manager"></a>controller-manager</h4><p> 运行控制器，它们是处理集群中常规任务的后台线程。逻辑上，每个控制器是一个单独的进程，但为了降低复杂性，它们都被编译成独立的可执行文件，并在单个进程中运行。<br> 这些控制器包括:</p>
-<ul>
-<li>节点控制器: 当节点移除时，负责注意和响应。</li>
-<li>副本控制器: 负责维护系统中每个副本控制器对象正确数量的 Pod。</li>
-<li>端点控制器: 填充 端点(Endpoints) 对象(即连接 Services &amp; Pods)。</li>
-<li>服务帐户和令牌控制器: 为新的命名空间创建默认帐户和 API 访问令牌</li>
-</ul>
-</li>
-</ul>
-<h3 id="Worker-Node"><a href="#Worker-Node" class="headerlink" title="Worker Node"></a>Worker Node</h3><ul>
-<li><h4 id="kubelet"><a href="#kubelet" class="headerlink" title="kubelet"></a>kubelet</h4><p>kubelet是主要的节点代理,它监测已分配给其节点的 Pod(通过 apiserver 或通过本地配置文件)，提供如下功能:</p>
-<ul>
-<li>挂载 Pod 所需要的数据卷(Volume)。</li>
-<li>下载 Pod 的 secrets。</li>
-<li>通过 Docker 运行(或通过其他容器运行时)运行 Pod 的容器。</li>
-<li>周期性的对容器生命周期进行探测。</li>
-<li>如果需要，通过创建 镜像 Pod（Mirror Pod） 将 Pod 的状态报告回系统的其余部分。<br>将节点的状态报告回系统的其余部分。</li>
-</ul>
-</li>
-<li><h4 id="kube-proxy"><a href="#kube-proxy" class="headerlink" title="kube-proxy"></a>kube-proxy</h4><p>通过维护主机上的网络规则并执行连接转发，实现了Kubernetes服务抽象。</p>
-</li>
-</ul>
-<h3 id="存储"><a href="#存储" class="headerlink" title="存储"></a>存储</h3><p>Kubernetes 所有集群数据都存储在etcd里。</p>
-<p>etcd通常部署在Master Node上，也可以单独部署。</p>
-<p>官网地址：<a href="https://github.com/etcd-io/etcd" target="_blank" rel="noopener">https://github.com/etcd-io/etcd</a></p>
-<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h3><p>CNI（Container Network Interface）是CNCF旗下的一个项目，由一组用于配置Linux容器的网络接口的规范和库组成，同时还包含了一些插件。CNI仅关心容器创建时的网络分配，和当容器被删除时释放网络资源。</p>
-<p>每个pod都会有一个集群内唯一的IP，不同Node上的Pod可以互相访问。</p>
-<p>常用的网络插件有<a href="https://github.com/projectcalico/calico" target="_blank" rel="noopener">Calico</a>和<a href="https://github.com/coreos/flannel" target="_blank" rel="noopener">Flannel</a>。</p>
-<h3 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h3><p>CRI（Container Runtime Interface）是容器运行时接口，kubelet可以运行实现了CRI的各种容器运行时而不仅仅是Docker。</p>
-<h2 id="高可用架构"><a href="#高可用架构" class="headerlink" title="高可用架构"></a>高可用架构</h2><p>要实现高可用，就要实现所有Node没有单点故障，任何一台服务器宕机均不影响Kubernetes的正常工作。Kubernetes的高可用主要是Master Node和存储的高可用，包括以下几个组件：</p>
-<ul>
-<li>etcd属于CP架构，保证一致性和分区容错性。因为其内部使用 Raft 协议进行选举，所以需要部署基数个实例，比如3、5、7个。可以和Master Node一起部署也可以外置部署。</li>
-<li>controller-manager和scheduler的高可用相对容易，是基于etcd的锁进行leader election。相当于基于etcd的分布式锁，谁拿到谁干活，同时只会有一个实例在工作，部署2个及以上的实例数量。</li>
-<li>api-server是无状态的，需要部署2个及以上的实例数量，然后使用HAProxy和Keepalived作为负载均衡实现高可用。除了HAProxy也可以使用Nginx或其他负载均衡策略。</li>
-</ul>
-<h3 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h3><p><img src="http://image.sunshanpeng.com/201908251648_290.png" alt="Kubernetes HA1"></p>
-<p>使用三台4核8G的服务器当Master Node，上面部署api-server、scheduler、controller-manager、kubelet、kube-proxy、docker、calico、etcd、HAProxy、keepalived。</p>
-<p>Worker Node的配置根据实际情况，最好CPU和内存的大小、比例都一样。上面部署kubelet、kube-proxy、docker、calico。</p>
-<p>该方案集群内外连接api-server都是高可用，使用方便。但是公有云不能用虚拟IP所以不能用该方案。另外所有的网络请求都会集中到一台服务器（虚拟IP所在的服务器）进行转发，负载不均衡，HAProxy的上限即api-server的上限。</p>
-<h3 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h3><p><img src="http://image.sunshanpeng.com/201908251741_884.png" alt="Kubernetes HA2"></p>
-<p>使用三台4核8G的服务器当Master Node，上面部署api-server、scheduler、controller-manager、kubelet、kube-proxy、docker、calico、etcd。</p>
-<p>Worker Node的配置根据实际情况，最好CPU和内存的大小、比例都一样。上面部署kubelet、kube-proxy、docker、calico、HAProxy。</p>
-<p>该方案兼容自有机房和公有云，Master Node负载比较均衡。但是集群外访问api-server没有做到高可用，需要额外解决。如果Worker Node上的HAProxy宕机则该节点不能正常工作。另外如果添加和删除Master Node需要更新所有Worker Node的负载均衡配置（可选项，不修改也可以）。</p>
-<h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><h3 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h3><p>所有组件均使用二进制文件部署，手动部署可以参考：<a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a>；ansible脚本部署可以用：<a href="https://github.com/easzlab/kubeasz" target="_blank" rel="noopener">https://github.com/easzlab/kubeasz</a>。</p>
-<h3 id="容器化部署"><a href="#容器化部署" class="headerlink" title="容器化部署"></a>容器化部署</h3><p>kubernetes的所有组件中，除了docker和kubelet是运行和管理容器的，其他组件都可以使用容器化的方式部署，最流行的方式就是使用kubeadm。</p>
-<p>官网地址：<a href="https://github.com/kubernetes/kubeadm。" target="_blank" rel="noopener">https://github.com/kubernetes/kubeadm。</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://kubernetes.io/zh/docs/concepts/overview/components/" target="_blank" rel="noopener">https://kubernetes.io/zh/docs/concepts/overview/components/</a></p>
-<p><a href="https://www.kubernetes.org.cn/2931.html" target="_blank" rel="noopener">https://www.kubernetes.org.cn/2931.html</a></p>
-<p><a href="https://jimmysong.io/kubernetes-handbook/concepts/cni.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/cni.html</a></p>
-<p><a href="https://jimmysong.io/kubernetes-handbook/concepts/cri.html" target="_blank" rel="noopener">https://jimmysong.io/kubernetes-handbook/concepts/cri.html</a></p>
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
 
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
 
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
 
       
     </footer>
     <hr class="entry-footer-hr">
   </div>
   
-</article>
-
-<!-- Table of Contents -->
-
+    
+<nav id="article-nav">
   
-    <article id="post-Kubernetes集群配置优化" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
+    <a href="/2019/09/17/在k8s中使用eureka的几种姿势/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
         
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/03/24/Kubernetes集群配置优化/">Kubernetes集群配置优化</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/03/24/Kubernetes集群配置优化/" class="article-date">
-	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、Docker配置"><a href="#一、Docker配置" class="headerlink" title="一、Docker配置"></a>一、Docker配置</h2><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"exec-opts"</span>: [<span class="string">"native.cgroupdriver=systemd"</span>],</span><br><span class="line">    <span class="attr">"log-driver"</span>: <span class="string">"json-file"</span>,</span><br><span class="line">    <span class="attr">"log-opts"</span>: &#123;</span><br><span class="line">        <span class="attr">"max-size"</span>: <span class="string">"100m"</span>,</span><br><span class="line">        <span class="attr">"max-file"</span>: <span class="string">"10"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">"bip"</span>: <span class="string">"169.254.123.1/24"</span>,</span><br><span class="line">    <span class="attr">"oom-score-adjust"</span>: <span class="number">-1000</span>,</span><br><span class="line">    <span class="attr">"registry-mirrors"</span>: [<span class="string">"https://registry.docker-cn.com"</span>, <span class="string">"https://docker.mirrors.ustc.edu.cn"</span>],</span><br><span class="line">    <span class="attr">"storage-driver"</span>: <span class="string">"overlay2"</span>,</span><br><span class="line">    <span class="attr">"storage-opts"</span>:[<span class="string">"overlay2.override_kernel_check=true"</span>],</span><br><span class="line">    <span class="attr">"data-root"</span>: <span class="string">"/var/lib/docker"</span>,</span><br><span class="line">    <span class="attr">"live-restore"</span>: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="data-root"><a href="#data-root" class="headerlink" title="data-root"></a>data-root</h3><p>设置存储持久数据和资源配置的目录，默认值<code>/var/lib/docker</code>，<strong>17.05.0</strong>以下版本参数为：<code>graph</code>。</p>
-<blockquote>
-<p>如果只有一个系统盘可以不用指定该参数，如果有数据盘并且数据盘不是<code>/var</code>，则需要指定数据目录。</p>
-</blockquote>
-<h3 id="registry-mirrors"><a href="#registry-mirrors" class="headerlink" title="registry-mirrors"></a>registry-mirrors</h3><p>镜像仓库地址，用于镜像加速。</p>
-<blockquote>
-<p>直接连接国外dockerHub拉取镜像速度太慢，一般都会配置国内的镜像地址。</p>
-</blockquote>
-<h3 id="bip"><a href="#bip" class="headerlink" title="bip"></a>bip</h3><p>设置docker0网桥地址，默认是<code>172.17.0.1/16</code>。</p>
-<blockquote>
-<p>默认网段有可能和现有服务器的网段冲突，建议设置成<code>169.254.123.1/24</code></p>
-</blockquote>
-<h3 id="live-restore"><a href="#live-restore" class="headerlink" title="live-restore"></a>live-restore</h3><p>当docker daemon停止时，让容器继续运行，默认<code>false</code>关闭，设为<code>true</code>打开。</p>
-<blockquote>
-<p>默认情况下重启或者关闭docker daemon时，容器都会停止，通过设置live-restore让容器继续运行，在修改docker配置或者升级docker的时候很有用。（如果daemon重启之后使用了不同的bip或不同的data-root，则live restore无法正常工作）</p>
-</blockquote>
-<h3 id="log-opts"><a href="#log-opts" class="headerlink" title="log-opts"></a>log-opts</h3><p>docker日志设置，默认为空。</p>
-<blockquote>
-<p>不设置最大值的话日志文件可能会撑爆硬盘。</p>
-</blockquote>
-<h3 id="exec-opts"><a href="#exec-opts" class="headerlink" title="exec-opts"></a>exec-opts</h3><p>设置docker cgroup驱动。</p>
-<blockquote>
-<p>需要注意docker的Cgroups和kubelet的Cgroups配置是否一致。</p>
-</blockquote>
-<h2 id="二、Kubelet配置"><a href="#二、Kubelet配置" class="headerlink" title="二、Kubelet配置"></a>二、Kubelet配置</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">--bootstrap-kubeconfig=/etc/kubernetes/bootstrap-kubelet.conf </span><br><span class="line">--kubeconfig=/etc/kubernetes/kubelet.conf </span><br><span class="line">--pod-manifest-path=/etc/kubernetes/manifests </span><br><span class="line">--allow-privileged=true --network-plugin=cni </span><br><span class="line">--cni-conf-dir=/etc/cni/net.d </span><br><span class="line">--cni-bin-dir=/opt/cni/bin </span><br><span class="line">--cluster-dns=192.168.176.10 </span><br><span class="line">--pod-infra-container-image=registry-vpc.cn-shanghai.aliyuncs.com/acs/pause-amd64:3.1 </span><br><span class="line">--enable-controller-attach-detach=false </span><br><span class="line">--enable-load-reader </span><br><span class="line">--cluster-domain=cluster.local </span><br><span class="line">--cloud-provider=external </span><br><span class="line">--hostname-override=$(NODE_NAME)</span><br><span class="line">--provider-id=cn-shanghai.i-uf657oy682jirk1oad62 </span><br><span class="line">--authorization-mode=Webhook </span><br><span class="line">--client-ca-file=/etc/kubernetes/pki/ca.crt </span><br><span class="line">--system-reserved=memory=300Mi </span><br><span class="line">--kube-reserved=memory=400Mi </span><br><span class="line">--eviction-hard=imagefs.available&lt;15%,memory.available&lt;300Mi,nodefs.available&lt;10%,nodefs.inodesFree&lt;5% </span><br><span class="line">--cgroup-driver=systemd </span><br><span class="line">--anonymous-auth=false </span><br><span class="line">--rotate-certificates=true </span><br><span class="line">--cert-dir=/var/lib/kubelet/pki</span><br><span class="line">--root-dir=/var/lib/kubelet</span><br></pre></td></tr></table></figure>
-<h3 id="pod-infra-container-image"><a href="#pod-infra-container-image" class="headerlink" title="pod-infra-container-image"></a>pod-infra-container-image</h3><p>基础镜像，默认使用的<code>k8s.gcr.io/pause-amd64:3.1</code>需要翻墙，可以使用国内镜像或者自己上传的镜像。</p>
-<h3 id="root-dir"><a href="#root-dir" class="headerlink" title="root-dir"></a>root-dir</h3><p>设置存储持久数据和资源配置的目录，默认值<code>/var/lib/kubelet</code>。</p>
-<blockquote>
-<p>用法同Docker的data-root参数。</p>
-</blockquote>
-<h3 id="cgroup-driver"><a href="#cgroup-driver" class="headerlink" title="cgroup-driver"></a>cgroup-driver</h3><p>设置kubelet Cgroups驱动。</p>
-<blockquote>
-<p>需要注意docker的Cgroups和kubelet的Cgroups配置是否一致。</p>
-</blockquote>
-<h3 id="system-reserved"><a href="#system-reserved" class="headerlink" title="system-reserved"></a>system-reserved</h3><p>给系统保留的资源大小，可以设置CPU、内存、硬盘。</p>
-<h3 id="kube-reserved"><a href="#kube-reserved" class="headerlink" title="kube-reserved"></a>kube-reserved</h3><p>给kubernetes保留的资源大小，可以设置CPU、内存、硬盘。</p>
-<h3 id="eviction-hard"><a href="#eviction-hard" class="headerlink" title="eviction-hard"></a>eviction-hard</h3><p>驱逐条件，当节点资源小于设置的驱逐条件时，kubelet开始驱逐Pod。</p>
-<h2 id="三、Kube-proxy"><a href="#三、Kube-proxy" class="headerlink" title="三、Kube-proxy"></a>三、Kube-proxy</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- --proxy-mode=ipvs</span><br><span class="line">- --kubeconfig=/var/lib/kube-proxy/kubeconfig.conf</span><br><span class="line">- --cluster-cidr=172.17.0.0/18</span><br><span class="line">- --hostname-override=$(NODE_NAME)</span><br></pre></td></tr></table></figure>
-<h3 id="proxy-mode"><a href="#proxy-mode" class="headerlink" title="proxy-mode"></a>proxy-mode</h3><p>ipvs可以大大提高性能。</p>
-<h2 id="参考资料："><a href="#参考资料：" class="headerlink" title="参考资料："></a>参考资料：</h2><ul>
-<li><a href="https://docs.docker.com/engine/reference/commandline/dockerd/" target="_blank" rel="noopener">https://docs.docker.com/engine/reference/commandline/dockerd/</a></li>
-<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/</a></li>
-<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/out-of-resource/</a></li>
-<li><a href="https://docs.docker.com/engine/deprecated/" target="_blank" rel="noopener">https://docs.docker.com/engine/deprecated/</a></li>
-</ul>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Windows电脑本地开发时连接Apollo配置中心启动慢" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
+          在k8s中使用eureka的几种姿势
         
+      </div>
+    </a>
   
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/">Windows电脑本地开发时连接Apollo配置中心启动慢</a>
-    </h1>
   
+    <a href="/2019/08/30/配置Jenkins打包VUE项目/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
 
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/" class="article-date">
-	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="表现："><a href="#表现：" class="headerlink" title="表现："></a>表现：</h3><p>启动时中间停顿了10秒左右</p>
-<p><img src="http://image.sunshanpeng.com/201908181151_8.png" alt="start"></p>
-<h3 id="原因："><a href="#原因：" class="headerlink" title="原因："></a>原因：</h3><p>电脑上网卡太多</p>
-<p><img src="http://image.sunshanpeng.com/201908181156_911.png" alt="ip"></p>
-<p><img src="http://image.sunshanpeng.com/201908181158_629.png" alt></p>
-<h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><ol>
-<li><p>禁用多余网卡</p>
-</li>
-<li><p>在启动参数指定本机IP：<code>-Dhost.ip=10.208.202.251</code></p>
-<blockquote>
-<p>10.208.202.251改成自己的IP地址</p>
-</blockquote>
-</li>
-</ol>
-<h3 id="原理："><a href="#原理：" class="headerlink" title="原理："></a>原理：</h3><p>指定本机IP后就会跳过查找有效IP这一步</p>
-<h3 id="具体代码"><a href="#具体代码" class="headerlink" title="具体代码"></a>具体代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctrip.framework.foundation.internals;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.net.Inet4Address;</span><br><span class="line"><span class="keyword">import</span> java.net.InetAddress;</span><br><span class="line"><span class="keyword">import</span> java.net.NetworkInterface;</span><br><span class="line"><span class="keyword">import</span> java.net.SocketException;</span><br><span class="line"><span class="keyword">import</span> java.net.UnknownHostException;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Collections;</span><br><span class="line"><span class="keyword">import</span> java.util.Enumeration;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> NetworkInterfaceManager &#123;</span><br><span class="line">  INSTANCE;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> InetAddress m_local;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> InetAddress m_localHost;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">NetworkInterfaceManager</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    load();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> InetAddress <span class="title">findValidateIp</span><span class="params">(List&lt;InetAddress&gt; addresses)</span> </span>&#123;</span><br><span class="line">    InetAddress local = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">int</span> maxWeight = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span> (InetAddress address : addresses) &#123;</span><br><span class="line">      <span class="keyword">if</span> (address <span class="keyword">instanceof</span> Inet4Address) &#123;</span><br><span class="line">        <span class="keyword">int</span> weight = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isSiteLocalAddress()) &#123;</span><br><span class="line">          weight += <span class="number">8</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isLinkLocalAddress()) &#123;</span><br><span class="line">          weight += <span class="number">4</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (address.isLoopbackAddress()) &#123;</span><br><span class="line">          weight += <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// has host name</span></span><br><span class="line">        <span class="comment">// TODO fix performance issue when calling getHostName</span></span><br><span class="line">        <span class="keyword">if</span> (!Objects.equals(address.getHostName(), address.getHostAddress())) &#123;</span><br><span class="line">          weight += <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (weight &gt; maxWeight) &#123;</span><br><span class="line">          maxWeight = weight;</span><br><span class="line">          local = address;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> local;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getLocalHostAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> m_local.getHostAddress();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">getLocalHostName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == m_localHost) &#123;</span><br><span class="line">        m_localHost = InetAddress.getLocalHost();</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> m_localHost.getHostName();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (UnknownHostException e) &#123;</span><br><span class="line">      <span class="keyword">return</span> m_local.getHostName();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> String <span class="title">getProperty</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">    String value = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    value = System.getProperty(name);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123;</span><br><span class="line">      value = System.getenv(name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> value;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">load</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String ip = getProperty(<span class="string">"host.ip"</span>);<span class="comment">//除了启动参数也可以在环境变量中指定host.ip</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (ip != <span class="keyword">null</span>) &#123;<span class="comment">//如果指定了host.ip就直接拿指定IP的网卡信息</span></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        m_local = InetAddress.getByName(ip);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        System.err.println(e);</span><br><span class="line">        <span class="comment">// ignore</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      Enumeration&lt;NetworkInterface&gt; interfaces = NetworkInterface.getNetworkInterfaces();</span><br><span class="line">      List&lt;NetworkInterface&gt; nis = interfaces == <span class="keyword">null</span> ? Collections.&lt;NetworkInterface&gt;emptyList() : Collections.list(interfaces);</span><br><span class="line">      List&lt;InetAddress&gt; addresses = <span class="keyword">new</span> ArrayList&lt;InetAddress&gt;();</span><br><span class="line">      InetAddress local = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">for</span> (NetworkInterface ni : nis) &#123;</span><br><span class="line">          <span class="keyword">if</span> (ni.isUp() &amp;&amp; !ni.isLoopback()) &#123;</span><br><span class="line">            addresses.addAll(Collections.list(ni.getInetAddresses()));</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        local = findValidateIp(addresses);</span><br><span class="line">      &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">        <span class="comment">// ignore</span></span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (local != <span class="keyword">null</span>) &#123;</span><br><span class="line">        m_local = local;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SocketException e) &#123;</span><br><span class="line">      <span class="comment">// ignore it</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    m_local = InetAddress.getLoopbackAddress();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>注：</p>
-<ul>
-<li>官方说还可以通过改host的方式实现，但是我在win10电脑上没有成功。</li>
-<li>1.4修复了该问题</li>
-</ul>
-<p>参考链接：<a href="https://github.com/ctripcorp/apollo/wiki/部署&amp;开发遇到的常见问题#6-客户端多块网卡造成获取ip不准如何解决" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo/wiki/%E9%83%A8%E7%BD%B2&amp;%E5%BC%80%E5%8F%91%E9%81%87%E5%88%B0%E7%9A%84%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98#6-%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%A4%9A%E5%9D%97%E7%BD%91%E5%8D%A1%E9%80%A0%E6%88%90%E8%8E%B7%E5%8F%96ip%E4%B8%8D%E5%87%86%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3</a></p>
-<p><a href="https://github.com/ctripcorp/apollo/issues/1457" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo/issues/1457</a></p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
   
 </article>
 
 <!-- Table of Contents -->
 
-  
-    <article id="post-Docker常用命令" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
     
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#注册发现流程"><span class="nav-number">1.</span> <span class="nav-text">注册发现流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务注册"><span class="nav-number">2.</span> <span class="nav-text">服务注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Eureka-server获取"><span class="nav-number">2.1.</span> <span class="nav-text">Eureka server获取</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端发起注册请求"><span class="nav-number">2.2.</span> <span class="nav-text">客户端发起注册请求</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务端接受注册请求"><span class="nav-number">2.3.</span> <span class="nav-text">服务端接受注册请求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#服务发现"><span class="nav-number">3.</span> <span class="nav-text">服务发现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Eureka-server缓存"><span class="nav-number">3.1.</span> <span class="nav-text">Eureka server缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#registry"><span class="nav-number">3.1.1.</span> <span class="nav-text">registry</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readWriteCacheMap"><span class="nav-number">3.1.2.</span> <span class="nav-text">readWriteCacheMap</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#readOnlyCacheMap"><span class="nav-number">3.1.3.</span> <span class="nav-text">readOnlyCacheMap</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#服务消费者缓存"><span class="nav-number">3.2.</span> <span class="nav-text">服务消费者缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Eureka-Client缓存"><span class="nav-number">3.2.1.</span> <span class="nav-text">Eureka Client缓存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ribbon缓存"><span class="nav-number">3.2.2.</span> <span class="nav-text">Ribbon缓存</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取应用实例"><span class="nav-number">3.3.</span> <span class="nav-text">获取应用实例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">4.</span> <span class="nav-text">参考文档</span></a></li></ol>
     
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/03/24/Docker常用命令/">Docker常用命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/03/24/Docker常用命令/" class="article-date">
-	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
     </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker pull [OPTIONS] NAME[:TAG|@DIGEST]</code>，tag不写的话默认latest。</p>
-<h2 id="登录镜像仓库"><a href="#登录镜像仓库" class="headerlink" title="登录镜像仓库"></a>登录镜像仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker login [OPTIONS] [SERVER]</code></p>
-<ul>
-<li><p>SERVER为空的情况下默认登录<code>hub.docker.com</code></p>
-</li>
-<li><p>password建议不要显示在控制台上</p>
-</li>
-</ul>
-<h2 id="列出所有镜像"><a href="#列出所有镜像" class="headerlink" title="列出所有镜像"></a>列出所有镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker images [OPTIONS] [REPOSITORY[:TAG]]</code>，可选参数显示全部镜像或者过滤镜像。</p>
-<h2 id="列出所有容器"><a href="#列出所有容器" class="headerlink" title="列出所有容器"></a>列出所有容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker ps [OPTIONS]</code>，去掉<code>-a</code>显示运行中的容器。</p>
-<h2 id="给镜像打tag"><a href="#给镜像打tag" class="headerlink" title="给镜像打tag"></a>给镜像打tag</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag mysql:5.6 harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</code></p>
-<p>当我们从公共仓库拉取的镜像，想推送到我们自己搭建的私有仓库，需要先打一个tag；</p>
-<p>当我们拉取不到一些需要翻墙才能拉取的镜像时，也可以从国内镜像仓库拉取镜像然后打个tag给成目标镜像。</p>
-<h2 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a>推送镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker push [OPTIONS] NAME[:TAG]</code></p>
-<p>推送镜像必须先登录要推送的目标仓库，而且需要对目标仓库有推送的权限。</p>
-<p>类似<code>docker push mysql:5.6</code>是不行的。</p>
-<h2 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t simpleApp:v1 .</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker build [OPTIONS] PATH | URL | -</code>。</p>
-<p>根据<code>Dockerfile</code>制作镜像。</p>
-<h2 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rmi [OPTIONS] IMAGE [IMAGE...]</code>，不能删除已经创建了容器的镜像，必须先删除对应容器。</p>
-<h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run nginx</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</code></p>
-<p>OPTIONS参数有很多，比较常用的如下：</p>
-<ul>
-<li><p><code>--name</code>指定容器名字</p>
-</li>
-<li><p><code>-p</code>指定容器映射宿主机的端口号</p>
-</li>
-<li><p><code>-e</code>指定环境变量</p>
-</li>
-<li><p><code>-v</code>指定挂载卷</p>
-</li>
-<li><p><code>-it</code>指定容器前台运行</p>
-</li>
-<li><p><code>-d</code>指定容器后台运行</p>
-<p>其他还有很多指定IP、Hostname、CPU、内存、网络、内核参数、重启策略等等参数，可以通过<code>docker run --help</code>查询。</p>
-<h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/data:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
-<h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="重命名容器"><a href="#重命名容器" class="headerlink" title="重命名容器"></a>重命名容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename mysql mysql1</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rename CONTAINER NEW_NAME</code>。</p>
-<h2 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker stop [OPTIONS] CONTAINER [CONTAINER...]</code>，停止多个容器用空格分隔容器名字或者容器id。</p>
-<h2 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker kill [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<h2 id="启动-重启容器"><a href="#启动-重启容器" class="headerlink" title="启动/重启容器"></a>启动/重启容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start/restart mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker start/restart [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rm [OPTIONS] CONTAINER [CONTAINER...]</code>，不带参数时只能删除已停止的容器，带上参数<code>-f</code>可以强制删除运行中的容器。</p>
-<h2 id="更新容器"><a href="#更新容器" class="headerlink" title="更新容器"></a>更新容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker update --restart always mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker update [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<p>更新容器的重启策略、CPU和内存大小。</p>
-<h2 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql /bin/bash</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker exec [OPTIONS] CONTAINER COMMAND [ARG...]</code>。</p>
-<ul>
-<li><p>CONTAINER 可以是容器Id或者容器名字；</p>
-</li>
-<li><p><code>/bin/bash</code>是进入容器后执行的命令，有些容器可能不存在<code>/bin/bash</code>。</p>
-</li>
-</ul>
-<h2 id="导出镜像文件"><a href="#导出镜像文件" class="headerlink" title="导出镜像文件"></a>导出镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o rook-ceph-093.tar rook/ceph:v0.9.3</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker save [OPTIONS] IMAGE [IMAGE...]</code>。</p>
-<p>如果同时导出多个镜像到一个文件里，后面的镜像列表用空格来分隔。</p>
-<h2 id="导入镜像文件"><a href="#导入镜像文件" class="headerlink" title="导入镜像文件"></a>导入镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i /root/rook-ceph-093.tar</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker load [OPTIONS]</code></p>
-<p>当不方便使用自建的镜像仓库来传输镜像时，可以用镜像的导出导入功能来移动镜像。</p>
-<h2 id="查看容器资源消耗"><a href="#查看容器资源消耗" class="headerlink" title="查看容器资源消耗"></a>查看容器资源消耗</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br><span class="line">CONTAINER ID        NAME                               CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS</span><br><span class="line">63ebc0e88e5a        happy_volhard                      0.02%               35.3MiB / 15.46GiB    0.22%               11.5MB / 19MB       13.3MB / 45MB       22</span><br><span class="line">7ed66f584a25        redis                              0.08%               7.82MiB / 15.46GiB    0.05%               304kB / 274kB       5.59MB / 0B         3</span><br><span class="line">500eed21d914        dockercompose_mqbroker_1           2.98%               752.3MiB / 15.46GiB   4.75%               0B / 0B             3.07GB / 19GB       204</span><br><span class="line">ddd919a5bf52        dockercompose_mqnamesrv_1          0.21%               329.2MiB / 15.46GiB   2.08%               0B / 0B             60.3MB / 16.4kB     41</span><br></pre></td></tr></table></figure>
-<h2 id="查看Docker占用磁盘"><a href="#查看Docker占用磁盘" class="headerlink" title="查看Docker占用磁盘"></a>查看Docker占用磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker system df</span><br><span class="line"></span><br><span class="line">TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE</span><br><span class="line">Images              29                  28                  8.575GB             1.873GB (21%)</span><br><span class="line">Containers          29                  17                  7.545GB             410.8MB (5%)</span><br><span class="line">Local Volumes       303                 23                  6.339GB             4.138GB (65%)</span><br><span class="line">Build Cache         0                   0                   0B                  0B</span><br></pre></td></tr></table></figure>
-<p>可以查看镜像文件大小、容器大小、本地存储使用的磁盘大小。</p>
-<h2 id="清理Docker镜像和容器"><a href="#清理Docker镜像和容器" class="headerlink" title="清理Docker镜像和容器"></a>清理Docker镜像和容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -a</span><br></pre></td></tr></table></figure>
-<p>此命令会清除所有未运行的容器和清理所有未使用的镜像。</p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Kubernetes介绍" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/Kubernetes介绍/">Kubernetes介绍</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/Kubernetes介绍/" class="article-date">
-	  <time datetime="2019-02-24T14:52:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>有了Docker之后，单个应用进程的使用管理变的更简单了，但是如果想要管理一个集群的不同应用，处理应用之间的关系，</p>
-<p>比如：一个Web应用与数据库之间的访问关系，负载均衡和后端服务之间的代理关系，门户应用与授权组件的调用关系，</p>
-<p>再比如说一个服务单位的不同功能之间的关系，如一个Web应用与日志搜集组件之间的文件交换关系，</p>
-<p>在传统虚拟机环境对这种关系的处理方法都比较“粗颗粒”，一股脑的部署在同一台虚拟机中，需要手动维护很多跟应用协作的守护进程，用来处理它的日志搜集、灾难恢复、数据备份等辅助工作。</p>
-<p>使用容器和编排技术以后，那些原来挤在同一个虚拟机里的各个应用、组件、守护进程，都可以被分别做成镜像，然后运行在一个个专属的容器中。</p>
-<p>它们之间互不干涉，拥有各自的资源配额，可以被调度在整个集群里的任何一台机器上。</p>
-<p>如果只是用来封装微服务、拉取用户镜像、调度单容器，用Docker Swarm就足够了，而且方便有效，但是如果需要路由网关、水平扩展、弹性伸缩、监控、备份、灾难恢复等一系列运维能力，就需要使用kubernetes来解决了。</p>
-<h2 id="Kubernetes介绍"><a href="#Kubernetes介绍" class="headerlink" title="Kubernetes介绍"></a>Kubernetes介绍</h2><p><img src="http://image.sunshanpeng.com/timg.jpg" alt="kubernetes"></p>
-<p>Kubernetes是Google开源的容器编排调度引擎，它的目标不仅仅是一个编排系统，而是提供一个规范，<strong>可以用来描述集群的架构，定义服务的最终状态</strong>，Kubernetes可以将系统自动得到和维持在这个状态。</p>
-<p>更直白的说，Kubernetes用户可以通过编写一个yaml或者json格式的配置文件，也可以通过工具/代码生成或直接请求Kubernetes API创建应用，该配置文件中包含了用户想要应用程序保持的状态，不论整个Kubernetes集群中的个别主机发生什么问题，都不会影响应用程序的状态，你还可以通过改变该配置文件或请求Kubernetes API来改变应用程序的状态。</p>
-<p><strong>配置文件里面怎么定义的，整个系统就是怎么运行的。</strong></p>
-<h2 id="kubernetes-的马斯洛需求"><a href="#kubernetes-的马斯洛需求" class="headerlink" title="kubernetes 的马斯洛需求"></a>kubernetes 的马斯洛需求</h2><p><img src="http://image.sunshanpeng.com/cae7afc329d743429328887cb831d4c5.jpg" alt="image"></p>
-<h2 id="Kubernetes架构图"><a href="#Kubernetes架构图" class="headerlink" title="Kubernetes架构图"></a>Kubernetes架构图</h2><p><img src="http://image.sunshanpeng.com/Yrdoo02.jpg" alt="img"></p>
-<p>Kubernets属于主从的分布式集群架构，包含Master和Node：</p>
-<ol>
-<li><p>Master作为控制节点，调度管理整个系统，包含以下组件：</p>
-<ul>
-<li>API Server作为kubernetes系统的入口，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它维护的REST对象将持久化到etcd(一个分布式强一致性的key/value存储)。</li>
-<li>Scheduler：负责集群的资源调度，为新建的pod分配机器。这部分工作分出来变成一个组件，意味着可以很方便地替换成其他的调度器。</li>
-<li>Controller Manager：负责执行各种控制器，目前有两类：<br>（1）Endpoint Controller：定期关联service和pod(关联信息由endpoint对象维护)，保证service到pod的映射总是最新的。<br>（2）Replication Controller：定期关联replicationController和pod，保证replicationController定义的复制数量与实际运行pod的数量总是一致的。</li>
-</ul>
-</li>
-<li><p>Node是运行节点，运行业务容器，包含以下组件：</p>
-<ul>
-<li>Kubelet：负责管控docker容器，如启动/停止、监控运行状态等。它会定期从etcd获取分配到本机的pod，并根据pod信息启动或停止相应的容器。同时，它也会接收apiserver的HTTP请求，汇报pod的运行状态。</li>
-<li>Kube Proxy：负责为pod提供代理。它会定期从etcd获取所有的service，并根据service信息创建代理。当某个客户pod要访问其他pod时，访问请求会经过本机proxy做转发。</li>
-</ul>
-<blockquote>
-<p>Kubernets使用Etcd作为存储和通信中间件，实现Master和Node的一致性，这是目前比较常见的做法，典型的SOA架构，解耦Master和Node。</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><p><img src="http://image.sunshanpeng.com/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20181017210240.png" alt="img"></p>
-<ul>
-<li><h3 id="Pod"><a href="#Pod" class="headerlink" title="Pod"></a>Pod</h3><p>Pod是Kubernetes的基本操作单元，把相关的一个或多个容器构成一个Pod，通常Pod里的容器运行相同的应用。Pod包含的容器运行在同一个Node(Host)上，看作一个统一管理单元，共享相同的volumes和network namespace/IP和Port空间。</p>
-</li>
-<li><h3 id="Replication-Controller"><a href="#Replication-Controller" class="headerlink" title="Replication Controller"></a>Replication Controller</h3><p>Replication Controller确保任何时候Kubernetes集群中有指定数量的pod副本(replicas)在运行， 如果少于指定数量的pod副本(replicas)，Replication Controller会启动新的Container，反之会杀死多余的以保证数量不变。</p>
-<p>Replication Controller使用预先定义的pod模板创建pods，一旦创建成功，pod 模板和创建的pods没有任何关联，可以修改pod 模板而不会对已创建pods有任何影响，也可以直接更新通过Replication Controller创建的pods。</p>
-<p>对于利用pod 模板创建的pods，Replication Controller根据label selector来关联，通过修改pods的label可以删除对应的pods。</p>
-</li>
-<li><h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>Service也是Kubernetes的基本操作单元，是真实应用服务的抽象，每一个服务后面都有很多对应的容器来支持，通过Proxy的port和服务selector决定服务请求传递给后端提供服务的容器，对外表现为一个单一访问接口，外部不需要了解后端如何运行，这给扩展或维护后端带来很大的好处。</p>
-</li>
-<li><h3 id="Label"><a href="#Label" class="headerlink" title="Label"></a>Label</h3><p>Label是用于区分Pod、Service、Replication Controller的key/value键值对，Pod、Service、 Replication Controller可以有多个label，但是每个label的key只能对应一个value。Labels是Service和Replication Controller运行的基础，为了将访问Service的请求转发给后端提供服务的多个容器，正是通过标识容器的labels来选择正确的容器。同样，Replication Controller也使用labels来管理通过pod 模板创建的一组容器，这样Replication Controller可以更加容易，方便地管理多个容器，无论有多少容器。</p>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Pod的意义" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/Pod的意义/">Pod的意义</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/Pod的意义/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Kubernetes 使用 Pod 来管理容器，每个 Pod 可以包含一个或多个紧密关联的容器。</p>
-<p>Pod 是一组紧密关联的容器集合，它们共享 PID、IPC、Network 和 UTS namespace，是 Kubernetes 调度的基本单位。</p>
-<p>Pod 内的多个容器共享网络和文件系统，可以通过进程间通信和文件共享这种简单高效的方式组合完成服务。</p>
-<p><img src="http://image.sunshanpeng.com/assets%252F-LDAOok5ngY4pc1lEDes%252F-LM_rqip-tinVoiFZE0I%252F-LM_sIwx4E3-69Ml-jNW%252Fpod.png" alt="img"></p>
-<h2 id="Pod的意义"><a href="#Pod的意义" class="headerlink" title="Pod的意义"></a>Pod的意义</h2><p>容器都是单进程运行的，不是因为容器只能运行一个进程，而是容器没有管理多个进程的能力。</p>
-<p>容器里PID=1的进程就是应用本身，其他的进程都是这个PID=1进程的子进程。如果启动了第二个进程，那这第二个进程异常退出的时候，外部并不能感知，也就管理不了。</p>
-<p>在一个真正的操作系统里，进程并不是“孤苦伶仃”地独自运行的，应用之间可能有着密切的协作关系，必须部署在同一台机器上。</p>
-<p>这些密切关系包括但不限于：互相之间会发生直接的文件交换，使用localhost或者Socket文件进行本地通信，会发生非常频繁的远程调用，共享某些Linux Namespace。</p>
-<h2 id="Pod的实现原理"><a href="#Pod的实现原理" class="headerlink" title="Pod的实现原理"></a>Pod的实现原理</h2><p>首先，Pod只是一个逻辑概念，是一组共享了某些资源的容器。</p>
-<p>Kubernetes真正处理的，还是宿主机操作系统上Linux容器的Namespace和Cgroups，而并不存在一个所谓的Pod的边界或者隔离环境。</p>
-<p>Kubernetes里，Pod的实现需要使用一个中间容器，叫做Infra容器，在Pod中，Infra容器永远都是第一个被创建的容器。</p>
-<p>其他用户自定义的容器，通过Join Network Namespace的方式与Infra容器关联在一起。</p>
-<p><img src="http://image.sunshanpeng.com/image2018-10-17_19-22-48.png" alt="img"></p>
-<p>如图所示，这个Pod里除了两个用户容器，还有一个Infra容器。</p>
-<p>这个Infra容器占用极少的资源，使用了一个非常特殊的镜像：k8s.gcr.io/pause，这个镜像永远处于“暂停”状态，100-200KB左右大小。</p>
-<p>Infra容器生成NetWork Namespace后，用户容器加入Infra容器的Network Namespace中，用户容器和Infra容器在宿主机上的Namespace文件是一样的。</p>
-<p>这意味着，对Pod中的容器A和容器B来说：</p>
-<ul>
-<li>它们可以直接使用localhost进行通信；</li>
-<li>他们看到的网络设备和Infra容器的一样；</li>
-<li>一个Pod只有一个IP地址，也就是容器A、容器B、Infra容器的ip地址一致；</li>
-<li>所有的网络资源被改Pod中的所有容器共享；</li>
-<li>Pod的生命周期只跟Infra容器一致，与容器A和B无关。</li>
-</ul>
-<p>对于同一个Pod里面的所有用户容器来说，它们的进出流量，都是通过Infra容器完成的。</p>
-<p>Pod的本质，实际上是在扮演传统基础设施“虚拟机”的角色；容器则是这个虚拟机里运行的用户进程。</p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-使用apollo配置中心生成雪花算法的workerId" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/">使用apollo配置中心生成雪花算法的workerId</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/02/24/使用apollo配置中心生成雪花算法的workerId/" class="article-date">
-	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。</p>
-<p>但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。</p>
-<p>使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。</p>
-<h2 id="Apollo配置中心介绍"><a href="#Apollo配置中心介绍" class="headerlink" title="Apollo配置中心介绍"></a>Apollo配置中心介绍</h2><p>Apollo（阿波罗）是携程框架部门研发的分布式配置中心，能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景。</p>
-<p>GitHub地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a><br><img src="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png" alt="Apollo架构图"></p>
-<p>Apollo分为Client、Config Service、Admin Service、Portal四个部分：</p>
-<ul>
-<li>Client是一个jar包集成在业务应用里，通过Meta Server从Config Service获取配置信息；</li>
-<li>Config Service提供配置的读取、推送等功能，服务对象是Apollo客户端（Client）；</li>
-<li>Admin Service提供配置的修改、发布等功能，服务对象是Apollo管理界面（Portal）；</li>
-<li>Portal通过Meta Server连接Admin Service修改、发布配置信息。</li>
-</ul>
-<blockquote>
-<p>ConfigDB存储配置信息，由Config Service和Admin Service使用；</p>
-</blockquote>
-<blockquote>
-<p>PortalDB存储权限和审计信息，由Portal使用。</p>
-</blockquote>
-<h2 id="改造Config-Service生成workerId"><a href="#改造Config-Service生成workerId" class="headerlink" title="改造Config Service生成workerId"></a>改造Config Service生成workerId</h2><h3 id="原理介绍"><a href="#原理介绍" class="headerlink" title="原理介绍"></a>原理介绍</h3><p>Client端通过<code>/configs/{appId}/{clusterName}/{namespace:.+}</code>接口拉取全量配置信息，对应方法是<code>com.ctrip.framework.apollo.configservice.controller.ConfigController#queryConfig</code>。方法的返回值ApolloConfig有5个属性：<code>appId</code>、<code>cluster</code>、<code>namespaceName</code>、<code>configurations</code>、<code>releaseKey</code>,只要把生成的workerId放到<code>configurations</code>这个Map类型的属性中，Client端就能直接通过Key值拿到workerId来使用。</p>
-<h3 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h3><h4 id="一、数据库改动"><a href="#一、数据库改动" class="headerlink" title="一、数据库改动"></a>一、数据库改动</h4><p>ConfigDB库的instance表存储了使用配置的应用实例。</p>
-<p>在Instance表新加一个NodeId字段用来存储生成的workerId，并且将AppId和NodeId设置为唯一索引：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `instance` (</span><br><span class="line">  `Id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT &apos;自增Id&apos;,</span><br><span class="line">  `AppId` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;AppID&apos;,</span><br><span class="line">  `ClusterName` varchar(32) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;ClusterName&apos;,</span><br><span class="line">  `DataCenter` varchar(64) NOT NULL DEFAULT &apos;default&apos; COMMENT &apos;Data Center Name&apos;,</span><br><span class="line">  `Ip` varchar(32) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;instance ip&apos;,</span><br><span class="line">  `NodeId` int(5) DEFAULT NULL COMMENT &apos;节点id&apos;,</span><br><span class="line">  `DataChange_CreatedTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &apos;创建时间&apos;,</span><br><span class="line">  `DataChange_LastTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;最后修改时间&apos;,</span><br><span class="line">  PRIMARY KEY (`Id`),</span><br><span class="line">  UNIQUE KEY `IX_UNIQUE_KEY` (`AppId`,`ClusterName`,`Ip`,`DataCenter`),</span><br><span class="line">  UNIQUE KEY `uk_appId_nodeId` (`AppId`,`NodeId`) USING BTREE,</span><br><span class="line">  KEY `IX_IP` (`Ip`),</span><br><span class="line">  KEY `IX_DataChange_LastTime` (`DataChange_LastTime`)</span><br><span class="line">) ENGINE=InnoDB AUTO_INCREMENT=6779 DEFAULT CHARSET=utf8mb4 COMMENT=&apos;使用配置的应用实例&apos;;</span><br></pre></td></tr></table></figure></p>
-<h4 id="二、代码改动"><a href="#二、代码改动" class="headerlink" title="二、代码改动"></a>二、代码改动</h4><p>原来Instance表的记录是在获取配置时调用<code>com.ctrip.framework.apollo.configservice.util.InstanceConfigAuditUtil#audit</code>异步添加的，这里需要改成获取配置时同步添加实例信息并且放到<code>ApolloConfig</code>的<code>configurations</code>属性中。</p>
-<p>1.<code>com.ctrip.framework.apollo.configservice.controller.ConfigController</code></p>
-<p><code>queryConfig</code>方法返回前获取实例信息并返回<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Instance instance = instanceService.findInstance(appId, clusterName, dataCenter, clientIp);</span><br><span class="line">Integer nodeId = instance.getNodeId();</span><br><span class="line"><span class="keyword">if</span> (nodeId == <span class="keyword">null</span>) &#123;</span><br><span class="line">  nodeId = -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line">apolloConfig.addConfig(<span class="string">"apollo.node.id"</span>, String.valueOf(nodeId));</span><br></pre></td></tr></table></figure></p>
-<p>2.<code>com.ctrip.framework.apollo.biz.service.InstanceService</code><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.minId&#125;"</span>)<span class="comment">//workerId最小值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer minId;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Value</span>(<span class="string">"$&#123;apollo.node.maxId&#125;"</span>)<span class="comment">//workerId最大值，0-1023之间</span></span><br><span class="line"><span class="keyword">private</span> Integer maxId;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Integer DEFAULT_NODE_ID = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> Instance <span class="title">findInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = instanceRepository.findByAppIdAndClusterNameAndDataCenterAndIp(appId, clusterName,</span><br><span class="line">          dataCenter, ip);</span><br><span class="line">  <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">    instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> (instance.getNodeId() == <span class="keyword">null</span>) &#123;</span><br><span class="line">    updateInstance(instance);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Instance <span class="title">createInstance</span><span class="params">(String appId, String clusterName, String dataCenter, String ip)</span> </span>&#123;</span><br><span class="line">  Instance instance = <span class="keyword">new</span> Instance();</span><br><span class="line">  instance.setAppId(appId);</span><br><span class="line">  instance.setClusterName(clusterName);</span><br><span class="line">  instance.setDataCenter(dataCenter);</span><br><span class="line">  instance.setIp(ip);</span><br><span class="line">  instance.setNodeId(generateNodeId(appId));</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    instance = createInstance(instance);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">    <span class="comment">//使用数据库的唯一约束来保证workerId的唯一性</span></span><br><span class="line">    logger.error(<span class="string">"createInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">    instance = findInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">      instance = createInstance(appId, clusterName, dataCenter, ip);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> instance;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateInstance</span><span class="params">(Instance instance)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        instance.setNodeId(generateNodeId(instance.getAppId()));</span><br><span class="line">        instanceRepository.save(instance);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (DataIntegrityViolationException e) &#123;</span><br><span class="line">        logger.error(<span class="string">"updateInstance.error,instance=&#123;&#125;"</span>, instance);</span><br><span class="line">        updateInstance(instance);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> Integer <span class="title">generateNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">  <span class="comment">//生成规则是当前appId最大workerId + 1</span></span><br><span class="line">  <span class="comment">//如果workerId已经到最大值了就拿最早的workerId（这里假设一个应用不会同时有1023（maxId）个实例在运行）</span></span><br><span class="line">  Integer maxNodeId = instanceRepository.maxNodeIdByAppId(appId);</span><br><span class="line">  <span class="keyword">if</span> (maxNodeId == <span class="keyword">null</span> || minId &gt; maxNodeId) &#123;</span><br><span class="line">    <span class="keyword">return</span> minId;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (maxNodeId &lt; maxId) &#123;</span><br><span class="line">    <span class="keyword">return</span> maxNodeId + <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> getEarliestNodeId(appId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> Integer <span class="title">getEarliestNodeId</span><span class="params">(String appId)</span> </span>&#123;</span><br><span class="line">      InstanceConfig instanceConfig = instanceConfigRepository.findTopByConfigAppIdOrderByReleaseDeliveryTime(appId);</span><br><span class="line">      <span class="keyword">if</span> (instanceConfig == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Instance instance = instanceRepository.findOne(instanceConfig.getInstanceId());</span><br><span class="line">      <span class="keyword">if</span> (instance == <span class="keyword">null</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> DEFAULT_NODE_ID;</span><br><span class="line">      &#125;</span><br><span class="line">      Integer nodeId = instance.getNodeId();</span><br><span class="line">      instance.setNodeId(<span class="keyword">null</span>);</span><br><span class="line">      instanceRepository.save(instance);</span><br><span class="line">      <span class="keyword">return</span> nodeId;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
-<h4 id="三、使用方式"><a href="#三、使用方式" class="headerlink" title="三、使用方式"></a>三、使用方式</h4><p>和其他配置的使用方式一样，直接用<code>@Value(&quot;${apollo.node.id}&quot;)</code>。</p>
-<p>这种方式生成的workerId可以直接使用在只需要一个workerId参数的雪花算法，另一种需要datacenterId和workerId两个参数的雪花算法在使用时需要做一下转换：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">datacenterId=apollo.node.id &gt;&gt; 5</span><br><span class="line">workerId=apolo.node.id &amp; 31</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>取高五位的值作为datacenterId，取低五位的值作为workerId。</p>
-<ul>
-<li>一个workerId参数的雪花算法，workerId最大1023，二进制为1111111111；</li>
-<li>datacenterId和workerId两个参数的雪花算法，datacenterId最大31，二进制为11111，workerId最大31，二进制为11111，datacenterId作为二进制的高5位，workerId作为二进制的低5位，组合起来1111111111，十进制为1023。</li>
-</ul>
-</blockquote>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/java/">java</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-
-
-  <nav id="page-nav">
-    
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next</a>
-  </nav>
-
+  </aside>
 </section>
-          <aside id="sidebar">
-  
-    <div style="margin: 20px 0;">
-	<div id="search-form-wrap">
-
-    <form class="search-form">
-        <label style="width: 72%;">
-            <span class="screen-reader-text">Search for:</span>
-            <input type="search" class="search-field" style="height: 36px; width: 100%;" placeholder=" Search…" value name="s" title="Search for:">
-        </label>
-        <input type="submit" class="search-form-submit" value="Search">
-    </form>
-    <div class="ins-search">
-    <div class="ins-search-mask"></div>
-    <div class="ins-search-container">
-        <div class="ins-input-wrapper">
-            <input type="text" class="ins-search-input" placeholder="Type something...">
-            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
-        </div>
-        <div class="ins-section-wrapper">
-            <div class="ins-section-container"></div>
-        </div>
-    </div>
-</div>
-<script>
-(function (window) {
-    var INSIGHT_CONFIG = {
-        TRANSLATION: {
-            POSTS: 'Posts',
-            PAGES: 'Pages',
-            CATEGORIES: 'Categories',
-            TAGS: 'Tags',
-            UNTITLED: '(Untitled)',
-        },
-        ROOT_URL: '/',
-        CONTENT_URL: '/content.json',
-    };
-    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
-})(window);
-</script>
-<script src="/js/insight.js"></script>
-
-</div>
-</div>
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Connect With Us</h3>
-    <div class="widget widget_athemes_social_icons">
-
-    	<ul class="clearfix widget-social-icons">   
-    	
-   			<li><a href="https://github.com/sunshanpeng" title="Github"><i class="fa fa-github" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href title="Weibo"><i class="fa fa-weibo" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href title="Twitter"><i class="fa fa-twitter" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href title="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href title="Google-plus"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li> 
-
-   		
-   			<li><a href title="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a></li> 
-
-   		
-   		</ul>
-
-
-   		<!--
-   		<ul class="clearfix widget-social-icons">   		
-   		<li class="widget-si-twitter"><a href="http://twitter.com" title="Twitter"><i class="ico-twitter"></i></a></li> 
-		<li class="widget-si-facebook"><a href="http://facebook.com" title="Facebook"><i class="ico-facebook"></i></a></li>
-			<li class="widget-si-gplus"><a href="http://plus.google.com" title="Google+"><i class="ico-gplus"></i></a></li>
-			<li class="widget-si-pinterest"><a href="http://pinterest.com" title="Pinterest"><i class="ico-pinterest"></i></a></li>
-			<li class="widget-si-flickr"><a href="http://flickr.com" title="Flickr"><i class="ico-flickr"></i></a></li>
-			<li class="widget-si-instagram"><a href="http://instagram.com" title="Instagram"><i class="ico-instagram"></i></a></li>
-		</ul> -->
-
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget_athemes_tabs">
-    <ul id="widget-tab" class="clearfix widget-tab-nav">
-      <li class="active"><a>Recent Posts</a></li>
-    </ul>
-    <div class="widget">
-      <ul>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/09/17/在k8s中使用eureka的几种姿势/">在k8s中使用eureka的几种姿势</a></h6>
-              <span>九月 17, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/09/17/Eureka服务注册发现/">Eureka服务注册发现</a></h6>
-              <span>九月 17, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/08/30/配置Jenkins打包VUE项目/">(no title)</a></h6>
-              <span>八月 30, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a></h6>
-              <span>八月 24, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/03/24/Kubernetes集群配置优化/">Kubernetes集群配置优化</a></h6>
-              <span>三月 24, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/">Windows电脑本地开发时连接Apollo配置中心启动慢</a></h6>
-              <span>三月 24, 2019</span>
-            </div>
-
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Categories</h3>
-    <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">13</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tags</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka/">eureka</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/eureka/" style="font-size: 13.33px;">eureka</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li></ul>
-    </div>
-  </div>
-
-
-  
-</aside>
         
       </div>
 

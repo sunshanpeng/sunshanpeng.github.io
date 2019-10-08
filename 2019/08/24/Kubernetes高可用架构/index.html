@@ -22,7 +22,7 @@
 <meta property="og:image" content="http://image.sunshanpeng.com/Yrdoo02.jpg">
 <meta property="og:image" content="http://image.sunshanpeng.com/201908251648_290.png">
 <meta property="og:image" content="http://image.sunshanpeng.com/201908251741_884.png">
-<meta property="og:updated_time" content="2019-08-25T10:38:36.660Z">
+<meta property="og:updated_time" content="2019-08-25T10:45:23.110Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kubernetes高可用部署">
 <meta name="twitter:description" content="基本架构 Kubernetes分为Master Node和Worker Node，其中Master Node作为控制节点，调度管理整个系统；Worker Node作为工作节点，运行业务容器。 Master Node api-server 作为kubernetes系统的入口，对外暴露了Kubernetes API，封装了核心对象的增删改查操作，以RESTFul接口方式提供给外部客户和内部组件调用。它">
@@ -214,7 +214,7 @@
 <p>使用三台4核8G的服务器当Master Node，上面部署api-server、scheduler、controller-manager、kubelet、kube-proxy、docker、calico、etcd。</p>
 <p>Worker Node的配置根据实际情况，最好CPU和内存的大小、比例都一样。上面部署kubelet、kube-proxy、docker、calico、HAProxy。</p>
 <p>该方案兼容自有机房和公有云，Master Node负载比较均衡。但是集群外访问api-server没有做到高可用，需要额外解决。如果Worker Node上的HAProxy宕机则该节点不能正常工作。另外如果添加和删除Master Node需要更新所有Worker Node的负载均衡配置（可选项，不修改也可以）。</p>
-<h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><h3 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h3><p>所有组件均使用二进制文件部署，手动部署可以参考：<a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster；ansible脚本部署可以用：https://github.com/easzlab/kubeasz。" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster；ansible脚本部署可以用：https://github.com/easzlab/kubeasz。</a></p>
+<h2 id="部署方式"><a href="#部署方式" class="headerlink" title="部署方式"></a>部署方式</h2><h3 id="二进制部署"><a href="#二进制部署" class="headerlink" title="二进制部署"></a>二进制部署</h3><p>所有组件均使用二进制文件部署，手动部署可以参考：<a href="https://github.com/opsnull/follow-me-install-kubernetes-cluster" target="_blank" rel="noopener">https://github.com/opsnull/follow-me-install-kubernetes-cluster</a>；ansible脚本部署可以用：<a href="https://github.com/easzlab/kubeasz" target="_blank" rel="noopener">https://github.com/easzlab/kubeasz</a>。</p>
 <h3 id="容器化部署"><a href="#容器化部署" class="headerlink" title="容器化部署"></a>容器化部署</h3><p>kubernetes的所有组件中，除了docker和kubelet是运行和管理容器的，其他组件都可以使用容器化的方式部署，最流行的方式就是使用kubeadm。</p>
 <p>官网地址：<a href="https://github.com/kubernetes/kubeadm。" target="_blank" rel="noopener">https://github.com/kubernetes/kubeadm。</a></p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://kubernetes.io/zh/docs/concepts/overview/components/" target="_blank" rel="noopener">https://kubernetes.io/zh/docs/concepts/overview/components/</a></p>
@@ -266,10 +266,19 @@
     
 <nav id="article-nav">
   
+    <a href="/2019/08/30/配置Jenkins打包VUE项目/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
   
-    <a href="/2019/03/24/Docker常用命令/" id="article-nav-older" class="article-nav-link-wrap">
+  
+    <a href="/2019/03/24/Kubernetes集群配置优化/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Docker常用命令</div>
+      <div class="article-nav-title">Kubernetes集群配置优化</div>
     </a>
   
 </nav>

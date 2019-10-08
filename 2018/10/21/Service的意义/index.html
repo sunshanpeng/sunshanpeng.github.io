@@ -3,26 +3,24 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>CentOS升级内核kernel的几种方式 | 阿鹏的博客</title>
+  <title>阿鹏的博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
-  <meta name="keywords" content="kernel">
   
   
   
-  
-  <meta name="description" content="小版本升级1234# installyum install kernel* -y# rebootinit 6 安装最新稳定版内核1234567891011121314# import keyrpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org# install elrepo reporpm -Uvh http://www.elrepo">
-<meta name="keywords" content="kernel">
+  <meta name="description" content="在用 Kubernetes 之前，当我们有了容器网络之后，访问一个应用最直接的做法，就是客户端直接去访问一个 Backend Container。 这种做法最直观和容易，同时问题也是显而易见的。 当应用有多个后端容器的时候，怎么做负载均衡，会话保持怎么做，某个容器迁了之后 IP 跟着变怎么办，还有对应的健康检查怎么配，如果想用域名来做访问入口要怎么处理…… 这些其实就是 Kubernetes 的">
+<meta name="keywords" content="java go devops kubernetes docker">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS升级内核kernel的几种方式">
-<meta property="og:url" content="http://sunshanpeng.com/2019/01/17/CentOS升级内核kernel的几种方式/index.html">
+<meta property="og:title" content="阿鹏的博客">
+<meta property="og:url" content="http://sunshanpeng.com/2018/10/21/Service的意义/index.html">
 <meta property="og:site_name" content="阿鹏的博客">
-<meta property="og:description" content="小版本升级1234# installyum install kernel* -y# rebootinit 6 安装最新稳定版内核1234567891011121314# import keyrpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org# install elrepo reporpm -Uvh http://www.elrepo">
+<meta property="og:description" content="在用 Kubernetes 之前，当我们有了容器网络之后，访问一个应用最直接的做法，就是客户端直接去访问一个 Backend Container。 这种做法最直观和容易，同时问题也是显而易见的。 当应用有多个后端容器的时候，怎么做负载均衡，会话保持怎么做，某个容器迁了之后 IP 跟着变怎么办，还有对应的健康检查怎么配，如果想用域名来做访问入口要怎么处理…… 这些其实就是 Kubernetes 的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2019-08-18T14:17:48.357Z">
+<meta property="og:updated_time" content="2019-06-09T06:59:54.193Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS升级内核kernel的几种方式">
-<meta name="twitter:description" content="小版本升级1234# installyum install kernel* -y# rebootinit 6 安装最新稳定版内核1234567891011121314# import keyrpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org# install elrepo reporpm -Uvh http://www.elrepo">
+<meta name="twitter:title" content="阿鹏的博客">
+<meta name="twitter:description" content="在用 Kubernetes 之前，当我们有了容器网络之后，访问一个应用最直接的做法，就是客户端直接去访问一个 Backend Container。 这种做法最直观和容易，同时问题也是显而易见的。 当应用有多个后端容器的时候，怎么做负载均衡，会话保持怎么做，某个容器迁了之后 IP 跟着变怎么办，还有对应的健康检查怎么配，如果想用域名来做访问入口要怎么处理…… 这些其实就是 Kubernetes 的">
   
     <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
   
@@ -128,30 +126,17 @@
             
       <div id="content" class="outer">
         
-          <section id="main" style="float:none;"><article id="post-CentOS升级内核kernel的几种方式" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+          <section id="main" style="float:none;"><article id="post-Service的意义" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      CentOS升级内核kernel的几种方式
-    </h1>
-  
-
-      </header>
-    
     <div class="article-meta">
       
-	<a href="/2019/01/17/CentOS升级内核kernel的几种方式/" class="article-date">
-	  <time datetime="2019-01-17T12:18:01.000Z" itemprop="datePublished">一月 17, 2019</time>
+	<a href="/2018/10/21/Service的意义/" class="article-date">
+	  <time datetime="2018-10-21T15:06:09.474Z" itemprop="datePublished">十月 21, 2018</time>
 	</a>
 
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/linux/">linux</a>
- 
+       
       
 	<span id="busuanzi_container_page_pv">
 	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
@@ -160,25 +145,18 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="小版本升级"><a href="#小版本升级" class="headerlink" title="小版本升级"></a>小版本升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install</span></span><br><span class="line">yum install kernel* -y</span><br><span class="line"><span class="comment"># reboot</span></span><br><span class="line">init 6</span><br></pre></td></tr></table></figure>
-<h2 id="安装最新稳定版内核"><a href="#安装最新稳定版内核" class="headerlink" title="安装最新稳定版内核"></a>安装最新稳定版内核</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># import key</span></span><br><span class="line">rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org</span><br><span class="line"><span class="comment"># install elrepo repo</span></span><br><span class="line">rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm</span><br><span class="line"><span class="comment"># list kernel</span></span><br><span class="line">yum --disablerepo=\* --enablerepo=elrepo-kernel list kernel*</span><br><span class="line"><span class="comment"># install kernel</span></span><br><span class="line">yum --enablerepo=elrepo-kernel install kernel-ml-devel kernel-ml -y</span><br><span class="line"><span class="comment"># yum --disablerepo=\* --enablerepo=elrepo-kernel install -y kernel-ml.x86_64</span></span><br><span class="line"><span class="comment"># modify grub</span></span><br><span class="line">grub2-set-default 0</span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line"><span class="comment"># reboot</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<h2 id="安装指定版本内核"><a href="#安装指定版本内核" class="headerlink" title="安装指定版本内核"></a>安装指定版本内核</h2><p>推荐一个可以找到各个版本内核的国内镜像站：<a href="http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS" target="_blank" rel="noopener">http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS</a></p>
-<p>本次安装以4.19版本的内核示例：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># install</span></span><br><span class="line">rpm -ivh http://mirror.rc.usf.edu/compute_lock/elrepo/kernel/el7/x86_64/RPMS/kernel-ml-4.19.12-1.el7.elrepo.x86_64.rpm</span><br><span class="line"><span class="comment"># modify grub</span></span><br><span class="line">sed -i <span class="string">"s/GRUB_DEFAULT=saved/GRUB_DEFAULT=0/"</span> /etc/default/grub</span><br><span class="line">grub2-mkconfig -o /boot/grub2/grub.cfg</span><br><span class="line"><span class="comment"># reboot</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure>
-<h2 id="编译源码安装"><a href="#编译源码安装" class="headerlink" title="编译源码安装"></a>编译源码安装</h2><p>没试过</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://mritd.me/2016/11/08/update-centos-kernel/" target="_blank" rel="noopener">https://mritd.me/2016/11/08/update-centos-kernel/</a></p>
+        <p>在用 Kubernetes 之前，当我们有了容器网络之后，访问一个应用最直接的做法，就是客户端直接去访问一个 Backend Container。</p>
+<p>这种做法最直观和容易，同时问题也是显而易见的。</p>
+<p>当应用有多个后端容器的时候，怎么做负载均衡，会话保持怎么做，某个容器迁了之后 IP 跟着变怎么办，还有对应的健康检查怎么配，如果想用域名来做访问入口要怎么处理……</p>
+<p>这些其实就是 Kubernetes 的 Service 引入所要解决的问题。</p>
+<h2 id="Service的意义"><a href="#Service的意义" class="headerlink" title="Service的意义"></a>Service的意义</h2><p>Kubernetes <code>Pod</code> 是有生命周期的，它们可以被创建，也可以被销毁，然而一旦被销毁生命就永远结束。 通过 <code>ReplicationController</code>能够动态地创建和销毁 <code>Pod</code>。 每个 <code>Pod</code> 都会获取它自己的 IP 地址，即使这些 IP 地址不总是稳定可依赖的。 这会导致一个问题：在 Kubernetes 集群中，如果一组 <code>Pod</code>（称为 backend）为其它 <code>Pod</code> （称为 frontend）提供服务，那么那些 frontend 该如何发现，并连接到这组 <code>Pod</code>中的哪些 backend 呢？</p>
+<p>Kubernetes <code>Service</code> 定义了这样一种抽象：一个 <code>Pod</code> 的逻辑分组，一种可以访问它们的策略 —— 通常称为微服务。 </p>
 
       
     </div>
     <footer class="entry-meta entry-footer">
       
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/linux/">linux</a>
-
       
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/kernel/">kernel</a></li></ul>
-
       
         
 	<div id="comment">
@@ -212,20 +190,15 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/24/Kubectl常用命令/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Kubectl常用命令
+          使用ephemeral-storage管理容器的临时存储
         
       </div>
     </a>
   
-  
-    <a href="/2018/12/17/创建NFS的StorageClass/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">创建NFS的StorageClass</div>
-    </a>
   
 </nav>
 
@@ -238,7 +211,7 @@
     <div id="toc" class="toc-article">
     <strong class="toc-title">Contents</strong>
     
-      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#小版本升级"><span class="nav-number">1.</span> <span class="nav-text">小版本升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装最新稳定版内核"><span class="nav-number">2.</span> <span class="nav-text">安装最新稳定版内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装指定版本内核"><span class="nav-number">3.</span> <span class="nav-text">安装指定版本内核</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译源码安装"><span class="nav-number">4.</span> <span class="nav-text">编译源码安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol>
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Service的意义"><span class="nav-number">1.</span> <span class="nav-text">Service的意义</span></a></li></ol>
     
     </div>
   </aside>

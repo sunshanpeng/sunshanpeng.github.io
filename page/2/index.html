@@ -127,7 +127,7 @@
         
           <section id="main">
   
-    <article id="post-Kubectl常用命令" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
     
@@ -135,7 +135,7 @@
         
   
     <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/02/24/Kubectl常用命令/">Kubectl常用命令</a>
+      <a class="article-title" href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a>
     </h1>
   
 
@@ -143,8 +143,8 @@
     
     <div class="article-meta">
       
-	<a href="/2019/02/24/Kubectl常用命令/" class="article-date">
-	  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	<a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
 	</a>
 
       
@@ -155,56 +155,33 @@
     </div>
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><h3 id="前台运行的容器"><a href="#前台运行的容器" class="headerlink" title="前台运行的容器"></a>前台运行的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=centos --restart=Never <span class="built_in">test</span> bash</span><br></pre></td></tr></table></figure>
-<h3 id="常驻后台的容器"><a href="#常驻后台的容器" class="headerlink" title="常驻后台的容器"></a>常驻后台的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br></pre></td></tr></table></figure>
-<p>通常使用yaml文件创建容器，只在调试或者排错的时候使用<code>kubectl run</code>临时创建容器。</p>
-<p>比如：</p>
-<h3 id="创建网络排查容器"><a href="#创建网络排查容器" class="headerlink" title="创建网络排查容器"></a>创建网络排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools</span><br></pre></td></tr></table></figure>
-<p>如果创建了一个MySQL容器并且暴露了service，但是不能使用service访问mysql，这个时候可以使用<code>nslookup</code>或者<code>dig</code>这些网络命令排查。</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dnstools<span class="comment"># nslookup mysql</span></span><br><span class="line">Server:         172.21.0.2</span><br><span class="line">Address:        172.21.0.2<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Name:   mysql.qa.svc.cluster.local</span><br><span class="line">Address: 172.21.147.86</span><br></pre></td></tr></table></figure>
-<h3 id="创建MySQL排查容器"><a href="#创建MySQL排查容器" class="headerlink" title="创建MySQL排查容器"></a>创建MySQL排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql --port 3306 -u root -p123456</span><br></pre></td></tr></table></figure>
-<p>如果创建的MySQL容器在集群外连接不上了，可以创建一个mysql容器在内部连接看看能不能连上。</p>
-<ul>
-<li><code>-h</code>参数是MySQL的host；</li>
-<li><code>--port</code>参数是MySQL的端口号；</li>
-<li><code>-u</code>参数是MySQL的用户名；</li>
-<li><code>-p</code>参数是用户名对应的密码，<code>-p</code>和密码之间没有空格。</li>
-</ul>
-<h2 id="应用资源"><a href="#应用资源" class="headerlink" title="应用资源"></a>应用资源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f deployment.yaml</span><br></pre></td></tr></table></figure>
-<p>推荐使用这种方式创建或者更新资源。</p>
-<h2 id="获取容器"><a href="#获取容器" class="headerlink" title="获取容器"></a>获取容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide</span><br></pre></td></tr></table></figure>
-<p>获取所有namespace的容器。</p>
-<ul>
-<li><code>--all-namespaces</code>表示所有namespace，默认获取<code>default namespace</code>的资源，可以通过<code>-n</code>指定namespace。</li>
-<li><code>-o wide</code>表示输出格式，其他还要<code>json</code>，<code>yaml</code>。</li>
-</ul>
-<h3 id="获取所有不是Running状态的容器"><a href="#获取所有不是Running状态的容器" class="headerlink" title="获取所有不是Running状态的容器"></a>获取所有不是Running状态的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide | awk <span class="string">'&#123;if ($4 != "Running") print $0&#125;'</span></span><br></pre></td></tr></table></figure>
-<h3 id="获取其他资源"><a href="#获取其他资源" class="headerlink" title="获取其他资源"></a>获取其他资源</h3><p>除了容器，还有很多其他资源例如<code>node</code>、<code>service</code>、<code>deployment</code>、<code>statefulset</code>、<code>daemonset</code>、<code>job</code>、<code>pvc</code>、<code>pv</code>等等可以通过kubectl来获取，大多数是区分namespace的，也有不区分namespace的比如<code>node</code>、<code>pv</code>、<code>storageclass</code>等。</p>
-<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc</span><br></pre></td></tr></table></figure>
-<h3 id="强制删除："><a href="#强制删除：" class="headerlink" title="强制删除："></a>强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc --force --grace-period=0</span><br></pre></td></tr></table></figure>
-<h3 id="批量强制删除："><a href="#批量强制删除：" class="headerlink" title="批量强制删除："></a>批量强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods | grep Terminating | awk <span class="string">'&#123;print $1&#125;'</span> | xargs kubectl delete pod --force --grace-period=0</span><br></pre></td></tr></table></figure>
-<h3 id="批量强制删除非运行容器"><a href="#批量强制删除非运行容器" class="headerlink" title="批量强制删除非运行容器"></a>批量强制删除非运行容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces | awk <span class="string">'&#123;if ($4 != "Running") system ("kubectl -n " $1 " delete pods " $2 " --grace-period=0 " " --force ")&#125;'</span></span><br></pre></td></tr></table></figure>
-<h2 id="扩缩容"><a href="#扩缩容" class="headerlink" title="扩缩容"></a>扩缩容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment nginx --replicas 4</span><br></pre></td></tr></table></figure>
-<p>最小可以缩容到0个。</p>
-<h2 id="暂停滚动升级"><a href="#暂停滚动升级" class="headerlink" title="暂停滚动升级"></a>暂停滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout pause deployment nginx</span><br></pre></td></tr></table></figure>
-<p>滚动升级时，可以使用该命令暂停升级来实现金丝雀发布。</p>
-<h2 id="恢复滚动升级"><a href="#恢复滚动升级" class="headerlink" title="恢复滚动升级"></a>恢复滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout resume deployment nginx</span><br></pre></td></tr></table></figure>
-<p>暂停后恢复。</p>
-<h2 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout undo deployment nginx</span><br></pre></td></tr></table></figure>
-<p>回滚到上一次发布。</p>
-<h2 id="给node加taint（污点）"><a href="#给node加taint（污点）" class="headerlink" title="给node加taint（污点）"></a>给node加taint（污点）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes node1 key=value:NoSchedule</span><br></pre></td></tr></table></figure>
-<p>给节点添加污点后只有容忍了该污点的容器才能调度上来。</p>
-<h2 id="查看node信息"><a href="#查看node信息" class="headerlink" title="查看node信息"></a>查看node信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe nodes node1</span><br></pre></td></tr></table></figure>
-<p>通过该命令可以查看node的资源、内核、容器、标签和污点等等。</p>
-<h2 id="给node加标签"><a href="#给node加标签" class="headerlink" title="给node加标签"></a>给node加标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role=node --overwrite</span><br></pre></td></tr></table></figure>
-<p>给node加标签后可以用节点亲和性指定某些pod调度到固定node。</p>
-<h2 id="删除node上的标签"><a href="#删除node上的标签" class="headerlink" title="删除node上的标签"></a>删除node上的标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role-</span><br></pre></td></tr></table></figure>
-<h2 id="根据标签筛选"><a href="#根据标签筛选" class="headerlink" title="根据标签筛选"></a>根据标签筛选</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes -l node-type=iot</span><br></pre></td></tr></table></figure>
-<h2 id="禁止节点调度"><a href="#禁止节点调度" class="headerlink" title="禁止节点调度"></a>禁止节点调度</h2><h3 id="只禁止不驱逐"><a href="#只禁止不驱逐" class="headerlink" title="只禁止不驱逐"></a>只禁止不驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl cordon node1</span><br></pre></td></tr></table></figure>
-<p>这种方式只把node标记为<code>SchedulingDisabled</code>,已经在node上运行的pod不会受影响，之后不会再有新的pod调度上去。</p>
-<h3 id="禁止并驱逐"><a href="#禁止并驱逐" class="headerlink" title="禁止并驱逐"></a>禁止并驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain node1 --ignore-daemonsets --delete-local-data --force</span><br></pre></td></tr></table></figure>
-<p>这种方式除了把node标记为<code>SchedulingDisabled</code>，已经运行的pod也会被驱逐，保证节点除<code>daemonset</code>外没有其他pod。</p>
-<h2 id="恢复调度"><a href="#恢复调度" class="headerlink" title="恢复调度"></a>恢复调度</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl uncordon node1</span><br></pre></td></tr></table></figure>
+        <h2 id="一、发布前"><a href="#一、发布前" class="headerlink" title="一、发布前"></a>一、发布前</h2><p>发布前，nginx运行三个实例（pod），<em>副本（replicaset）版本编号855b564c8d</em>，此时运行状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、发布中"><a href="#二、发布中" class="headerlink" title="二、发布中"></a>二、发布中</h2><h3 id="步骤一：发布"><a href="#步骤一：发布" class="headerlink" title="步骤一：发布"></a>步骤一：发布</h3><p>此时进行发布，<em>新副本版本编号77b6c7b585</em>，此时发布状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         0/1       Running            0          21s       172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="步骤二：暂停"><a href="#步骤二：暂停" class="headerlink" title="步骤二：暂停"></a>步骤二：暂停</h3><p><strong>执行暂停命令<code>kubectl rollout pause deployment -n qa nginx</code></strong></p>
+<p>等待第一个实例运行成功，此时状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时为暂停发布状态，三个旧版本实例正常运行，一个新版本实例运行成功，流量将分摊到这四个实例上。</p>
+</blockquote>
+<h3 id="步骤三：恢复"><a href="#步骤三：恢复" class="headerlink" title="步骤三：恢复"></a>步骤三：恢复</h3><p><strong>执行恢复命令<code>kubectl rollout resume deployment -n qa nginx</code></strong></p>
+<p>此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                         0/1       Running            0          33s       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                        1/1       Running            0          1m        172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>恢复后会执行正常的滚动升级操作，即新增一个新副本实例，删除一个旧副本实例。<br>滚动升级时，新旧版本同时存在，总实例最大数量不会超过目标数量的25%，最小数量不会低于目标数量的75%。</p>
+</blockquote>
+<h2 id="三、发布完成"><a href="#三、发布完成" class="headerlink" title="三、发布完成"></a>三、发布完成</h2><p>实例的副本版本编号都变成77b6c7b585，说明全部升级成功，此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                       1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                      1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                      1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="四、回滚"><a href="#四、回滚" class="headerlink" title="四、回滚"></a>四、回滚</h2><p>发布中发现功能与预期不符，需要取消发布并回滚至上个发布版本，此时可以执行回滚操作。<br><strong>执行回滚命令<code>kubectl rollout undo deployment -n qa nginx</code></strong>。<br>回滚操作在发布中，发布后都可以执行。</p>
+<h3 id="发布中回滚"><a href="#发布中回滚" class="headerlink" title="发布中回滚"></a>发布中回滚</h3><p>当暂停发布进行灰度验证时，发现功能不符合预期，需要取消发布。<br>暂停时灰度验证状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          2m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                         1/1       Running            0          2m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>副本编号变成855b564c8d，说明回滚成功，恢复到新版本。</p>
+</blockquote>
+<h3 id="发布完成后回滚"><a href="#发布完成后回滚" class="headerlink" title="发布完成后回滚"></a>发布完成后回滚</h3><p>全部升级成功后，发现功能异常，回滚到之前版本。<br>回滚前状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                      1/1       Running            0          6m       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                        1/1       Running            0          6m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                      1/1       Running            0          6m       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="滚动升级状态"><a href="#滚动升级状态" class="headerlink" title="滚动升级状态"></a>滚动升级状态</h2><p>目标实例数3个，旧实例数3个，总实例数3个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                       1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数3个，新实例数1个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数2个，新实例数2个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-pmw2f                       1/1       Running            0          15s       172.20.190.51    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          3m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数1个，新实例数3个，总实例数4个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          35m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          35m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          1m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          13h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，新实例数3个，总实例数3个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -216,6 +193,201 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-修改Kubernetes集群Pod容器的内核参数" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/">修改Kubernetes集群Pod容器的内核参数</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>容器的本质是一个进程，共享Node的内核。原以为修改了Node的内核参数容器中也会改，但实际上并不是这样，容器的内核参数可以和Node不同。</p>
+<h2 id="Docker-Daemon"><a href="#Docker-Daemon" class="headerlink" title="Docker Daemon"></a>Docker Daemon</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -it --rm --sysctl net.core.somaxconn=65535 busybox cat /proc/sys/net/core/somaxconn</span><br></pre></td></tr></table></figure>
+<p>多个参数：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">docker run -itd --restart=always --net=host \</span><br><span class="line">--name=centos01 --hostname=centos01 \</span><br><span class="line">--sysctl kernel.msgmnb=13107200 \</span><br><span class="line">--sysctl kernel.msgmni=256 \</span><br><span class="line">--sysctl kernel.msgmax=65536 \</span><br><span class="line">--sysctl kernel.shmmax=69719476736 \</span><br><span class="line">--sysctl kernel.sem=<span class="string">'500 256000 250 1024'</span> \</span><br><span class="line">-v /mnt:/update \</span><br><span class="line">centos /bin/bash</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">docker <span class="built_in">exec</span> centos01 sysctl -a |grep -E \</span><br><span class="line"><span class="string">'kernel.msgmnb|kernel.msgmni|kernel.msgmax|kernel.shmmax|kernel.sem'</span></span><br></pre></td></tr></table></figure>
+<h2 id="Kubernetes"><a href="#Kubernetes" class="headerlink" title="Kubernetes"></a>Kubernetes</h2><h3 id="Kubernetes-Sysctls"><a href="#Kubernetes-Sysctls" class="headerlink" title="Kubernetes Sysctls"></a>Kubernetes Sysctls</h3><ol>
+<li><p>增加Kubelet启动参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubelet --allowed-unsafe-sysctls=net.*</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新加载配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启kubelet</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl restart kubelet</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置Pod的securityContext参数（注意是pod不是container）</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">securityContext:</span><br><span class="line">  sysctls:</span><br><span class="line">  - name: net.ipv4.tcp_keepalive_time</span><br><span class="line">    value: &quot;180&quot;</span><br></pre></td></tr></table></figure>
+<p>Kubernetes允许配置的内核参数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">kernel.shm*,</span><br><span class="line">kernel.msg*,</span><br><span class="line">kernel.sem,</span><br><span class="line">fs.mqueue.*,</span><br><span class="line">net.*.</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>使用Kubernetes Sysctls推荐指定几台Node，利用污点或者节点亲和性把需要修改内核参数的pod调度到指定节点，而不是修改所有Node。</p>
+</blockquote>
+<h3 id="Kubernetes-Init-Container"><a href="#Kubernetes-Init-Container" class="headerlink" title="Kubernetes Init Container"></a>Kubernetes Init Container</h3><p>使用init container不需要修改kubelet参数<br><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">initContainers:</span></span><br><span class="line"><span class="attr">- command:</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">sysctl</span></span><br><span class="line"><span class="bullet">  -</span> <span class="bullet">-w</span></span><br><span class="line"><span class="bullet">  -</span> <span class="string">net.ipv4.tcp_keepalive_time=180</span></span><br><span class="line"><span class="attr">  image:</span> <span class="attr">busybox:1.27</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">init-sysctl</span></span><br><span class="line"><span class="attr">  securityContext:</span></span><br><span class="line"><span class="attr">    privileged:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://www.cnblogs.com/DaweiJ/articles/8528687.html" target="_blank" rel="noopener">https://www.cnblogs.com/DaweiJ/articles/8528687.html</a></li>
+<li><a href="https://yq.aliyun.com/articles/603745?utm_content=m_1000003707" target="_blank" rel="noopener">https://yq.aliyun.com/articles/603745?utm_content=m_1000003707</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/" target="_blank" rel="noopener">https://kubernetes.io/docs/tasks/administer-cluster/sysctl-cluster/</a></li>
+</ul>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-常用的IntelliJ IDEA 插件推荐" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/">常用的IntelliJ IDEA 插件推荐</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/常用的IntelliJ IDEA 插件推荐/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="一、Free-Mybatis-plugin"><a href="#一、Free-Mybatis-plugin" class="headerlink" title="一、Free Mybatis plugin"></a>一、Free Mybatis plugin</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/8321-free-mybatis-plugin/</a></p>
+</blockquote>
+<p>1.把mybatis的xml文件和代码关联上，可以在mapper接口直接跳转到对应的SQL语句。</p>
+<p><img src="http://image.sunshanpeng.com/201908181216_569.png" alt="mybatis"></p>
+<p>2.如果没有对应的SQL语句，可以快捷补全（当然具体SQL语句还是要自己写）。</p>
+<p><img src="http://image.sunshanpeng.com/201908181217_431.png" alt="sql"></p>
+<h3 id="二、Maven-Helper"><a href="#二、Maven-Helper" class="headerlink" title="二、Maven Helper"></a>二、Maven Helper</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7179-maven-helper/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7179-maven-helper/</a></p>
+</blockquote>
+<p>简单、方便的查看maven依赖和冲突</p>
+<p><img src="http://image.sunshanpeng.com/201908181217_88.png" alt="maven helper"></p>
+<p><img src="http://image.sunshanpeng.com/201908181218_140.png" alt="maven helper"></p>
+<h3 id="三、GenerateAllSetter"><a href="#三、GenerateAllSetter" class="headerlink" title="三、GenerateAllSetter"></a>三、GenerateAllSetter</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9360-generateallsetter/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9360-generateallsetter/</a></p>
+</blockquote>
+<p>一键调用一个对象的所有的set方法</p>
+<p><img src="http://image.sunshanpeng.com/201908181219_563.png" alt="generateAllSetter"></p>
+<h3 id="四、RestfulToolkit"><a href="#四、RestfulToolkit" class="headerlink" title="四、RestfulToolkit"></a>四、RestfulToolkit</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10292-restfultoolkit/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10292-restfultoolkit/</a></p>
+</blockquote>
+<p>通过URL查询对应的方法，可以根据请求方法过滤，另外支持简单的HTTP调用。</p>
+<p><img src="http://image.sunshanpeng.com/201908181219_755.png" alt="restfulToolkit"></p>
+<p><img src="http://image.sunshanpeng.com/201908181220_291.png" alt></p>
+<h3 id="五、Key-Promoter-X"><a href="#五、Key-Promoter-X" class="headerlink" title="五、Key Promoter X"></a>五、Key Promoter X</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9792-key-promoter-x/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9792-key-promoter-x/</a></p>
+</blockquote>
+<p>帮助我们快速的掌握 <strong>IntelliJ IDEA</strong>的快捷键。</p>
+<p><img src="http://image.sunshanpeng.com/201908181221_36.gif" alt></p>
+<h3 id="六、GsonFormat"><a href="#六、GsonFormat" class="headerlink" title="六、GsonFormat"></a>六、GsonFormat</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7654-gsonformat/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7654-gsonformat/</a></p>
+</blockquote>
+<p>快速方便的把json字符串转换为实体类（快捷键ALT+S）。</p>
+<p><img src="http://image.sunshanpeng.com/201908181221_537.png" alt></p>
+<h3 id="七、String-Manipulation"><a href="#七、String-Manipulation" class="headerlink" title="七、String Manipulation"></a>七、String Manipulation</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/2162-string-manipulation/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/2162-string-manipulation/</a></p>
+</blockquote>
+<p>快捷方便的把字符串在驼峰、大小写等格式之间转换（快捷键Alt+M)。</p>
+<p><img src="http://image.sunshanpeng.com/201908181222_332.png" alt></p>
+<p><img src="https://plugins.jetbrains.com/files/2162/screenshot_16015.png" alt="Screenshot 2"></p>
+<h3 id="八、Alibaba-Java-Coding-Guidelines"><a href="#八、Alibaba-Java-Coding-Guidelines" class="headerlink" title="八、Alibaba Java Coding Guidelines"></a>八、Alibaba Java Coding Guidelines</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10046-alibaba-java-coding-guidelines/</a></p>
+</blockquote>
+<p>扫描代码是否符合规范</p>
+<p><img src="http://image.sunshanpeng.com/201908181222_445.png" alt></p>
+<h3 id="九、Lombok"><a href="#九、Lombok" class="headerlink" title="九、Lombok"></a>九、Lombok</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/6317-lombok/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/6317-lombok/</a></p>
+</blockquote>
+<p>简化java bean的代码量，自动生成get set toString EqualsAndHashCode 构造器。</p>
+<blockquote>
+<p>需要引入依赖包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; &lt;dependency&gt;  </span><br><span class="line">&gt;           &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;  </span><br><span class="line">&gt;           &lt;artifactId&gt;lombok&lt;/artifactId&gt;   </span><br><span class="line">&gt; &lt;/dependency&gt;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="十、-ignore"><a href="#十、-ignore" class="headerlink" title="十、.ignore"></a>十、.ignore</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/7495--ignore/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/7495--ignore/</a></p>
+</blockquote>
+<p>使用协作或者打包工具时，方便的处理要忽略的文件和文件夹。</p>
+<p><img src="https://plugins.jetbrains.com/files/7495/screenshot_14958.png" alt="Screenshot 1"></p>
+<h3 id="十一、Vue-js"><a href="#十一、Vue-js" class="headerlink" title="十一、Vue.js"></a>十一、Vue.js</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/9442-vue-js/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/9442-vue-js/</a></p>
+</blockquote>
+<p>用IDEA开发Vue的插件。</p>
+<h3 id="十二、element"><a href="#十二、element" class="headerlink" title="十二、element"></a>十二、element</h3><blockquote>
+<p><a href="https://plugins.jetbrains.com/plugin/10524-element/" target="_blank" rel="noopener">https://plugins.jetbrains.com/plugin/10524-element/</a></p>
+</blockquote>
+<p>饿了么开源前端框架element的插件。</p>
+<p><img src="https://plugins.jetbrains.com/files/10524/screenshot_17918.png" alt="element"></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/idea/">idea</a></li></ul>
 
       
     </footer>
@@ -333,6 +505,106 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-Kubectl常用命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/Kubectl常用命令/">Kubectl常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/Kubectl常用命令/" class="article-date">
+	  <time datetime="2019-02-24T14:26:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><h3 id="前台运行的容器"><a href="#前台运行的容器" class="headerlink" title="前台运行的容器"></a>前台运行的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=centos --restart=Never <span class="built_in">test</span> bash</span><br></pre></td></tr></table></figure>
+<h3 id="常驻后台的容器"><a href="#常驻后台的容器" class="headerlink" title="常驻后台的容器"></a>常驻后台的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run nginx --image=nginx --replicas=2</span><br></pre></td></tr></table></figure>
+<p>通常使用yaml文件创建容器，只在调试或者排错的时候使用<code>kubectl run</code>临时创建容器。</p>
+<p>比如：</p>
+<h3 id="创建网络排查容器"><a href="#创建网络排查容器" class="headerlink" title="创建网络排查容器"></a>创建网络排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools</span><br></pre></td></tr></table></figure>
+<p>如果创建了一个MySQL容器并且暴露了service，但是不能使用service访问mysql，这个时候可以使用<code>nslookup</code>或者<code>dig</code>这些网络命令排查。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dnstools<span class="comment"># nslookup mysql</span></span><br><span class="line">Server:         172.21.0.2</span><br><span class="line">Address:        172.21.0.2<span class="comment">#53</span></span><br><span class="line"></span><br><span class="line">Name:   mysql.qa.svc.cluster.local</span><br><span class="line">Address: 172.21.147.86</span><br></pre></td></tr></table></figure>
+<h3 id="创建MySQL排查容器"><a href="#创建MySQL排查容器" class="headerlink" title="创建MySQL排查容器"></a>创建MySQL排查容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql --port 3306 -u root -p123456</span><br></pre></td></tr></table></figure>
+<p>如果创建的MySQL容器在集群外连接不上了，可以创建一个mysql容器在内部连接看看能不能连上。</p>
+<ul>
+<li><code>-h</code>参数是MySQL的host；</li>
+<li><code>--port</code>参数是MySQL的端口号；</li>
+<li><code>-u</code>参数是MySQL的用户名；</li>
+<li><code>-p</code>参数是用户名对应的密码，<code>-p</code>和密码之间没有空格。</li>
+</ul>
+<h2 id="应用资源"><a href="#应用资源" class="headerlink" title="应用资源"></a>应用资源</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f deployment.yaml</span><br></pre></td></tr></table></figure>
+<p>推荐使用这种方式创建或者更新资源。</p>
+<h2 id="获取容器"><a href="#获取容器" class="headerlink" title="获取容器"></a>获取容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide</span><br></pre></td></tr></table></figure>
+<p>获取所有namespace的容器。</p>
+<ul>
+<li><code>--all-namespaces</code>表示所有namespace，默认获取<code>default namespace</code>的资源，可以通过<code>-n</code>指定namespace。</li>
+<li><code>-o wide</code>表示输出格式，其他还要<code>json</code>，<code>yaml</code>。</li>
+</ul>
+<h3 id="获取所有不是Running状态的容器"><a href="#获取所有不是Running状态的容器" class="headerlink" title="获取所有不是Running状态的容器"></a>获取所有不是Running状态的容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces -o wide | awk <span class="string">'&#123;if ($4 != "Running") print $0&#125;'</span></span><br></pre></td></tr></table></figure>
+<h3 id="获取其他资源"><a href="#获取其他资源" class="headerlink" title="获取其他资源"></a>获取其他资源</h3><p>除了容器，还有很多其他资源例如<code>node</code>、<code>service</code>、<code>deployment</code>、<code>statefulset</code>、<code>daemonset</code>、<code>job</code>、<code>pvc</code>、<code>pv</code>等等可以通过kubectl来获取，大多数是区分namespace的，也有不区分namespace的比如<code>node</code>、<code>pv</code>、<code>storageclass</code>等。</p>
+<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc</span><br></pre></td></tr></table></figure>
+<h3 id="强制删除："><a href="#强制删除：" class="headerlink" title="强制删除："></a>强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl delete pod nginx-deployment-599c95f496-hd2jc --force --grace-period=0</span><br></pre></td></tr></table></figure>
+<h3 id="批量强制删除："><a href="#批量强制删除：" class="headerlink" title="批量强制删除："></a>批量强制删除：</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods | grep Terminating | awk <span class="string">'&#123;print $1&#125;'</span> | xargs kubectl delete pod --force --grace-period=0</span><br></pre></td></tr></table></figure>
+<h3 id="批量强制删除非运行容器"><a href="#批量强制删除非运行容器" class="headerlink" title="批量强制删除非运行容器"></a>批量强制删除非运行容器</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get pods --all-namespaces | awk <span class="string">'&#123;if ($4 != "Running") system ("kubectl -n " $1 " delete pods " $2 " --grace-period=0 " " --force ")&#125;'</span></span><br></pre></td></tr></table></figure>
+<h2 id="扩缩容"><a href="#扩缩容" class="headerlink" title="扩缩容"></a>扩缩容</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl scale deployment nginx --replicas 4</span><br></pre></td></tr></table></figure>
+<p>最小可以缩容到0个。</p>
+<h2 id="暂停滚动升级"><a href="#暂停滚动升级" class="headerlink" title="暂停滚动升级"></a>暂停滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout pause deployment nginx</span><br></pre></td></tr></table></figure>
+<p>滚动升级时，可以使用该命令暂停升级来实现金丝雀发布。</p>
+<h2 id="恢复滚动升级"><a href="#恢复滚动升级" class="headerlink" title="恢复滚动升级"></a>恢复滚动升级</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout resume deployment nginx</span><br></pre></td></tr></table></figure>
+<p>暂停后恢复。</p>
+<h2 id="回滚"><a href="#回滚" class="headerlink" title="回滚"></a>回滚</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl rollout undo deployment nginx</span><br></pre></td></tr></table></figure>
+<p>回滚到上一次发布。</p>
+<h2 id="给node加taint（污点）"><a href="#给node加taint（污点）" class="headerlink" title="给node加taint（污点）"></a>给node加taint（污点）</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl taint nodes node1 key=value:NoSchedule</span><br></pre></td></tr></table></figure>
+<p>给节点添加污点后只有容忍了该污点的容器才能调度上来。</p>
+<h2 id="查看node信息"><a href="#查看node信息" class="headerlink" title="查看node信息"></a>查看node信息</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl describe nodes node1</span><br></pre></td></tr></table></figure>
+<p>通过该命令可以查看node的资源、内核、容器、标签和污点等等。</p>
+<h2 id="给node加标签"><a href="#给node加标签" class="headerlink" title="给node加标签"></a>给node加标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role=node --overwrite</span><br></pre></td></tr></table></figure>
+<p>给node加标签后可以用节点亲和性指定某些pod调度到固定node。</p>
+<h2 id="删除node上的标签"><a href="#删除node上的标签" class="headerlink" title="删除node上的标签"></a>删除node上的标签</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl label node node1 kubernetes.io/role-</span><br></pre></td></tr></table></figure>
+<h2 id="根据标签筛选"><a href="#根据标签筛选" class="headerlink" title="根据标签筛选"></a>根据标签筛选</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl get nodes -l node-type=iot</span><br></pre></td></tr></table></figure>
+<h2 id="禁止节点调度"><a href="#禁止节点调度" class="headerlink" title="禁止节点调度"></a>禁止节点调度</h2><h3 id="只禁止不驱逐"><a href="#只禁止不驱逐" class="headerlink" title="只禁止不驱逐"></a>只禁止不驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl cordon node1</span><br></pre></td></tr></table></figure>
+<p>这种方式只把node标记为<code>SchedulingDisabled</code>,已经在node上运行的pod不会受影响，之后不会再有新的pod调度上去。</p>
+<h3 id="禁止并驱逐"><a href="#禁止并驱逐" class="headerlink" title="禁止并驱逐"></a>禁止并驱逐</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl drain node1 --ignore-daemonsets --delete-local-data --force</span><br></pre></td></tr></table></figure>
+<p>这种方式除了把node标记为<code>SchedulingDisabled</code>，已经运行的pod也会被驱逐，保证节点除<code>daemonset</code>外没有其他pod。</p>
+<h2 id="恢复调度"><a href="#恢复调度" class="headerlink" title="恢复调度"></a>恢复调度</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl uncordon node1</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
 
       
     </footer>
@@ -524,7 +796,7 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
 <ol start="4">
-<li>严重配置是否加载</li>
+<li>验证配置是否加载</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl show --property=Environment docker</span><br><span class="line">Environment=HTTP_PROXY=http://proxy.example.com:80/</span><br></pre></td></tr></table></figure>
 <p>如果配置已经加载但还是不能下载谷歌镜像，可以试试把<code>HTTP_PROXY</code>改成<code>http_proxy</code>，我的配置是<code>Environment=&quot;http_proxy=http://10.208.204.147:1080/&quot;</code>才能使用。</p>
@@ -629,6 +901,43 @@
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
 
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-Service的意义" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+    <div class="article-meta">
+      
+	<a href="/2018/10/21/Service的意义/" class="article-date">
+	  <time datetime="2018-10-21T15:06:09.474Z" itemprop="datePublished">十月 21, 2018</time>
+	</a>
+
+       
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在用 Kubernetes 之前，当我们有了容器网络之后，访问一个应用最直接的做法，就是客户端直接去访问一个 Backend Container。</p>
+<p>这种做法最直观和容易，同时问题也是显而易见的。</p>
+<p>当应用有多个后端容器的时候，怎么做负载均衡，会话保持怎么做，某个容器迁了之后 IP 跟着变怎么办，还有对应的健康检查怎么配，如果想用域名来做访问入口要怎么处理……</p>
+<p>这些其实就是 Kubernetes 的 Service 引入所要解决的问题。</p>
+<h2 id="Service的意义"><a href="#Service的意义" class="headerlink" title="Service的意义"></a>Service的意义</h2><p>Kubernetes <code>Pod</code> 是有生命周期的，它们可以被创建，也可以被销毁，然而一旦被销毁生命就永远结束。 通过 <code>ReplicationController</code>能够动态地创建和销毁 <code>Pod</code>。 每个 <code>Pod</code> 都会获取它自己的 IP 地址，即使这些 IP 地址不总是稳定可依赖的。 这会导致一个问题：在 Kubernetes 集群中，如果一组 <code>Pod</code>（称为 backend）为其它 <code>Pod</code> （称为 frontend）提供服务，那么那些 frontend 该如何发现，并连接到这组 <code>Pod</code>中的哪些 backend 呢？</p>
+<p>Kubernetes <code>Service</code> 定义了这样一种抽象：一个 <code>Pod</code> 的逻辑分组，一种可以访问它们的策略 —— 通常称为微服务。 </p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+      
       
     </footer>
     <hr class="entry-footer-hr">
@@ -749,8 +1058,8 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a></h6>
-              <span>八月 24, 2019</span>
+              <h6 style="margin: 0;"><a href="/2019/09/17/在k8s中使用eureka的几种姿势/">在k8s中使用eureka的几种姿势</a></h6>
+              <span>九月 17, 2019</span>
             </div>
 
           </li>
@@ -761,8 +1070,32 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/03/24/Docker常用命令/">Docker常用命令</a></h6>
-              <span>三月 24, 2019</span>
+              <h6 style="margin: 0;"><a href="/2019/09/17/Eureka服务注册发现/">Eureka服务注册发现</a></h6>
+              <span>九月 17, 2019</span>
+            </div>
+
+          </li>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/2019/08/30/配置Jenkins打包VUE项目/">(no title)</a></h6>
+              <span>八月 30, 2019</span>
+            </div>
+
+          </li>
+        
+          <li class="clearfix">
+
+            
+              <div class="widget-entry-summary" style="margin: 0;">
+            
+
+              <h6 style="margin: 0;"><a href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a></h6>
+              <span>八月 24, 2019</span>
             </div>
 
           </li>
@@ -791,30 +1124,6 @@
 
           </li>
         
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/02/24/Kubernetes介绍/">Kubernetes介绍</a></h6>
-              <span>二月 24, 2019</span>
-            </div>
-
-          </li>
-        
-          <li class="clearfix">
-
-            
-              <div class="widget-entry-summary" style="margin: 0;">
-            
-
-              <h6 style="margin: 0;"><a href="/2019/02/24/Pod的意义/">Pod的意义</a></h6>
-              <span>二月 24, 2019</span>
-            </div>
-
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -824,7 +1133,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">12</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">13</span></li></ul>
     </div>
   </div>
 
@@ -834,7 +1143,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka/">eureka</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -844,7 +1153,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a>
+      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/eureka/" style="font-size: 13.33px;">eureka</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a>
     </div>
   </div>
 
@@ -854,7 +1163,7 @@
     <h3 class="widget-title">Archives</h3>
 
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 

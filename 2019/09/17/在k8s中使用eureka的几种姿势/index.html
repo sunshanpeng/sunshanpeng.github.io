@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>在k8s中使用eureka的几种姿势 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="k8seureka">
+  
+  
+  
+  
+  <meta name="description" content="前言在Kubernetes中，service通过label关联pod，使用service的clusterIp即可访问到对应pod。 如果觉得clusterIp不好记，可以用coredns将service name解析成service的clusterIp，通过访问service name来访问对应的pod。 通过coredns+service，可以在单个kubernetes集群中无需其他依赖即可实现">
+<meta name="keywords" content="k8s,eureka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在k8s中使用eureka的几种姿势">
+<meta property="og:url" content="http://sunshanpeng.com/2019/09/17/在k8s中使用eureka的几种姿势/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="前言在Kubernetes中，service通过label关联pod，使用service的clusterIp即可访问到对应pod。 如果觉得clusterIp不好记，可以用coredns将service name解析成service的clusterIp，通过访问service name来访问对应的pod。 通过coredns+service，可以在单个kubernetes集群中无需其他依赖即可实现">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2019-10-08T00:27:46.314Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在k8s中使用eureka的几种姿势">
+<meta name="twitter:description" content="前言在Kubernetes中，service通过label关联pod，使用service的clusterIp即可访问到对应pod。 如果觉得clusterIp不好记，可以用coredns将service name解析成service的clusterIp，通过访问service name来访问对应的pod。 通过coredns+service，可以在单个kubernetes集群中无需其他依赖即可实现">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-在k8s中使用eureka的几种姿势" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      在k8s中使用eureka的几种姿势
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/09/17/在k8s中使用eureka的几种姿势/" class="article-date">
+	  <time datetime="2019-09-17T11:29:37.000Z" itemprop="datePublished">九月 17, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在Kubernetes中，service通过label关联pod，使用service的clusterIp即可访问到对应pod。</p>
+<p>如果觉得clusterIp不好记，可以用coredns将service name解析成service的clusterIp，通过访问service name来访问对应的pod。</p>
+<p>通过coredns+service，可以在单个kubernetes集群中无需其他依赖即可实现服务发现。</p>
+<p>但由于某些其他原因我们需要使用额外的注册中心eureka，本文列举了几种注册方式和注意事项。</p>
+<h2 id="使用Pod-IP注册"><a href="#使用Pod-IP注册" class="headerlink" title="使用Pod IP注册"></a>使用Pod IP注册</h2><p>因为Pod的IP是跟随生命周期的，重新发布以后IP就变更了。</p>
+<p>但是eureka的缓存机制相当长，重新发布后服务消费者很长一段时间会访问之前的Pod IP。</p>
+<p>要解决这个问题有以下几个优化点：</p>
+<h3 id="优雅停止Pod"><a href="#优雅停止Pod" class="headerlink" title="优雅停止Pod"></a>优雅停止Pod</h3><p>如果Pod被强杀掉，就不能立即从Eureka Server下线，直到Eureka Server的EvictionTask 来定时清理过期的客户端，默认60秒清理一次，清理掉之前还能被其他客户端发现并调用。</p>
+<p>kubernetes提供了生命周期回调函数，会在容器被终止前调用preStop，执行停止Java进程的命令</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">lifecycle:</span></span><br><span class="line"><span class="attr">  preStop:</span></span><br><span class="line"><span class="attr">    exec:</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">["/bin/bash",</span> <span class="string">"-c"</span><span class="string">,</span> <span class="string">"ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill"</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
+<p>因为遵循一个容器只运行一个进程的原则，所以可以直接查找Java的pid然后kill，也可以用pidof命令查找Java的pid。</p>
+<h3 id="缩短服务发现时间"><a href="#缩短服务发现时间" class="headerlink" title="缩短服务发现时间"></a>缩短服务发现时间</h3><p>Eureka客户端默认30秒的缓存时间，ribbon默认30秒的缓存时间，加上Eureka Server的三级缓存机制readOnlyCache也有30秒的缓存时间，在开启Eureka Server的自我保护模式时，即使客户端从Eureka Server下线了，极端情况下也有可能在90秒以后才能在其他客户端的缓存中清除。</p>
+<p>可以通过设置deployment中的环境变量修改默认的缓存时间：</p>
+<p>eureka client缓存（单位：秒）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.client.registryFetchIntervalSeconds = 10</span><br></pre></td></tr></table></figure>
+<p>ribbon缓存（单位：秒）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ribbon.ServerListRefreshInterval = 10</span><br></pre></td></tr></table></figure>
+<h3 id="关闭Eureka-Server的readOnlyCache（可选）"><a href="#关闭Eureka-Server的readOnlyCache（可选）" class="headerlink" title="关闭Eureka Server的readOnlyCache（可选）"></a>关闭Eureka Server的readOnlyCache（可选）</h3><p>因为<code>readWriteCacheMap</code>用的<code>LoadingCache</code>有读写锁，使用<code>readOnlyCacheMap</code>可以增加吞吐量，中小集群可以关闭<code>readOnlyCacheMap</code>。</p>
+<p>关闭<code>readWriteCacheMap</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.use-read-only-response-cache = false</span><br></pre></td></tr></table></figure>
+<p>也可以缩短readOnlyCache的刷新时间：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eureka.server.response-cache-update-interval-ms = 10</span><br></pre></td></tr></table></figure>
+<h3 id="强制下线"><a href="#强制下线" class="headerlink" title="强制下线"></a>强制下线</h3><p>即使优雅停止Pod、缩短客户端和Eureka Server的缓存时间，但是Eureka客户端还是有几率请求到已下线的Pod。</p>
+<p>Eureka提供了强制下线的接口，可以先从Eureka Server强制下线，等待缓存时间过期再停止Pod。</p>
+<p>client强制下线接口:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /pause</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST /service-registry</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/pause"</span></span><br><span class="line">curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/service-registry/instance-status"</span> -H <span class="string">"Content-Type: text/plain; charset=utf-8"</span> -d <span class="string">"OUT_OF_SERVICE"</span></span><br></pre></td></tr></table></figure>
+<p>Eureka Server强制下线接口：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">PUT /eureka/apps/$&#123;appId&#125;/$&#123;ip:port&#125;/status?value=OUT_OF_SERVICE</span><br></pre></td></tr></table></figure>
+<p>比如：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT http://eureka:8080/eureka/apps/EUREKA-1/192.168.0.10:8080/status?value=OUT_OF_SERVICE</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于强制下线可以看一下参考里的文章。</p>
+</blockquote>
+<h3 id="具体配置"><a href="#具体配置" class="headerlink" title="具体配置"></a>具体配置</h3><p>实践配置为Eureka客户端缓存10秒，ribbon缓存10秒，不关闭readOnlyCache（缓存30秒），加起来缓存时间50秒。</p>
+<p>将停止脚本放在指定目录，并在preStop调用。</p>
+<p>脚本逻辑：1.强制下线当前实例；2.暂停总缓存时间；3.停止服务。</p>
+<h4 id="配置环境变量："><a href="#配置环境变量：" class="headerlink" title="配置环境变量："></a>配置环境变量：</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">eureka.client.registryFetchIntervalSeconds</span> <span class="comment"># Eureka客户端缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"10"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">ribbon.ServerListRefreshInterval</span> <span class="comment">#ribbon缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"10"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">MANAGEMENT_PORT</span> <span class="comment">#management.port的端口</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"$&#123;management.port&#125;"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">SLEEP_SECOND</span> <span class="comment">#总缓存时间</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"50"</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">management.endpoints.web.exposure.include</span> <span class="comment">#启用并暴露service-registry</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">service-registry</span></span><br></pre></td></tr></table></figure>
+<h4 id="preStop"><a href="#preStop" class="headerlink" title="preStop"></a>preStop</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">lifecycle:</span></span><br><span class="line"><span class="attr">  preStop:</span></span><br><span class="line"><span class="attr">    exec:</span></span><br><span class="line"><span class="attr">      command:</span> <span class="string">["/bin/sh",</span> <span class="string">"/app/script/stop.sh"</span><span class="string">]</span></span><br></pre></td></tr></table></figure>
+<h4 id="stop-sh"><a href="#stop-sh" class="headerlink" title="stop.sh"></a>stop.sh</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 如果没有管理端口直接下线</span></span><br><span class="line">if [ -z $MANAGEMENT_PORT ];then</span><br><span class="line">  echo "MANAGEMENT_PORT is empty, kill java"</span><br><span class="line">  ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill</span><br><span class="line">  exit 1</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 默认暂停时间</span></span><br><span class="line">if [ -z $SLEEP_SECOND ];then</span><br><span class="line">  echo "SLEEP_SECOND is empty, set 50"</span><br><span class="line">  SLEEP_SECOND=50</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 从EUREKA下线</span></span><br><span class="line">echo "curl pause $MANAGEMENT_PORT"</span><br><span class="line"><span class="meta">#</span><span class="bash"> curl -X POST <span class="string">"http://localhost:<span class="variable">$MANAGEMENT_PORT</span>/pause"</span></span></span><br><span class="line">curl -X "POST" "http://localhost:$MANAGEMENT_PORT/service-registry/instance-status" -H "Content-Type: text/plain; charset=utf-8" -d "OUT_OF_SERVICE"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 等待SLEEP_SECOND秒，SLEEP_SECOND = 客户端缓存时间（eureka+ribbon）+ readOnlyCache时间</span></span><br><span class="line">echo ""</span><br><span class="line">echo "sleep $SLEEP_SECOND s"</span><br><span class="line">sleep $SLEEP_SECOND</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 停止服务</span></span><br><span class="line">echo "kill java"</span><br><span class="line">ps -ef | grep jav[a] | awk 'NR==1&#123;print $2&#125;' | xargs kill</span><br></pre></td></tr></table></figure>
+<h2 id="使用Service的Cluster-IP注册"><a href="#使用Service的Cluster-IP注册" class="headerlink" title="使用Service的Cluster IP注册"></a>使用Service的Cluster IP注册</h2><p>Service的Cluster IP是一个虚拟IP，会经kube-proxy把流量负载均衡到后端endpoint。</p>
+<p>而且Service的Cluster IP是固定的，除非主动删除后重建，不然可以一直固定。</p>
+<p>使用Cluster IP等于使用了Kubernetes的服务发现，当Pod不可用时就会从service的endpoint列表中移除，流量就不会再负载均衡到该Pod。</p>
+<p>配置方式（properties）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">eureka.instance.ipAddress = $&#123;Cluster IP&#125;</span><br><span class="line">eureka.instance.nonSecurePort = $&#123;port&#125; #service的port</span><br></pre></td></tr></table></figure>
+<p><strong>使用Service注册虽然可以自动过滤下线的服务，但是ribbon内部使用keepalive进行会话保持，因为是客户端负载均衡所以A服务的A1实例所有请求都会经过service转发到同一个B服务的B1实例，从而出现负载不均衡的情况</strong></p>
+<h2 id="使用Service的NodePort注册"><a href="#使用Service的NodePort注册" class="headerlink" title="使用Service的NodePort注册"></a>使用Service的NodePort注册</h2><p>默认情况下Pod的IP只能在本集群内的Node上访问，非本集群的服务器访问不了。</p>
+<p><strong>可以通过写路由表或者BGP来发布Pod路由。</strong></p>
+<p>NodePort是Pod对外提供访问的一种方式，使用Host IP+NodePort可以简单实现跨集群及虚拟机之间的服务互相访问。</p>
+<p>配置方式（环境变量）：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">- name:</span> <span class="string">eureka.instance.ipAddress</span></span><br><span class="line"><span class="attr">  valueFrom:</span></span><br><span class="line"><span class="attr">    fieldRef:</span></span><br><span class="line"><span class="attr">      fieldPath:</span> <span class="string">status.hostIP</span></span><br><span class="line"><span class="attr">- name:</span> <span class="string">eureka.instance.nonSecurePort</span></span><br><span class="line"><span class="attr">  value:</span> <span class="string">"$&#123;NodePort&#125;"</span></span><br></pre></td></tr></table></figure>
+<p><strong>NodePort方式本质也是Service，所以也存在负载均衡的情况。</strong></p>
+<p><strong>另外管理NodePort也是件麻烦事。</strong></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/" target="_blank" rel="noopener">http://www.itmuch.com/spring-cloud-sum/how-to-unregister-service-in-eureka/</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/eureka/">eureka</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/09/17/Eureka服务注册发现/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Eureka服务注册发现</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Pod-IP注册"><span class="nav-number">2.</span> <span class="nav-text">使用Pod IP注册</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#优雅停止Pod"><span class="nav-number">2.1.</span> <span class="nav-text">优雅停止Pod</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缩短服务发现时间"><span class="nav-number">2.2.</span> <span class="nav-text">缩短服务发现时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭Eureka-Server的readOnlyCache（可选）"><span class="nav-number">2.3.</span> <span class="nav-text">关闭Eureka Server的readOnlyCache（可选）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强制下线"><span class="nav-number">2.4.</span> <span class="nav-text">强制下线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体配置"><span class="nav-number">2.5.</span> <span class="nav-text">具体配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#配置环境变量："><span class="nav-number">2.5.1.</span> <span class="nav-text">配置环境变量：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#preStop"><span class="nav-number">2.5.2.</span> <span class="nav-text">preStop</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stop-sh"><span class="nav-number">2.5.3.</span> <span class="nav-text">stop.sh</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Service的Cluster-IP注册"><span class="nav-number">3.</span> <span class="nav-text">使用Service的Cluster IP注册</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Service的NodePort注册"><span class="nav-number">4.</span> <span class="nav-text">使用Service的NodePort注册</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2019 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

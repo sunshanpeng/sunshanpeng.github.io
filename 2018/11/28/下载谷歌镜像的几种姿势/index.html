@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="前言在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站gcr.io，不过我们可以通过其他方式使用谷歌的镜像。 通过国内镜像站阿里云镜像站域名：registry.cn-hangzhou.aliyuncs.com/google_containers 微软镜像站域名：gcr.azk8s.cn/google_containers 中科大镜像站（拉取速度较慢）域名：gcr.mirrors.">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2019-08-18T12:49:58.168Z">
+<meta property="og:updated_time" content="2019-08-25T10:40:47.179Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="下载谷歌镜像的几种姿势">
 <meta name="twitter:description" content="前言在国内，因为墙的存在所以很多国外网站不能访问，这其中就有谷歌镜像网站gcr.io，不过我们可以通过其他方式使用谷歌的镜像。 通过国内镜像站阿里云镜像站域名：registry.cn-hangzhou.aliyuncs.com/google_containers 微软镜像站域名：gcr.azk8s.cn/google_containers 中科大镜像站（拉取速度较慢）域名：gcr.mirrors.">
@@ -183,7 +183,7 @@
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
 <ol start="4">
-<li>严重配置是否加载</li>
+<li>验证配置是否加载</li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl show --property=Environment docker</span><br><span class="line">Environment=HTTP_PROXY=http://proxy.example.com:80/</span><br></pre></td></tr></table></figure>
 <p>如果配置已经加载但还是不能下载谷歌镜像，可以试试把<code>HTTP_PROXY</code>改成<code>http_proxy</code>，我的配置是<code>Environment=&quot;http_proxy=http://10.208.204.147:1080/&quot;</code>才能使用。</p>

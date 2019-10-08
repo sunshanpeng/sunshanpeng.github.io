@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="拉取镜像1docker pull mysql:5.6 格式：docker pull [OPTIONS] NAME[:TAG|@DIGEST]，tag不写的话默认latest。 登录镜像仓库1docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com 格式：docker login [OPTIONS] [S">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2019-08-18T11:21:45.249Z">
+<meta property="og:updated_time" content="2019-10-08T00:23:33.805Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker常用命令">
 <meta name="twitter:description" content="拉取镜像1docker pull mysql:5.6 格式：docker pull [OPTIONS] NAME[:TAG|@DIGEST]，tag不写的话默认latest。 登录镜像仓库1docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com 格式：docker login [OPTIONS] [S">
@@ -203,7 +203,7 @@
 </li>
 <li><p><code>-d</code>指定容器后台运行</p>
 <p>其他还有很多指定IP、Hostname、CPU、内存、网络、内核参数、重启策略等等参数，可以通过<code>docker run --help</code>查询。</p>
-<h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/lib:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
+<h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/data:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
 <h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
@@ -284,19 +284,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/08/24/Kubernetes高可用架构/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/03/24/Windows电脑本地开发时连接Apollo配置中心启动慢/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          Kubernetes高可用部署
+          Windows电脑本地开发时连接Apollo配置中心启动慢
         
       </div>
     </a>
   
   
-    <a href="/2019/03/24/Kubernetes集群配置优化/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/02/24/Kubernetes介绍/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Kubernetes集群配置优化</div>
+      <div class="article-nav-title">Kubernetes介绍</div>
     </a>
   
 </nav>
