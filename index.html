@@ -358,45 +358,6 @@
 <!-- Table of Contents -->
 
   
-    <article id="post-配置Jenkins打包VUE项目" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-    <div class="article-meta">
-      
-	<a href="/2019/08/30/配置Jenkins打包VUE项目/" class="article-date">
-	  <time datetime="2019-08-30T12:50:03.464Z" itemprop="datePublished">八月 30, 2019</time>
-	</a>
-
-       
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="一、下载NodeJS插件"><a href="#一、下载NodeJS插件" class="headerlink" title="一、下载NodeJS插件"></a>一、下载NodeJS插件</h2><h3 id="进入插件管理"><a href="#进入插件管理" class="headerlink" title="进入插件管理"></a>进入插件管理</h3><p><img src="http://image.sunshanpeng.com/201908301902_419.png" alt></p>
-<h3 id="在可选插件里面安装NodeJS"><a href="#在可选插件里面安装NodeJS" class="headerlink" title="在可选插件里面安装NodeJS"></a>在可选插件里面安装NodeJS</h3><p><img src="http://image.sunshanpeng.com/201908301905_538.png" alt></p>
-<h3 id="等待安装完成"><a href="#等待安装完成" class="headerlink" title="等待安装完成"></a>等待安装完成</h3><p><img src="http://image.sunshanpeng.com/201908301906_385.png" alt></p>
-<h2 id="二、配置NodeJS插件"><a href="#二、配置NodeJS插件" class="headerlink" title="二、配置NodeJS插件"></a>二、配置NodeJS插件</h2><h3 id="进入全局工具配置"><a href="#进入全局工具配置" class="headerlink" title="进入全局工具配置"></a>进入全局工具配置</h3><p><img src="http://image.sunshanpeng.com/201908301908_350.png" alt></p>
-<h3 id="新增NodeJS"><a href="#新增NodeJS" class="headerlink" title="新增NodeJS"></a>新增NodeJS</h3><p><img src="http://image.sunshanpeng.com/201908301912_783.png" alt></p>
-<h2 id="三、配置Job"><a href="#三、配置Job" class="headerlink" title="三、配置Job"></a>三、配置Job</h2><h3 id="配置执行shell"><a href="#配置执行shell" class="headerlink" title="配置执行shell"></a>配置执行shell</h3><p><img src="http://image.sunshanpeng.com/201908301910_887.png" alt></p>
-<p>shell命令：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打包</span></span><br><span class="line">node -v</span><br><span class="line">npm -v </span><br><span class="line">npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver</span><br><span class="line">npm install</span><br><span class="line">rm -rf dist</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-      
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
     <article id="post-Kubernetes高可用架构" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -493,6 +454,135 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
+    <article id="post-Docker常用命令" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/03/24/Docker常用命令/">Docker常用命令</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/03/24/Docker常用命令/" class="article-date">
+	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.6</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker pull [OPTIONS] NAME[:TAG|@DIGEST]</code>，tag不写的话默认latest。</p>
+<h2 id="登录镜像仓库"><a href="#登录镜像仓库" class="headerlink" title="登录镜像仓库"></a>登录镜像仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker login [OPTIONS] [SERVER]</code></p>
+<ul>
+<li><p>SERVER为空的情况下默认登录<code>hub.docker.com</code></p>
+</li>
+<li><p>password建议不要显示在控制台上</p>
+</li>
+</ul>
+<h2 id="列出所有镜像"><a href="#列出所有镜像" class="headerlink" title="列出所有镜像"></a>列出所有镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker images [OPTIONS] [REPOSITORY[:TAG]]</code>，可选参数显示全部镜像或者过滤镜像。</p>
+<h2 id="列出所有容器"><a href="#列出所有容器" class="headerlink" title="列出所有容器"></a>列出所有容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker ps [OPTIONS]</code>，去掉<code>-a</code>显示运行中的容器。</p>
+<h2 id="给镜像打tag"><a href="#给镜像打tag" class="headerlink" title="给镜像打tag"></a>给镜像打tag</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag mysql:5.6 harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</code></p>
+<p>当我们从公共仓库拉取的镜像，想推送到我们自己搭建的私有仓库，需要先打一个tag；</p>
+<p>当我们拉取不到一些需要翻墙才能拉取的镜像时，也可以从国内镜像仓库拉取镜像然后打个tag给成目标镜像。</p>
+<h2 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a>推送镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker push [OPTIONS] NAME[:TAG]</code></p>
+<p>推送镜像必须先登录要推送的目标仓库，而且需要对目标仓库有推送的权限。</p>
+<p>类似<code>docker push mysql:5.6</code>是不行的。</p>
+<h2 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t simpleApp:v1 .</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker build [OPTIONS] PATH | URL | -</code>。</p>
+<p>根据<code>Dockerfile</code>制作镜像。</p>
+<h2 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi mysql:5.6</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker rmi [OPTIONS] IMAGE [IMAGE...]</code>，不能删除已经创建了容器的镜像，必须先删除对应容器。</p>
+<h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run nginx</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</code></p>
+<p>OPTIONS参数有很多，比较常用的如下：</p>
+<ul>
+<li><p><code>--name</code>指定容器名字</p>
+</li>
+<li><p><code>-p</code>指定容器映射宿主机的端口号</p>
+</li>
+<li><p><code>-e</code>指定环境变量</p>
+</li>
+<li><p><code>-v</code>指定挂载卷</p>
+</li>
+<li><p><code>-it</code>指定容器前台运行</p>
+</li>
+<li><p><code>-d</code>指定容器后台运行</p>
+<p>其他还有很多指定IP、Hostname、CPU、内存、网络、内核参数、重启策略等等参数，可以通过<code>docker run --help</code>查询。</p>
+<h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/data:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
+<h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="重命名容器"><a href="#重命名容器" class="headerlink" title="重命名容器"></a>重命名容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename mysql mysql1</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker rename CONTAINER NEW_NAME</code>。</p>
+<h2 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker stop [OPTIONS] CONTAINER [CONTAINER...]</code>，停止多个容器用空格分隔容器名字或者容器id。</p>
+<h2 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker kill [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
+<h2 id="启动-重启容器"><a href="#启动-重启容器" class="headerlink" title="启动/重启容器"></a>启动/重启容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start/restart mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker start/restart [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
+<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker rm [OPTIONS] CONTAINER [CONTAINER...]</code>，不带参数时只能删除已停止的容器，带上参数<code>-f</code>可以强制删除运行中的容器。</p>
+<h2 id="更新容器"><a href="#更新容器" class="headerlink" title="更新容器"></a>更新容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker update --restart always mysql</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker update [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
+<p>更新容器的重启策略、CPU和内存大小。</p>
+<h2 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql /bin/bash</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker exec [OPTIONS] CONTAINER COMMAND [ARG...]</code>。</p>
+<ul>
+<li><p>CONTAINER 可以是容器Id或者容器名字；</p>
+</li>
+<li><p><code>/bin/bash</code>是进入容器后执行的命令，有些容器可能不存在<code>/bin/bash</code>。</p>
+</li>
+</ul>
+<h2 id="导出镜像文件"><a href="#导出镜像文件" class="headerlink" title="导出镜像文件"></a>导出镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o rook-ceph-093.tar rook/ceph:v0.9.3</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker save [OPTIONS] IMAGE [IMAGE...]</code>。</p>
+<p>如果同时导出多个镜像到一个文件里，后面的镜像列表用空格来分隔。</p>
+<h2 id="导入镜像文件"><a href="#导入镜像文件" class="headerlink" title="导入镜像文件"></a>导入镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i /root/rook-ceph-093.tar</span><br></pre></td></tr></table></figure>
+<p>格式：<code>docker load [OPTIONS]</code></p>
+<p>当不方便使用自建的镜像仓库来传输镜像时，可以用镜像的导出导入功能来移动镜像。</p>
+<h2 id="查看容器资源消耗"><a href="#查看容器资源消耗" class="headerlink" title="查看容器资源消耗"></a>查看容器资源消耗</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br><span class="line">CONTAINER ID        NAME                               CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS</span><br><span class="line">63ebc0e88e5a        happy_volhard                      0.02%               35.3MiB / 15.46GiB    0.22%               11.5MB / 19MB       13.3MB / 45MB       22</span><br><span class="line">7ed66f584a25        redis                              0.08%               7.82MiB / 15.46GiB    0.05%               304kB / 274kB       5.59MB / 0B         3</span><br><span class="line">500eed21d914        dockercompose_mqbroker_1           2.98%               752.3MiB / 15.46GiB   4.75%               0B / 0B             3.07GB / 19GB       204</span><br><span class="line">ddd919a5bf52        dockercompose_mqnamesrv_1          0.21%               329.2MiB / 15.46GiB   2.08%               0B / 0B             60.3MB / 16.4kB     41</span><br></pre></td></tr></table></figure>
+<h2 id="查看Docker占用磁盘"><a href="#查看Docker占用磁盘" class="headerlink" title="查看Docker占用磁盘"></a>查看Docker占用磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker system df</span><br><span class="line"></span><br><span class="line">TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE</span><br><span class="line">Images              29                  28                  8.575GB             1.873GB (21%)</span><br><span class="line">Containers          29                  17                  7.545GB             410.8MB (5%)</span><br><span class="line">Local Volumes       303                 23                  6.339GB             4.138GB (65%)</span><br><span class="line">Build Cache         0                   0                   0B                  0B</span><br></pre></td></tr></table></figure>
+<p>可以查看镜像文件大小、容器大小、本地存储使用的磁盘大小。</p>
+<h2 id="清理Docker镜像和容器"><a href="#清理Docker镜像和容器" class="headerlink" title="清理Docker镜像和容器"></a>清理Docker镜像和容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -a</span><br></pre></td></tr></table></figure>
+<p>此命令会清除所有未运行的容器和清理所有未使用的镜像。</p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
 
       
     </footer>
@@ -662,135 +752,6 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/apollo/">apollo</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-Docker常用命令" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2019/03/24/Docker常用命令/">Docker常用命令</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2019/03/24/Docker常用命令/" class="article-date">
-	  <time datetime="2019-03-24T14:26:37.000Z" itemprop="datePublished">三月 24, 2019</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="拉取镜像"><a href="#拉取镜像" class="headerlink" title="拉取镜像"></a>拉取镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker pull [OPTIONS] NAME[:TAG|@DIGEST]</code>，tag不写的话默认latest。</p>
-<h2 id="登录镜像仓库"><a href="#登录镜像仓库" class="headerlink" title="登录镜像仓库"></a>登录镜像仓库</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker login [OPTIONS] [SERVER]</code></p>
-<ul>
-<li><p>SERVER为空的情况下默认登录<code>hub.docker.com</code></p>
-</li>
-<li><p>password建议不要显示在控制台上</p>
-</li>
-</ul>
-<h2 id="列出所有镜像"><a href="#列出所有镜像" class="headerlink" title="列出所有镜像"></a>列出所有镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker images [OPTIONS] [REPOSITORY[:TAG]]</code>，可选参数显示全部镜像或者过滤镜像。</p>
-<h2 id="列出所有容器"><a href="#列出所有容器" class="headerlink" title="列出所有容器"></a>列出所有容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker ps -a</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker ps [OPTIONS]</code>，去掉<code>-a</code>显示运行中的容器。</p>
-<h2 id="给镜像打tag"><a href="#给镜像打tag" class="headerlink" title="给镜像打tag"></a>给镜像打tag</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag mysql:5.6 harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]</code></p>
-<p>当我们从公共仓库拉取的镜像，想推送到我们自己搭建的私有仓库，需要先打一个tag；</p>
-<p>当我们拉取不到一些需要翻墙才能拉取的镜像时，也可以从国内镜像仓库拉取镜像然后打个tag给成目标镜像。</p>
-<h2 id="推送镜像"><a href="#推送镜像" class="headerlink" title="推送镜像"></a>推送镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker push harbor.sunshanpeng.com/database/mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker push [OPTIONS] NAME[:TAG]</code></p>
-<p>推送镜像必须先登录要推送的目标仓库，而且需要对目标仓库有推送的权限。</p>
-<p>类似<code>docker push mysql:5.6</code>是不行的。</p>
-<h2 id="制作镜像"><a href="#制作镜像" class="headerlink" title="制作镜像"></a>制作镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker build -t simpleApp:v1 .</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker build [OPTIONS] PATH | URL | -</code>。</p>
-<p>根据<code>Dockerfile</code>制作镜像。</p>
-<h2 id="删除镜像"><a href="#删除镜像" class="headerlink" title="删除镜像"></a>删除镜像</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rmi mysql:5.6</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rmi [OPTIONS] IMAGE [IMAGE...]</code>，不能删除已经创建了容器的镜像，必须先删除对应容器。</p>
-<h2 id="运行容器"><a href="#运行容器" class="headerlink" title="运行容器"></a>运行容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run nginx</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</code></p>
-<p>OPTIONS参数有很多，比较常用的如下：</p>
-<ul>
-<li><p><code>--name</code>指定容器名字</p>
-</li>
-<li><p><code>-p</code>指定容器映射宿主机的端口号</p>
-</li>
-<li><p><code>-e</code>指定环境变量</p>
-</li>
-<li><p><code>-v</code>指定挂载卷</p>
-</li>
-<li><p><code>-it</code>指定容器前台运行</p>
-</li>
-<li><p><code>-d</code>指定容器后台运行</p>
-<p>其他还有很多指定IP、Hostname、CPU、内存、网络、内核参数、重启策略等等参数，可以通过<code>docker run --help</code>查询。</p>
-<h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/data:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
-<h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h2 id="重命名容器"><a href="#重命名容器" class="headerlink" title="重命名容器"></a>重命名容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename mysql mysql1</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rename CONTAINER NEW_NAME</code>。</p>
-<h2 id="停止容器"><a href="#停止容器" class="headerlink" title="停止容器"></a>停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker stop mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker stop [OPTIONS] CONTAINER [CONTAINER...]</code>，停止多个容器用空格分隔容器名字或者容器id。</p>
-<h2 id="强制停止容器"><a href="#强制停止容器" class="headerlink" title="强制停止容器"></a>强制停止容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">kill</span> mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker kill [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<h2 id="启动-重启容器"><a href="#启动-重启容器" class="headerlink" title="启动/重启容器"></a>启动/重启容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker start/restart mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker start/restart [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<h2 id="删除容器"><a href="#删除容器" class="headerlink" title="删除容器"></a>删除容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rm mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker rm [OPTIONS] CONTAINER [CONTAINER...]</code>，不带参数时只能删除已停止的容器，带上参数<code>-f</code>可以强制删除运行中的容器。</p>
-<h2 id="更新容器"><a href="#更新容器" class="headerlink" title="更新容器"></a>更新容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker update --restart always mysql</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker update [OPTIONS] CONTAINER [CONTAINER...]</code>。</p>
-<p>更新容器的重启策略、CPU和内存大小。</p>
-<h2 id="进入容器"><a href="#进入容器" class="headerlink" title="进入容器"></a>进入容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> -it mysql /bin/bash</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker exec [OPTIONS] CONTAINER COMMAND [ARG...]</code>。</p>
-<ul>
-<li><p>CONTAINER 可以是容器Id或者容器名字；</p>
-</li>
-<li><p><code>/bin/bash</code>是进入容器后执行的命令，有些容器可能不存在<code>/bin/bash</code>。</p>
-</li>
-</ul>
-<h2 id="导出镜像文件"><a href="#导出镜像文件" class="headerlink" title="导出镜像文件"></a>导出镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker save -o rook-ceph-093.tar rook/ceph:v0.9.3</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker save [OPTIONS] IMAGE [IMAGE...]</code>。</p>
-<p>如果同时导出多个镜像到一个文件里，后面的镜像列表用空格来分隔。</p>
-<h2 id="导入镜像文件"><a href="#导入镜像文件" class="headerlink" title="导入镜像文件"></a>导入镜像文件</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i /root/rook-ceph-093.tar</span><br></pre></td></tr></table></figure>
-<p>格式：<code>docker load [OPTIONS]</code></p>
-<p>当不方便使用自建的镜像仓库来传输镜像时，可以用镜像的导出导入功能来移动镜像。</p>
-<h2 id="查看容器资源消耗"><a href="#查看容器资源消耗" class="headerlink" title="查看容器资源消耗"></a>查看容器资源消耗</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker stats</span><br><span class="line">CONTAINER ID        NAME                               CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS</span><br><span class="line">63ebc0e88e5a        happy_volhard                      0.02%               35.3MiB / 15.46GiB    0.22%               11.5MB / 19MB       13.3MB / 45MB       22</span><br><span class="line">7ed66f584a25        redis                              0.08%               7.82MiB / 15.46GiB    0.05%               304kB / 274kB       5.59MB / 0B         3</span><br><span class="line">500eed21d914        dockercompose_mqbroker_1           2.98%               752.3MiB / 15.46GiB   4.75%               0B / 0B             3.07GB / 19GB       204</span><br><span class="line">ddd919a5bf52        dockercompose_mqnamesrv_1          0.21%               329.2MiB / 15.46GiB   2.08%               0B / 0B             60.3MB / 16.4kB     41</span><br></pre></td></tr></table></figure>
-<h2 id="查看Docker占用磁盘"><a href="#查看Docker占用磁盘" class="headerlink" title="查看Docker占用磁盘"></a>查看Docker占用磁盘</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">docker system df</span><br><span class="line"></span><br><span class="line">TYPE                TOTAL               ACTIVE              SIZE                RECLAIMABLE</span><br><span class="line">Images              29                  28                  8.575GB             1.873GB (21%)</span><br><span class="line">Containers          29                  17                  7.545GB             410.8MB (5%)</span><br><span class="line">Local Volumes       303                 23                  6.339GB             4.138GB (65%)</span><br><span class="line">Build Cache         0                   0                   0B                  0B</span><br></pre></td></tr></table></figure>
-<p>可以查看镜像文件大小、容器大小、本地存储使用的磁盘大小。</p>
-<h2 id="清理Docker镜像和容器"><a href="#清理Docker镜像和容器" class="headerlink" title="清理Docker镜像和容器"></a>清理Docker镜像和容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker system prune -a</span><br></pre></td></tr></table></figure>
-<p>此命令会清除所有未运行的容器和清理所有未使用的镜像。</p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
 
       
     </footer>
@@ -1057,6 +1018,83 @@
 <!-- Table of Contents -->
 
   
+    <article id="post-使用同一个deployment实现金丝雀（灰度）发布" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/">使用同一个deployment实现金丝雀（灰度）发布</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" class="article-date">
+	  <time datetime="2019-02-24T14:29:37.000Z" itemprop="datePublished">二月 24, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="一、发布前"><a href="#一、发布前" class="headerlink" title="一、发布前"></a>一、发布前</h2><p>发布前，nginx运行三个实例（pod），<em>副本（replicaset）版本编号855b564c8d</em>，此时运行状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二、发布中"><a href="#二、发布中" class="headerlink" title="二、发布中"></a>二、发布中</h2><h3 id="步骤一：发布"><a href="#步骤一：发布" class="headerlink" title="步骤一：发布"></a>步骤一：发布</h3><p>此时进行发布，<em>新副本版本编号77b6c7b585</em>，此时发布状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         0/1       Running            0          21s       172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="步骤二：暂停"><a href="#步骤二：暂停" class="headerlink" title="步骤二：暂停"></a>步骤二：暂停</h3><p><strong>执行暂停命令<code>kubectl rollout pause deployment -n qa nginx</code></strong></p>
+<p>等待第一个实例运行成功，此时状态如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>此时为暂停发布状态，三个旧版本实例正常运行，一个新版本实例运行成功，流量将分摊到这四个实例上。</p>
+</blockquote>
+<h3 id="步骤三：恢复"><a href="#步骤三：恢复" class="headerlink" title="步骤三：恢复"></a>步骤三：恢复</h3><p><strong>执行恢复命令<code>kubectl rollout resume deployment -n qa nginx</code></strong></p>
+<p>此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                         0/1       Running            0          33s       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                        1/1       Running            0          1m        172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>恢复后会执行正常的滚动升级操作，即新增一个新副本实例，删除一个旧副本实例。<br>滚动升级时，新旧版本同时存在，总实例最大数量不会超过目标数量的25%，最小数量不会低于目标数量的75%。</p>
+</blockquote>
+<h2 id="三、发布完成"><a href="#三、发布完成" class="headerlink" title="三、发布完成"></a>三、发布完成</h2><p>实例的副本版本编号都变成77b6c7b585，说明全部升级成功，此时状态如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                       1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                      1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                      1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="四、回滚"><a href="#四、回滚" class="headerlink" title="四、回滚"></a>四、回滚</h2><p>发布中发现功能与预期不符，需要取消发布并回滚至上个发布版本，此时可以执行回滚操作。<br><strong>执行回滚命令<code>kubectl rollout undo deployment -n qa nginx</code></strong>。<br>回滚操作在发布中，发布后都可以执行。</p>
+<h3 id="发布中回滚"><a href="#发布中回滚" class="headerlink" title="发布中回滚"></a>发布中回滚</h3><p>当暂停发布进行灰度验证时，发现功能不符合预期，需要取消发布。<br>暂停时灰度验证状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                         1/1       Running            0          2m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                         1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                         1/1       Running            0          2m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>副本编号变成855b564c8d，说明回滚成功，恢复到新版本。</p>
+</blockquote>
+<h3 id="发布完成后回滚"><a href="#发布完成后回滚" class="headerlink" title="发布完成后回滚"></a>发布完成后回滚</h3><p>全部升级成功后，发现功能异常，回滚到之前版本。<br>回滚前状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>回滚后状态：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                      1/1       Running            0          6m       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-jqbjk                        1/1       Running            0          6m        172.20.235.215   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                      1/1       Running            0          6m       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="滚动升级状态"><a href="#滚动升级状态" class="headerlink" title="滚动升级状态"></a>滚动升级状态</h2><p>目标实例数3个，旧实例数3个，总实例数3个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                       1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数3个，新实例数1个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          1m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-hclp9                        1/1       Running            0          12h       172.20.235.210   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数2个，新实例数2个，总实例数4个：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-pmw2f                       1/1       Running            0          15s       172.20.190.51    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-vzc9g                        1/1       Running            0          3m        172.20.42.156    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                        1/1       Running            0          12h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-n7kn8                        1/1       Running            0          12h       172.20.35.53     10.22.19.17   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，旧实例数1个，新实例数3个，总实例数4个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          35m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          35m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          1m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br><span class="line">nginx-855b564c8d-5qhk7                       1/1       Running            0          13h       172.20.199.135   10.22.19.14   &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+<p>目标实例数3个，新实例数3个，总实例数3个<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nginx-77b6c7b585-4bt6h                        1/1       Running            0          36m       172.20.190.56    10.22.19.6    &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-g4wnx                       1/1       Running            0          36m       172.20.42.172    10.22.19.15   &lt;none&gt;</span><br><span class="line">nginx-77b6c7b585-kcsqm                       1/1       Running            0          2m        172.20.235.253   10.22.19.5    &lt;none&gt;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
 
 
   <nav id="page-nav">
@@ -1191,8 +1229,8 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/08/30/配置Jenkins打包VUE项目/">(no title)</a></h6>
-              <span>八月 30, 2019</span>
+              <h6 style="margin: 0;"><a href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a></h6>
+              <span>八月 24, 2019</span>
             </div>
 
           </li>
@@ -1203,8 +1241,8 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/08/24/Kubernetes高可用架构/">Kubernetes高可用部署</a></h6>
-              <span>八月 24, 2019</span>
+              <h6 style="margin: 0;"><a href="/2019/03/24/Docker常用命令/">Docker常用命令</a></h6>
+              <span>三月 24, 2019</span>
             </div>
 
           </li>
@@ -1242,7 +1280,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">13</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vue/">vue</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/容器/">容器</a><span class="category-list-count">13</span></li></ul>
     </div>
   </div>
 
@@ -1252,7 +1290,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka/">eureka</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li></ul>
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/apollo/">apollo</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/docker/">docker</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/eureka/">eureka</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/idea/">idea</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jenkins/">jenkins</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/k8s/">k8s</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/kernel/">kernel</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/nodejs/">nodejs</a><span class="tag-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -1262,7 +1300,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/eureka/" style="font-size: 13.33px;">eureka</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a>
+      <a href="/tags/apollo/" style="font-size: 13.33px;">apollo</a> <a href="/tags/docker/" style="font-size: 16.67px;">docker</a> <a href="/tags/eureka/" style="font-size: 13.33px;">eureka</a> <a href="/tags/idea/" style="font-size: 10px;">idea</a> <a href="/tags/jenkins/" style="font-size: 10px;">jenkins</a> <a href="/tags/k8s/" style="font-size: 20px;">k8s</a> <a href="/tags/kernel/" style="font-size: 10px;">kernel</a> <a href="/tags/nodejs/" style="font-size: 10px;">nodejs</a>
     </div>
   </div>
 
@@ -1272,7 +1310,7 @@
     <h3 class="widget-title">Archives</h3>
 
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/09/">九月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li></ul>
     </div>
   </div>
 
