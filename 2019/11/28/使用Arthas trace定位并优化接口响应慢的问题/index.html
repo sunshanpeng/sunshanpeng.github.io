@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>使用Arthas trace定位并优化接口响应慢的问题 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="arthas">
+  
+  
+  
+  
+  <meta name="description" content="Arthas trace命令介绍  https://alibaba.github.io/arthas/trace.html   打印方法内部调用路径，并输出方法路径上的每个节点上耗时。 trace命令只会trace匹配到的函数里的子调用，并不会向下trace多层。因为trace是代价比较贵的，多层trace可能会导致最终要trace的类和函数非常多。 使用方法命令格式： 1trace class">
+<meta name="keywords" content="arthas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Arthas trace定位并优化接口响应慢的问题">
+<meta property="og:url" content="http://sunshanpeng.com/2019/11/28/使用Arthas trace定位并优化接口响应慢的问题/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="Arthas trace命令介绍  https://alibaba.github.io/arthas/trace.html   打印方法内部调用路径，并输出方法路径上的每个节点上耗时。 trace命令只会trace匹配到的函数里的子调用，并不会向下trace多层。因为trace是代价比较贵的，多层trace可能会导致最终要trace的类和函数非常多。 使用方法命令格式： 1trace class">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:34:10.615Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Arthas trace定位并优化接口响应慢的问题">
+<meta name="twitter:description" content="Arthas trace命令介绍  https://alibaba.github.io/arthas/trace.html   打印方法内部调用路径，并输出方法路径上的每个节点上耗时。 trace命令只会trace匹配到的函数里的子调用，并不会向下trace多层。因为trace是代价比较贵的，多层trace可能会导致最终要trace的类和函数非常多。 使用方法命令格式： 1trace class">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-使用Arthas trace定位并优化接口响应慢的问题" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      使用Arthas trace定位并优化接口响应慢的问题
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/11/28/使用Arthas trace定位并优化接口响应慢的问题/" class="article-date">
+	  <time datetime="2019-11-28T13:26:37.000Z" itemprop="datePublished">十一月 28, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Arthas-trace命令介绍"><a href="#Arthas-trace命令介绍" class="headerlink" title="Arthas trace命令介绍"></a>Arthas trace命令介绍</h2><blockquote>
+<p> <a href="https://alibaba.github.io/arthas/trace.html" target="_blank" rel="noopener">https://alibaba.github.io/arthas/trace.html</a> </p>
+</blockquote>
+<p><strong>打印方法内部调用路径，并输出方法路径上的每个节点上耗时。</strong></p>
+<p><em>trace命令只会trace匹配到的函数里的子调用，并不会向下trace多层。因为trace是代价比较贵的，多层trace可能会导致最终要trace的类和函数非常多。</em></p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">trace class method</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">[arthas@30]$ trace com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl checkPrePub</span><br><span class="line">Press Q or Ctrl+C to abort.</span><br><span class="line">Affect(class-cnt:2 , method-cnt:4) cost <span class="keyword">in</span> 408 ms.</span><br><span class="line">`---ts=2019-11-12 14:47:28;thread_name=http-nio-8266-exec-147;id=7938;is_daemon=<span class="literal">true</span>;priority=5;TCCL=org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedWebappClassLoader@6c902fd5</span><br><span class="line">    `---[3771.437071ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:checkPrePub()</span><br><span class="line">        +---[0.003039ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getClusterCode() <span class="comment">#157</span></span><br><span class="line">        +---[0.001022ms] java.util.Map:get() <span class="comment">#157</span></span><br><span class="line">        +---[0.002185ms] com.sunshanpeng.platform.pub.common.enums.PubStatusEnum:getCode() <span class="comment">#161</span></span><br><span class="line">        +---[0.001843ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setStatus() <span class="comment">#161</span></span><br><span class="line">        +---[1645.580557ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:selectBySelective() <span class="comment">#162</span></span><br><span class="line">        +---[0.002757ms] org.springframework.util.CollectionUtils:isEmpty() <span class="comment">#163</span></span><br><span class="line">        +---[0.001587ms] com.sunshanpeng.platform.pub.common.enums.PubStatusEnum:getCode() <span class="comment">#169</span></span><br><span class="line">        +---[0.002123ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setStatus() <span class="comment">#169</span></span><br><span class="line">        +---[1478.93462ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:selectBySelective() <span class="comment">#170</span></span><br><span class="line">        +---[0.002329ms] org.springframework.util.CollectionUtils:isEmpty() <span class="comment">#171</span></span><br><span class="line">        `---[646.735412ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:buildPublishDetailDTO() <span class="comment">#178</span></span><br><span class="line">            `---[646.539364ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:buildPublishDetailDTO()</span><br><span class="line">                +---[0.011378ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getPubEnv() <span class="comment">#513</span></span><br><span class="line">                +---[0.002328ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#513</span></span><br><span class="line">                +---[0.001789ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getClusterCode() <span class="comment">#516</span></span><br><span class="line">                +---[0.001076ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#516</span></span><br><span class="line">                +---[0.005232ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getSysCode() <span class="comment">#519</span></span><br><span class="line">                +---[0.001092ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#519</span></span><br><span class="line">                +---[0.004531ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getSysName() <span class="comment">#522</span></span><br><span class="line">                +---[9.95E-4ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#522</span></span><br><span class="line">                +---[0.001071ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getPubEnv() <span class="comment">#525</span></span><br><span class="line">                +---[0.001343ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getClusterCode() <span class="comment">#525</span></span><br><span class="line">                +---[0.001108ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getSysCode() <span class="comment">#525</span></span><br><span class="line">                +---[1.617415ms] com.sunshanpeng.platform.pub.service.EnvBindService:getRelationByArgs() <span class="comment">#525</span></span><br><span class="line">                +---[0.002319ms] java.util.List:get() <span class="comment">#526</span></span><br><span class="line">                +---[0.014244ms] java.util.List:size() <span class="comment">#527</span></span><br><span class="line">                +---[0.011744ms] com.sunshanpeng.platform.pub.dto.envbind.EnvBindDetailDTO:getJobName() <span class="comment">#527</span></span><br><span class="line">                +---[0.001469ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#527</span></span><br><span class="line">                +---[0.001367ms] com.sunshanpeng.platform.pub.dto.envbind.EnvBindDetailDTO:getJobName() <span class="comment">#532</span></span><br><span class="line">                +---[0.006322ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setJobName() <span class="comment">#532</span></span><br><span class="line">                +---[0.001252ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getPubEnv() <span class="comment">#535</span></span><br><span class="line">                +---[0.001285ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getClusterCode() <span class="comment">#535</span></span><br><span class="line">                +---[0.001253ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getSysCode() <span class="comment">#535</span></span><br><span class="line">                +---[643.723767ms] com.sunshanpeng.platform.pub.service.JenkinsService:getBuildArgs() <span class="comment">#535</span></span><br><span class="line">                +---[0.010914ms] com.sunshanpeng.platform.pub.common.enums.CommonStatusEnum:getCode() <span class="comment">#536</span></span><br><span class="line">                +---[0.006734ms] com.sunshanpeng.platform.pub.dto.envbind.EnvBindDetailDTO:getSwEnable() <span class="comment">#536</span></span><br><span class="line">                +---[0.014911ms] java.lang.Integer:equals() <span class="comment">#536</span></span><br><span class="line">                +---[0.002085ms] java.lang.Boolean:valueOf() <span class="comment">#536</span></span><br><span class="line">                +---[0.011168ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setApmEnable() <span class="comment">#536</span></span><br><span class="line">                +---[0.004956ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getPubParamKey() <span class="comment">#542</span></span><br><span class="line">                +---[0.002016ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#542</span></span><br><span class="line">                +---[0.002196ms] java.util.Map:get() <span class="comment">#550</span></span><br><span class="line">                +---[0.004316ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getPubParamValue() <span class="comment">#551</span></span><br><span class="line">                +---[0.001027ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#551</span></span><br><span class="line">                +---[0.004536ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getRemark() <span class="comment">#559</span></span><br><span class="line">                +---[0.001113ms] org.springframework.util.StringUtils:isEmpty() <span class="comment">#559</span></span><br><span class="line">                +---[0.004637ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setRemark() <span class="comment">#560</span></span><br><span class="line">                +---[0.001502ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getSysCode() <span class="comment">#562</span></span><br><span class="line">                +---[0.322113ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:getCiCode() <span class="comment">#562</span></span><br><span class="line">                +---[0.005395ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setCiCode() <span class="comment">#562</span></span><br><span class="line">                +---[0.004249ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setConsoleLog() <span class="comment">#563</span></span><br><span class="line">                +---[0.001335ms] java.lang.Integer:valueOf() <span class="comment">#564</span></span><br><span class="line">                +---[0.004697ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setBuildNo() <span class="comment">#564</span></span><br><span class="line">                +---[0.004276ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setCreator() <span class="comment">#565</span></span><br><span class="line">                +---[0.004354ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setCreatorCode() <span class="comment">#566</span></span><br><span class="line">                +---[0.020689ms] java.time.LocalDateTime:now() <span class="comment">#567</span></span><br><span class="line">                +---[0.004397ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setGmtCreate() <span class="comment">#567</span></span><br><span class="line">                +---[0.002075ms] java.time.LocalDateTime:now() <span class="comment">#568</span></span><br><span class="line">                +---[0.004739ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setGmtModify() <span class="comment">#568</span></span><br><span class="line">                +---[0.001317ms] com.sunshanpeng.platform.pub.common.enums.PubStatusEnum:getCode() <span class="comment">#569</span></span><br><span class="line">                `---[0.001365ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setStatus() <span class="comment">#569</span></span><br></pre></td></tr></table></figure>
+<p><strong>可以看到目标方法的耗时为<code>3771.437071ms</code>，其中<code>com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:selectBySelective()</code>方法调用了两次，并且耗时都在1.5秒左右。</strong></p>
+<h2 id="优化前执行计划"><a href="#优化前执行计划" class="headerlink" title="优化前执行计划"></a>优化前执行计划</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select id, ci_code, build_no, creator_code, sys_code, sys_name, pub_env,cluster_code, job_name, pub_param_key, pub_param_value, status, remark,  creator, gmt_create, gmt_modify</span><br><span class="line">from t_pub_publish </span><br><span class="line"><span class="built_in">where</span> sys_code = <span class="string">"aim"</span> and pub_env = <span class="string">"qa"</span> and cluster_code = <span class="string">'cn-hd-idc-test-1'</span> and status = 1;</span><br><span class="line">+----+-------------+---------------+------+---------------+------+---------+------+-------+-------------+</span><br><span class="line">| id | select_type | table         | <span class="built_in">type</span> | possible_keys | key  | key_len | ref  | rows  | Extra       |</span><br><span class="line">+----+-------------+---------------+------+---------------+------+---------+------+-------+-------------+</span><br><span class="line">|  1 | SIMPLE      | t_pub_publish | ALL  | NULL          | NULL | NULL    | NULL | 30544 | Using <span class="built_in">where</span> |</span><br><span class="line">+----+-------------+---------------+------+---------------+------+---------+------+-------+-------------+</span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span></span><br></pre></td></tr></table></figure>
+<h2 id="加组合索引"><a href="#加组合索引" class="headerlink" title="加组合索引"></a>加组合索引</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ALTER TABLE `t_pub_publish`</span><br><span class="line">ADD INDEX `idx_code` (`sys_code`, `pub_env`, `cluster_code`, `status`) ;</span><br></pre></td></tr></table></figure>
+<h2 id="优化后执行计划"><a href="#优化后执行计划" class="headerlink" title="优化后执行计划"></a>优化后执行计划</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; explain select id, ci_code, build_no, creator_code, sys_code, sys_name, pub_env,cluster_code, job_name, pub_param_key, pub_param_value, status, remark,  creator, gmt_create, gmt_modify</span><br><span class="line">from t_pub_publish </span><br><span class="line"><span class="built_in">where</span> sys_code = <span class="string">"aim"</span> and pub_env = <span class="string">"qa"</span> and cluster_code = <span class="string">'cn-hd-idc-test-1'</span> and status = 1;</span><br><span class="line">+----+-------------+---------------+------+---------------+----------+---------+-------------------------+------+-----------------------+</span><br><span class="line">| id | select_type | table         | <span class="built_in">type</span> | possible_keys | key      | key_len | ref                     | rows | Extra                 |</span><br><span class="line">+----+-------------+---------------+------+---------------+----------+---------+-------------------------+------+-----------------------+</span><br><span class="line">|  1 | SIMPLE      | t_pub_publish | ref  | idx_code      | idx_code | 249     | const,const,const,const |    1 | Using index condition |</span><br><span class="line">+----+-------------+---------------+------+---------------+----------+---------+-------------------------+------+-----------------------+</span><br><span class="line">1 row <span class="keyword">in</span> <span class="built_in">set</span></span><br></pre></td></tr></table></figure>
+<h2 id="优化后耗时"><a href="#优化后耗时" class="headerlink" title="优化后耗时"></a>优化后耗时</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">[arthas@30]$ trace com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl checkPrePub </span><br><span class="line">Press Q or Ctrl+C to abort.</span><br><span class="line">Affect(class-cnt:2 , method-cnt:1) cost <span class="keyword">in</span> 390 ms.</span><br><span class="line">`---ts=2019-11-13 13:42:15;thread_name=http-nio-8266-exec-143;id=7934;is_daemon=<span class="literal">true</span>;priority=5;TCCL=org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedWebappClassLoader@6c902fd5</span><br><span class="line">    `---[203.648108ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:checkPrePub()</span><br><span class="line">        +---[min=4.7E-4ms,max=0.010168ms,total=0.010638ms,count=2] java.lang.Integer:&lt;init&gt;() <span class="comment">#157</span></span><br><span class="line">        +---[4.61E-4ms] java.lang.reflect.Method:invoke() <span class="comment">#157</span></span><br><span class="line">        +---[0.003624ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:getClusterCode() <span class="comment">#157</span></span><br><span class="line">        +---[0.001096ms] java.util.Map:get() <span class="comment">#157</span></span><br><span class="line">        +---[0.002196ms] com.sunshanpeng.platform.pub.common.enums.PubStatusEnum:getCode() <span class="comment">#161</span></span><br><span class="line">        +---[0.001674ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setStatus() <span class="comment">#161</span></span><br><span class="line">        +---[0.578989ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:selectBySelective() <span class="comment">#162</span></span><br><span class="line">        +---[6.84E-4ms] org.springframework.util.CollectionUtils:isEmpty() <span class="comment">#163</span></span><br><span class="line">        +---[5.82E-4ms] com.sunshanpeng.platform.pub.common.enums.PubStatusEnum:getCode() <span class="comment">#169</span></span><br><span class="line">        +---[5.45E-4ms] com.sunshanpeng.platform.pub.dto.publish.PublishDetailDTO:setStatus() <span class="comment">#169</span></span><br><span class="line">        +---[0.407368ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:selectBySelective() <span class="comment">#170</span></span><br><span class="line">        +---[5.59E-4ms] org.springframework.util.CollectionUtils:isEmpty() <span class="comment">#171</span></span><br><span class="line">        `---[202.38997ms] com.sunshanpeng.platform.pub.service.impl.PublishServiceImpl:buildPublishDetailDTO() <span class="comment">#178</span></span><br></pre></td></tr></table></figure>
+<p><strong>优化后SQL查询时间降到1ms不到，总耗时200ms，效果明显。</strong></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arthas/">arthas</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/28/使用Arthas ognl执行表达式/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用Arthas ognl执行表达式
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/28/使用Arthas thread命令查看线程堆栈等信息/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用Arthas thread命令查看线程堆栈</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Arthas-trace命令介绍"><span class="nav-number">1.</span> <span class="nav-text">Arthas trace命令介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">2.</span> <span class="nav-text">使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化前执行计划"><span class="nav-number">3.</span> <span class="nav-text">优化前执行计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#加组合索引"><span class="nav-number">4.</span> <span class="nav-text">加组合索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化后执行计划"><span class="nav-number">5.</span> <span class="nav-text">优化后执行计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#优化后耗时"><span class="nav-number">6.</span> <span class="nav-text">优化后耗时</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

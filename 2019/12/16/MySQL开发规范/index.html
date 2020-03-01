@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>MySQL开发规范 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="mysql">
+  
+  
+  
+  
+  <meta name="description" content="表结构设计1、每张表都必须有三个字段：id，gmt_create，gmt_modify，代表主键ID，记录创建时间，记录修改时间。  id：必须是唯一并且递增的非负数数字类型，数据量小并发写入量不高用数据库自增Id，并发写入高或者数据量大有分表需求用雪花算法等id生成器生成。   12&amp;gt; `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMEN">
+<meta name="keywords" content="mysql">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL开发规范">
+<meta property="og:url" content="http://sunshanpeng.com/2019/12/16/MySQL开发规范/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="表结构设计1、每张表都必须有三个字段：id，gmt_create，gmt_modify，代表主键ID，记录创建时间，记录修改时间。  id：必须是唯一并且递增的非负数数字类型，数据量小并发写入量不高用数据库自增Id，并发写入高或者数据量大有分表需求用雪花算法等id生成器生成。   12&amp;gt; `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMEN">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:48:47.393Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL开发规范">
+<meta name="twitter:description" content="表结构设计1、每张表都必须有三个字段：id，gmt_create，gmt_modify，代表主键ID，记录创建时间，记录修改时间。  id：必须是唯一并且递增的非负数数字类型，数据量小并发写入量不高用数据库自增Id，并发写入高或者数据量大有分表需求用雪花算法等id生成器生成。   12&amp;gt; `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMEN">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-MySQL开发规范" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      MySQL开发规范
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/12/16/MySQL开发规范/" class="article-date">
+	  <time datetime="2019-12-16T12:26:37.000Z" itemprop="datePublished">十二月 16, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="表结构设计"><a href="#表结构设计" class="headerlink" title="表结构设计"></a>表结构设计</h2><p>1、每张表都必须有三个字段：<code>id</code>，<code>gmt_create</code>，<code>gmt_modify</code>，代表主键ID，记录创建时间，记录修改时间。</p>
+<ul>
+<li><code>id</code>：必须是唯一并且递增的非负数数字类型，数据量小并发写入量不高用数据库自增Id，并发写入高或者数据量大有分表需求用雪花算法等id生成器生成。</li>
+</ul>
+<blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'id'</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<ul>
+<li><code>gmt_create</code>：顺序递增，存储每条记录的创建时间，一般场景用<code>datatime</code>类型，有跨时区的需求用<code>timestamp</code>类型。</li>
+</ul>
+<blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<ul>
+<li><code>gmt_modify</code>：存储每条记录的修改时间，一般场景用<code>datatime</code>类型，有跨时区的需求用<code>timestamp</code>类型。</li>
+</ul>
+<blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; `gmt_modify` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>2、没有特殊需求都使用<code>innodb</code>存储引擎，并设置<code>id</code>为主键索引<code>PRIMARY KEY</code>。</p>
+<blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; PRIMARY KEY (`id`)</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>​        因为<code>id</code>字段是<code>innodb</code>的聚簇索引，使用<code>id</code>查询记录的速度最快。</p>
+<p>3、主键<code>id</code>字段的长度不宜太大，因为二级索引都会存储主键的值，而且值越大，比较大小就越耗时。</p>
+<blockquote>
+<p>一般用无符号自增主键<code>int(10)</code>即可，最大值<code>4,294,567,294‬</code>（<code>2,147,283,647‬*2</code>）。需要存储超过该长度的记录可以用<code>bigint(20)</code>。其中<code>int(N)</code>中的N只是显示长度，详见：<a href="https://dev.mysql.com/doc/refman/8.0/en/integer-types.html" target="_blank" rel="noopener">https://dev.mysql.com/doc/refman/8.0/en/integer-types.html</a>。</p>
+</blockquote>
+<p>4、数据量大的表不要物理删除，使用字段<code>is_deleted</code>来做逻辑删除，1 表示删除，0 表示未删除。</p>
+<blockquote>
+<p><code>innodb</code>在磁盘中是分页存储的，如果在记录中间插入或者删除数据都要移动后面的数据。</p>
+<p>重要数据也可以使用逻辑删除。</p>
+<p>逻辑删除不适合有唯一约束的表。</p>
+</blockquote>
+<p>5、需要并发修改的数据使用<code>version</code>字段做乐观锁，每次修改都对版本号<code>+1</code>。</p>
+<blockquote>
+<p>比如库存、余额等。</p>
+</blockquote>
+<p>6、 长度超过 <code>2000</code> 字符的大字段用<code>blob</code>、<code>text</code>类型，并和主记录分开存储，可以提高查询速度。</p>
+<blockquote>
+<p><code>mysql</code>已页为单位存储，每个页的大小为<code>16k</code>，如果单条记录内容太大则会影响范围查询。</p>
+</blockquote>
+<p>7、如果存的都是数字就不要用字符类型的字段，存储空间和排序比较时数字都优于字符串。</p>
+<p>8、数字类型如果不存负数就用无符号<code>unsigned</code>,可以增加存储大小。</p>
+<blockquote>
+<p>int(10)：-2,147,283,647‬~2,147,283,646</p>
+<p>int(10) unsigned：0~4,294,567,294</p>
+</blockquote>
+<p>9、 小数类型为 decimal，禁止使用 float 和 double。</p>
+<blockquote>
+<p> float 和 double 在存储的时候，存在精度损失的问题，很可能在值的比较时，得到不正确的结果。如果存储的数据范围超过 decimal 的范围，建议将数据拆成整数和小数分开存储。 </p>
+</blockquote>
+<p>10、没有特殊需求，所有字段都不允许为<code>null</code>。</p>
+<p>11、指定表字符集为<code>utf8mb4</code>，不要用<code>utf8</code>，mysql中<code>utf8mb4</code>才是正宗的<code>UTF-8</code>编码。</p>
+<p>12、保证所有表使用同样的排序规则。</p>
+<blockquote>
+<p>排序规则<code>utf8mb4_unicode_ci</code>比<code>utf8mb4_general_ci</code>更精确，推荐都使用<code>utf8mb4_unicode_ci</code>，参考：<a href="https://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci" target="_blank" rel="noopener">https://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci</a></p>
+</blockquote>
+<p>13、禁止使用外键、 一切外键概念在应用层解决 。</p>
+<h2 id="索引设计"><a href="#索引设计" class="headerlink" title="索引设计"></a>索引设计</h2><p>1、 唯一索引名为<code>uk_字段名</code>；普通索引名则为 <code>idx_字段名</code> 。</p>
+<p>2、根据业务的唯一特性，尽量给表加上唯一索引。</p>
+<p>3、 在长度大于50的 <code>varchar</code>字段上建立索引时，必须指定索引长度，不然会对全部内容建立索引，浪费索引存储空间。</p>
+<p>4、 建组合索引的时候，区分度最高的在最左边。 </p>
+<p>5、 索引需要建立在重复率低的字段上，重复率高的字段建立索引没有太大作用；。</p>
+<h2 id="SQL语句"><a href="#SQL语句" class="headerlink" title="SQL语句"></a><strong>SQL语句</strong></h2><p>1、 禁止使用存储过程和触发器，存储过程和触发器难以调试和扩展，更没有移植性。 </p>
+<p>2、 超过三个表禁止 join；需要 join 的字段，数据类型必须绝对一致；多表关联查询时，保证被关联的字段有索引。 </p>
+<p>3、除了<code>count</code>、<code>sum</code>、<code>max</code>、<code>min</code>等少数几个函数，将计算工作放在应用层来做，把计算和存储分离。</p>
+<blockquote>
+<p>无状态应用迁移、扩容简单，有状态应用迁移、扩容复杂。</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://github.com/jly8866/archer/blob/master/src/docs/mysql_db_design_guide.md" target="_blank" rel="noopener">https://github.com/jly8866/archer/blob/master/src/docs/mysql_db_design_guide.md</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/mysql/">mysql</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/12/16/MySQL服务端配置/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          MySQL服务端配置
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/12/16/Web开发规范/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Web开发规范</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#表结构设计"><span class="nav-number">1.</span> <span class="nav-text">表结构设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引设计"><span class="nav-number">2.</span> <span class="nav-text">索引设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL语句"><span class="nav-number">3.</span> <span class="nav-text">SQL语句</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

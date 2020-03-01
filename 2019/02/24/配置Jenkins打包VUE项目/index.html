@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://image.sunshanpeng.com/201908301908_350.png">
 <meta property="og:image" content="http://image.sunshanpeng.com/201908301912_783.png">
 <meta property="og:image" content="http://image.sunshanpeng.com/201908301910_887.png">
-<meta property="og:updated_time" content="2019-10-08T00:42:31.033Z">
+<meta property="og:updated_time" content="2020-03-01T13:10:36.548Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="配置Jenkins打包Vue项目">
 <meta name="twitter:description" content="一、下载NodeJS插件进入插件管理 在可选插件里面安装NodeJS 等待安装完成 二、配置NodeJS插件进入全局工具配置 新增NodeJS 三、配置Job配置执行shell shell命令： 1234567# 打包node -vnpm -v npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist">
@@ -175,6 +175,10 @@
 <h2 id="三、配置Job"><a href="#三、配置Job" class="headerlink" title="三、配置Job"></a>三、配置Job</h2><h3 id="配置执行shell"><a href="#配置执行shell" class="headerlink" title="配置执行shell"></a>配置执行shell</h3><p><img src="http://image.sunshanpeng.com/201908301910_887.png" alt></p>
 <p>shell命令：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打包</span></span><br><span class="line">node -v</span><br><span class="line">npm -v </span><br><span class="line">npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver</span><br><span class="line">npm install</span><br><span class="line">rm -rf dist</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+<p>cnpm：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 打包</span></span><br><span class="line">node -v</span><br><span class="line">npm -v </span><br><span class="line">npm install -g cnpm --registry=https://registry.npm.taobao.org</span><br><span class="line"><span class="meta">#</span><span class="bash">cnpm install rimraf -g</span></span><br><span class="line"><span class="meta">#</span><span class="bash">rimraf node_modules</span></span><br><span class="line">cnpm install</span><br><span class="line">rm -rf dist</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+<p>升级Vue：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打包</span></span><br><span class="line">node -v</span><br><span class="line">npm -v </span><br><span class="line">npm install chromedriver --chromedriver_cdnurl=http://cdn.npm.taobao.org/dist/chromedriver</span><br><span class="line">npm install -g @vue/cli</span><br><span class="line">cnpm install -s vue-template-compiler</span><br><span class="line">vue -V</span><br><span class="line">rm -rf node_modules</span><br><span class="line">cnpm install</span><br><span class="line">rm -rf dist</span><br><span class="line">npm run build</span><br></pre></td></tr></table></figure>
 
       
     </div>
@@ -273,7 +277,7 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2019 阿鹏的博客 All Rights Reserved.
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
               本站访客数<span id="busuanzi_value_site_uv"></span>人次  

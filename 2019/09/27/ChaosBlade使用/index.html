@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>ChaosBlade使用 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="chaosBlade">
+  
+  
+  
+  
+  <meta name="description" content="安装二进制1234567#下载wget https://github.com/chaosblade-io/chaosblade/releases/download/v0.3.0/chaosblade-0.3.0.linux-amd64.tar.gz#解压tar -zxvf chaosblade-0.3.0.linux-amd64.tar.gz#运行cd chaosblade-0.3.0/./bla">
+<meta name="keywords" content="chaosBlade">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ChaosBlade使用">
+<meta property="og:url" content="http://sunshanpeng.com/2019/09/27/ChaosBlade使用/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="安装二进制1234567#下载wget https://github.com/chaosblade-io/chaosblade/releases/download/v0.3.0/chaosblade-0.3.0.linux-amd64.tar.gz#解压tar -zxvf chaosblade-0.3.0.linux-amd64.tar.gz#运行cd chaosblade-0.3.0/./bla">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:41:16.548Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ChaosBlade使用">
+<meta name="twitter:description" content="安装二进制1234567#下载wget https://github.com/chaosblade-io/chaosblade/releases/download/v0.3.0/chaosblade-0.3.0.linux-amd64.tar.gz#解压tar -zxvf chaosblade-0.3.0.linux-amd64.tar.gz#运行cd chaosblade-0.3.0/./bla">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-ChaosBlade使用" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      ChaosBlade使用
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/09/27/ChaosBlade使用/" class="article-date">
+	  <time datetime="2019-09-27T13:17:37.000Z" itemprop="datePublished">九月 27, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/混沌工程/">混沌工程</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="二进制"><a href="#二进制" class="headerlink" title="二进制"></a>二进制</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#下载</span></span><br><span class="line">wget https://github.com/chaosblade-io/chaosblade/releases/download/v0.3.0/chaosblade-0.3.0.linux-amd64.tar.gz</span><br><span class="line"><span class="comment">#解压</span></span><br><span class="line">tar -zxvf chaosblade-0.3.0.linux-amd64.tar.gz</span><br><span class="line"><span class="comment">#运行</span></span><br><span class="line"><span class="built_in">cd</span> chaosblade-0.3.0/</span><br><span class="line">./blade version</span><br></pre></td></tr></table></figure>
+<h2 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h2><p>命令介绍</p>
+<p>最主要的命令是创建命令<code>create</code>和创建后的销毁命令<code>destroy</code>。</p>
+<p>创建了以后一定要销毁！！！</p>
+<p>创建了以后一定要销毁！！！</p>
+<p>创建了以后一定要销毁！！！</p>
+<p><code>prepare</code> 和 <code>revoke</code> 命令调用混沌实验准备执行器准备或者恢复实验环境。</p>
+<p> 混沌实验和混沌实验环境准备记录都可以通过<code>status</code> 命令查询。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 ~]<span class="comment"># ./blade help</span></span><br><span class="line">An easy to use and powerful chaos engineering experiment toolkit</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  blade [<span class="built_in">command</span>]</span><br><span class="line"></span><br><span class="line">Available Commands:</span><br><span class="line">  create      Create a chaos engineering experiment</span><br><span class="line">  destroy     Destroy a chaos experiment</span><br><span class="line">  <span class="built_in">help</span>        Help about any <span class="built_in">command</span></span><br><span class="line">  prepare     Prepare to experiment</span><br><span class="line">  query       Query the parameter values required <span class="keyword">for</span> chaos experiments</span><br><span class="line">  revoke      Undo chaos engineering experiment preparation</span><br><span class="line">  server      Server mode starts, exposes web services</span><br><span class="line">  status      Query preparation stage or experiment status</span><br><span class="line">  version     Print version info</span><br><span class="line"></span><br><span class="line">Flags:</span><br><span class="line">  -d, --debug   Set client to DEBUG mode</span><br><span class="line">  -h, --<span class="built_in">help</span>    <span class="built_in">help</span> <span class="keyword">for</span> blade</span><br><span class="line"></span><br><span class="line">Use <span class="string">"blade [command] --help"</span> <span class="keyword">for</span> more information about a <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+<p>创建命令</p>
+<p>可以创建CPU、内存、磁盘、网络、进程、脚本、Docker、K8S的故障场景。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 ~]<span class="comment"># blade create help</span></span><br><span class="line">Create a chaos engineering experiment</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  blade create [<span class="built_in">command</span>]</span><br><span class="line"></span><br><span class="line">Aliases:</span><br><span class="line">  create, c</span><br><span class="line"></span><br><span class="line">Examples:</span><br><span class="line">create dubbo delay --time 3000 --offset 100 --service com.example.Service --consumer</span><br><span class="line"></span><br><span class="line">Available Commands:</span><br><span class="line">  cplus       c++ experiment</span><br><span class="line">  cpu         Cpu experiment</span><br><span class="line">  disk        Disk experiment</span><br><span class="line">  docker      Execute a docker experiment</span><br><span class="line">  druid       Druid experiment</span><br><span class="line">  dubbo       dubbo experiment</span><br><span class="line">  http        http experiment</span><br><span class="line">  jedis       jedis experiment</span><br><span class="line">  jvm         method</span><br><span class="line">  k8s         Kubernetes experiment</span><br><span class="line">  mem         Mem experiment</span><br><span class="line">  mysql       mysql experiment</span><br><span class="line">  network     Network experiment</span><br><span class="line">  process     Process experiment</span><br><span class="line">  psql        Postgrelsql experiment</span><br><span class="line">  rocketmq    Rocketmq experiment,can make message send or pull delay and exception</span><br><span class="line">  script      Script chaos experiment</span><br><span class="line">  servlet     java servlet experiment</span><br><span class="line"></span><br><span class="line">Flags:</span><br><span class="line">  -h, --<span class="built_in">help</span>   <span class="built_in">help</span> <span class="keyword">for</span> create</span><br><span class="line"></span><br><span class="line">Global Flags:</span><br><span class="line">  -d, --debug   Set client to DEBUG mode</span><br><span class="line"></span><br><span class="line">Use <span class="string">"blade create [command] --help"</span> <span class="keyword">for</span> more information about a <span class="built_in">command</span>.</span><br></pre></td></tr></table></figure>
+<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h3 id="CPU满负载"><a href="#CPU满负载" class="headerlink" title="CPU满负载"></a>CPU满负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create cpu fullload</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"4077e008d9a1b63b"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>返回参数中的<code>result</code>是<code>Uid</code>，后续<code>destroy</code>命令需要用到。</p>
+<h3 id="指定CPU负载"><a href="#指定CPU负载" class="headerlink" title="指定CPU负载"></a>指定CPU负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create cpu fullload --cpu-percent 80</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"8b465a05ec5f3468"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>80%负载。</p>
+<p>另外也可以使用<code>--cpu-count</code>指定满负载的CPU个数或者<code>--cpu-list</code>指定具体满负载的CPU。</p>
+<h3 id="指定故障时间"><a href="#指定故障时间" class="headerlink" title="指定故障时间"></a>指定故障时间</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create cpu fullload --cpu-percent 80 --timeout 10</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"0136822f8f505c61"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p><code>--timeout</code>可以指定该故障的持续时间，单位是秒，指定持续时间后自动终止该故障。</p>
+<p><strong>后续的其他故障也都可以指定故障时间。</strong></p>
+<h3 id="查看CPU负载"><a href="#查看CPU负载" class="headerlink" title="查看CPU负载"></a>查看CPU负载</h3><ul>
+<li><code>top</code></li>
+<li><code>iostat -c 1 1000</code></li>
+</ul>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><h3 id="指定内存负载"><a href="#指定内存负载" class="headerlink" title="指定内存负载"></a>指定内存负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade c mem load --mem-percent 90</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"55d737f88301d0a5"</span>&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="查看内存负载"><a href="#查看内存负载" class="headerlink" title="查看内存负载"></a>查看内存负载</h3><ul>
+<li><code>top</code></li>
+<li><code>free -lh</code></li>
+</ul>
+<h2 id="磁盘"><a href="#磁盘" class="headerlink" title="磁盘"></a>磁盘</h2><h3 id="磁盘容量不足"><a href="#磁盘容量不足" class="headerlink" title="磁盘容量不足"></a>磁盘容量不足</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create disk fill --path /home --size 60000</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"5e16812a5393e610"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>在指定目录<code>--path</code>填充指定大小<code>--size</code>的数据，单位是M。</p>
+<h3 id="查看磁盘容量"><a href="#查看磁盘容量" class="headerlink" title="查看磁盘容量"></a>查看磁盘容量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># df -h /home</span></span><br><span class="line">Filesystem               Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/centos-root   58G  5.4G   53G  10% /</span><br><span class="line"></span><br><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># df -h /home</span></span><br><span class="line">Filesystem               Size  Used Avail Use% Mounted on</span><br><span class="line">/dev/mapper/centos-root   58G   53G  5.1G  92% /</span><br></pre></td></tr></table></figure>
+<h3 id="磁盘读-IO高负载"><a href="#磁盘读-IO高负载" class="headerlink" title="磁盘读 IO高负载"></a>磁盘读 IO高负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./blade create disk burn --<span class="built_in">read</span> --path /home</span><br></pre></td></tr></table></figure>
+<h3 id="磁盘写IO高负载"><a href="#磁盘写IO高负载" class="headerlink" title="磁盘写IO高负载"></a>磁盘写IO高负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./blade create disk burn --write --path /home</span><br></pre></td></tr></table></figure>
+<h3 id="查看IO负载"><a href="#查看IO负载" class="headerlink" title="查看IO负载"></a>查看IO负载</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iostat -x -t 2</span><br></pre></td></tr></table></figure>
+<h2 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h2><h3 id="网络延时"><a href="#网络延时" class="headerlink" title="网络延时"></a>网络延时</h3><h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">--destination-ip string   目标 IP. 支持通过子网掩码来指定一个网段的IP地址, 例如 192.168.1.0/24. 则 192.168.1.0~192.168.1.255 都生效。你也可以指定固定的 IP，如 192.168.1.1 或者 192.168.1.1/32。</span><br><span class="line">--exclude-port string     排除掉的端口，可以指定多个，使用逗号分隔或者连接符表示范围，例如 22,8000 或者 8000-8010。 这个参数不能与 --local-port 或者 --remote-port 参数一起使用</span><br><span class="line">--interface string        网卡设备，例如 eth0 (必要参数)</span><br><span class="line">--local-port string       本地端口，一般是本机暴露服务的端口。可以指定多个，使用逗号分隔或者连接符表示范围，例如 80,8000-8080</span><br><span class="line">--offset string           延迟时间上下浮动的值, 单位是毫秒</span><br><span class="line">--remote-port string      远程端口，一般是要访问的外部暴露服务的端口。可以指定多个，使用逗号分隔或者连接符表示范围，例如 80,8000-8080</span><br><span class="line">--time string             延迟时间，单位是毫秒 (必要参数)</span><br><span class="line">--timeout string          设定运行时长，单位是秒，通用参数</span><br></pre></td></tr></table></figure>
+<h4 id="指定本地端口延时"><a href="#指定本地端口延时" class="headerlink" title="指定本地端口延时"></a>指定本地端口延时</h4><p>所有其他服务器访问本地端口延时。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create network delay --time 3000 --offset 1000 --interface eno16780032 --local-port 9100</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"88626fd1175317ff"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p> 在另一台机器验证：<code>telnet xxx.xxx.xxx.xxx 9100</code></p>
+<h4 id="到远程IP端口延时"><a href="#到远程IP端口延时" class="headerlink" title="到远程IP端口延时"></a>到远程IP端口延时</h4><p>当前机器访问远程IP端口延时，其他机器不受影响。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create network delay --time 3000 --interface eno16780032 --remote-port 8080 --destination-ip 10.22.19.8</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"fb75e208d0793104"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>演练机器验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># curl -o /dev/null -w %&#123;time_namelookup&#125;::%&#123;time_connect&#125;::%&#123;time_starttransfer&#125;::%&#123;time_total&#125;::%&#123;speed_download&#125;"\n" "http://10.22.19.8:8080/"</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100 11266    0 11266    0     0   1251      0 --:--:--  0:00:09 --:--:--  2819</span><br><span class="line">0.000::3.005::6.009::9.002::1251.000</span><br></pre></td></tr></table></figure>
+<p>同时间正常机器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># curl -o /dev/null -w %&#123;time_namelookup&#125;::%&#123;time_connect&#125;::%&#123;time_starttransfer&#125;::%&#123;time_total&#125;::%&#123;speed_download&#125;"\n" "http://10.22.19.8:8080/"</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100 11266    0 11266    0     0  4998k      0 --:--:-- --:--:-- --:--:-- 5500k</span><br><span class="line">0.000::0.001::0.002::0.002::5118582.000</span><br></pre></td></tr></table></figure>
+<h4 id="让一个容器服务超时"><a href="#让一个容器服务超时" class="headerlink" title="让一个容器服务超时"></a>让一个容器服务超时</h4><p>首先找到该服务的宿主机，再找到容器对应的网卡，然后在服务宿主机上设置该网卡超时。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./blade create network delay --time 3000 --interface cali4c37fec8d88 --timeout 30</span><br></pre></td></tr></table></figure>
+<h3 id="网络丢包"><a href="#网络丢包" class="headerlink" title="网络丢包"></a>网络丢包</h3><h4 id="参数-1"><a href="#参数-1" class="headerlink" title="参数"></a>参数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">--destination-ip string   目标 IP. 支持通过子网掩码来指定一个网段的IP地址, 例如 192.168.1.0/24. 则 192.168.1.0~192.168.1.255 都生效。你也可以指定固定的 IP，如 192.168.1.1 或者 192.168.1.1/32。</span><br><span class="line">--exclude-port string     排除掉的端口，可以指定多个，使用逗号分隔或者连接符表示范围，例如 22,8000 或者 8000-8010。 这个参数不能与 --<span class="built_in">local</span>-port 或者 --remote-port 参数一起使用</span><br><span class="line">--interface string        网卡设备，例如 eth0 (必要参数)</span><br><span class="line">--<span class="built_in">local</span>-port string       本地端口，一般是本机暴露服务的端口。可以指定多个，使用逗号分隔或者连接符表示范围，例如 80,8000-8080</span><br><span class="line">--percent string          丢包百分比，取值在[0, 100]的正整数 (必要参数)</span><br><span class="line">--remote-port string      远程端口，一般是要访问的外部暴露服务的端口。可以指定多个，使用逗号分隔或者连接符表示范围，例如 80,8000-8080</span><br><span class="line">--timeout string          设定运行时长，单位是秒，通用参数</span><br></pre></td></tr></table></figure>
+<h4 id="指定本地端口丢包"><a href="#指定本地端口丢包" class="headerlink" title="指定本地端口丢包"></a>指定本地端口丢包</h4><p>所有其他服务器访问本地端口延时。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create network loss --percent 70 --interface eno16780032 --local-port 9100</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"88626fd1175317ff"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p> 在另一台机器验证： <code>curl  xxx.xxx.xxx.xxx:8080</code>，不使用 telnet 的原因是 telnet 内部有重试机制，影响实验验证。如果将 percent 的值设置为 100，可以使用 telnet 验证 </p>
+<h4 id="到远程IP端口丢包"><a href="#到远程IP端口丢包" class="headerlink" title="到远程IP端口丢包"></a>到远程IP端口丢包</h4><p>当前机器访问远程IP端口延时，其他机器不受影响。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create network loss --percent 70 --interface eno16780032 --remote-port 8080 --destination-ip 10.22.19.8</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"fb75e208d0793104"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>演练机器验证：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># curl -o /dev/null -w %&#123;time_namelookup&#125;::%&#123;time_connect&#125;::%&#123;time_starttransfer&#125;::%&#123;time_total&#125;::%&#123;speed_download&#125;"\n" "http://10.22.19.8:8080/"</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100 11266    0 11266    0     0   1502      0 --:--:--  0:00:07 --:--:--  3223</span><br><span class="line">0.000::7.082::7.499::7.499::1502.000</span><br></pre></td></tr></table></figure>
+<p>同时间正常机器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># curl -o /dev/null -w %&#123;time_namelookup&#125;::%&#123;time_connect&#125;::%&#123;time_starttransfer&#125;::%&#123;time_total&#125;::%&#123;speed_download&#125;"\n" "http://10.22.19.8:8080/"</span></span><br><span class="line">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current</span><br><span class="line">                                 Dload  Upload   Total   Spent    Left  Speed</span><br><span class="line">100 11266    0 11266    0     0  5254k      0 --:--:-- --:--:-- --:--:-- 10.7M</span><br><span class="line">0.000::0.000::0.002::0.002::5380133.000</span><br></pre></td></tr></table></figure>
+<h4 id="让一个容器服务丢包"><a href="#让一个容器服务丢包" class="headerlink" title="让一个容器服务丢包"></a>让一个容器服务丢包</h4><p>首先找到该服务的宿主机，再找到容器对应的网卡，然后在服务宿主机上设置该网卡丢包。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./blade create network loss --percent 70 --interface cali4c37fec8d88 --timeout 30</span><br></pre></td></tr></table></figure>
+<h3 id="网络隔离"><a href="#网络隔离" class="headerlink" title="网络隔离"></a>网络隔离</h3><p>丢包率100%即网络隔离。</p>
+<h3 id="DNS解析"><a href="#DNS解析" class="headerlink" title="DNS解析"></a>DNS解析</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade create network dns --domain www.baidu.com --ip 10.0.0.0</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"5923c8feae34ec52"</span>&#125;</span><br><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ping www.baidu.com</span></span><br><span class="line">PING www.baidu.com (10.0.0.0) 56(84) bytes of data.</span><br><span class="line">^C</span><br><span class="line">--- www.baidu.com ping statistics ---</span><br><span class="line">24 packets transmitted, 0 received, 100% packet loss, time 23533ms</span><br></pre></td></tr></table></figure>
+<h2 id="销毁实验"><a href="#销毁实验" class="headerlink" title="销毁实验"></a>销毁实验</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade destroy a6fa3362742e8c6f</span></span><br><span class="line">&#123;<span class="string">"code"</span>:200,<span class="string">"success"</span>:<span class="literal">true</span>,<span class="string">"result"</span>:<span class="string">"command: network loss --help false --interface eno16780032 --debug false --local-port 9100 --percent 70, destroy time: 2019-10-22T17:35:36.557547578+08:00"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>每个实验要么在创建的时候指定销毁时间<code>--timeout</code>，要么手动销毁，不然会一直执行。</p>
+<h2 id="查看实验状态"><a href="#查看实验状态" class="headerlink" title="查看实验状态"></a>查看实验状态</h2><p>创建只会如果忘记了uid，可以通过status命令查询。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[root@master4 chaosblade-0.3.0]<span class="comment"># ./blade status --type create</span></span><br><span class="line">&#123;</span><br><span class="line">        <span class="string">"code"</span>: 200,</span><br><span class="line">        <span class="string">"success"</span>: <span class="literal">true</span>,</span><br><span class="line">        <span class="string">"result"</span>: [</span><br><span class="line">                &#123;</span><br><span class="line">                        <span class="string">"Uid"</span>: <span class="string">"4cdc5e72e623d449"</span>,</span><br><span class="line">                        <span class="string">"Command"</span>: <span class="string">"network"</span>,</span><br><span class="line">                        <span class="string">"SubCommand"</span>: <span class="string">"delay"</span>,</span><br><span class="line">                        <span class="string">"Flag"</span>: <span class="string">"--debug false --interface cali4c37fec8d88 --time 3000 --timeout 30 --help false"</span>,</span><br><span class="line">                        <span class="string">"Status"</span>: <span class="string">"Destroyed"</span>,</span><br><span class="line">                        <span class="string">"Error"</span>: <span class="string">""</span>,</span><br><span class="line">                        <span class="string">"CreateTime"</span>: <span class="string">"2019-10-22T16:35:53.572066698+08:00"</span>,</span><br><span class="line">                        <span class="string">"UpdateTime"</span>: <span class="string">"2019-10-22T16:36:23.898669337+08:00"</span></span><br><span class="line">                &#125;,</span><br><span class="line">                &#123;</span><br><span class="line">                        <span class="string">"Uid"</span>: <span class="string">"01e7e9b19770834c"</span>,</span><br><span class="line">                        <span class="string">"Command"</span>: <span class="string">"network"</span>,</span><br><span class="line">                        <span class="string">"SubCommand"</span>: <span class="string">"delay"</span>,</span><br><span class="line">                        <span class="string">"Flag"</span>: <span class="string">"--timeout 60 --debug false --interface cali4c37fec8d88 --time 3000 --help false"</span>,</span><br><span class="line">                        <span class="string">"Status"</span>: <span class="string">"Destroyed"</span>,</span><br><span class="line">                        <span class="string">"Error"</span>: <span class="string">""</span>,</span><br><span class="line">                        <span class="string">"CreateTime"</span>: <span class="string">"2019-10-22T16:42:30.821076685+08:00"</span>,</span><br><span class="line">                        <span class="string">"UpdateTime"</span>: <span class="string">"2019-10-22T16:43:30.937855907+08:00"</span></span><br><span class="line">                &#125;</span><br><span class="line">        ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/混沌工程/">混沌工程</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/chaosBlade/">chaosBlade</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/17/Git开发规范/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Git开发规范
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/09/27/混沌工程/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">混沌工程</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#二进制"><span class="nav-number">1.1.</span> <span class="nav-text">二进制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#命令"><span class="nav-number">2.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CPU"><span class="nav-number">3.</span> <span class="nav-text">CPU</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CPU满负载"><span class="nav-number">3.1.</span> <span class="nav-text">CPU满负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指定CPU负载"><span class="nav-number">3.2.</span> <span class="nav-text">指定CPU负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#指定故障时间"><span class="nav-number">3.3.</span> <span class="nav-text">指定故障时间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看CPU负载"><span class="nav-number">3.4.</span> <span class="nav-text">查看CPU负载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存"><span class="nav-number">4.</span> <span class="nav-text">内存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#指定内存负载"><span class="nav-number">4.1.</span> <span class="nav-text">指定内存负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看内存负载"><span class="nav-number">4.2.</span> <span class="nav-text">查看内存负载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#磁盘"><span class="nav-number">5.</span> <span class="nav-text">磁盘</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#磁盘容量不足"><span class="nav-number">5.1.</span> <span class="nav-text">磁盘容量不足</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看磁盘容量"><span class="nav-number">5.2.</span> <span class="nav-text">查看磁盘容量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#磁盘读-IO高负载"><span class="nav-number">5.3.</span> <span class="nav-text">磁盘读 IO高负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#磁盘写IO高负载"><span class="nav-number">5.4.</span> <span class="nav-text">磁盘写IO高负载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看IO负载"><span class="nav-number">5.5.</span> <span class="nav-text">查看IO负载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络"><span class="nav-number">6.</span> <span class="nav-text">网络</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络延时"><span class="nav-number">6.1.</span> <span class="nav-text">网络延时</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数"><span class="nav-number">6.1.1.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#指定本地端口延时"><span class="nav-number">6.1.2.</span> <span class="nav-text">指定本地端口延时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#到远程IP端口延时"><span class="nav-number">6.1.3.</span> <span class="nav-text">到远程IP端口延时</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#让一个容器服务超时"><span class="nav-number">6.1.4.</span> <span class="nav-text">让一个容器服务超时</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络丢包"><span class="nav-number">6.2.</span> <span class="nav-text">网络丢包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#参数-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#指定本地端口丢包"><span class="nav-number">6.2.2.</span> <span class="nav-text">指定本地端口丢包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#到远程IP端口丢包"><span class="nav-number">6.2.3.</span> <span class="nav-text">到远程IP端口丢包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#让一个容器服务丢包"><span class="nav-number">6.2.4.</span> <span class="nav-text">让一个容器服务丢包</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络隔离"><span class="nav-number">6.3.</span> <span class="nav-text">网络隔离</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNS解析"><span class="nav-number">6.4.</span> <span class="nav-text">DNS解析</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#销毁实验"><span class="nav-number">7.</span> <span class="nav-text">销毁实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查看实验状态"><span class="nav-number">8.</span> <span class="nav-text">查看实验状态</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

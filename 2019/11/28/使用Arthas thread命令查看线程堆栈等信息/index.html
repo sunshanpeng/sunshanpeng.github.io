@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>使用Arthas thread命令查看线程堆栈 | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="arthas">
+  
+  
+  
+  
+  <meta name="description" content="Arthas thread命令介绍  https://alibaba.github.io/arthas/thread.html    查看当前Java进程的线程信息和线程的堆栈信息。 使用方法命令格式： 1thread [id] [-n 5] 示例： 显示所有线程的信息12345678910111213141516171819$ threadThreads Total: 16, NEW: 0, R">
+<meta name="keywords" content="arthas">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用Arthas thread命令查看线程堆栈">
+<meta property="og:url" content="http://sunshanpeng.com/2019/11/28/使用Arthas thread命令查看线程堆栈等信息/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="Arthas thread命令介绍  https://alibaba.github.io/arthas/thread.html    查看当前Java进程的线程信息和线程的堆栈信息。 使用方法命令格式： 1thread [id] [-n 5] 示例： 显示所有线程的信息12345678910111213141516171819$ threadThreads Total: 16, NEW: 0, R">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:33:59.901Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用Arthas thread命令查看线程堆栈">
+<meta name="twitter:description" content="Arthas thread命令介绍  https://alibaba.github.io/arthas/thread.html    查看当前Java进程的线程信息和线程的堆栈信息。 使用方法命令格式： 1thread [id] [-n 5] 示例： 显示所有线程的信息12345678910111213141516171819$ threadThreads Total: 16, NEW: 0, R">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-使用Arthas thread命令查看线程堆栈等信息" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      使用Arthas thread命令查看线程堆栈
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2019/11/28/使用Arthas thread命令查看线程堆栈等信息/" class="article-date">
+	  <time datetime="2019-11-28T13:26:37.000Z" itemprop="datePublished">十一月 28, 2019</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Arthas-thread命令介绍"><a href="#Arthas-thread命令介绍" class="headerlink" title="Arthas thread命令介绍"></a>Arthas thread命令介绍</h2><blockquote>
+<p> <a href="https://alibaba.github.io/arthas/thread.html" target="_blank" rel="noopener">https://alibaba.github.io/arthas/thread.html</a> </p>
+</blockquote>
+<p> 查看当前Java进程的线程信息和线程的堆栈信息。</p>
+<h2 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h2><p>命令格式：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thread [id] [-n 5]</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<h3 id="显示所有线程的信息"><a href="#显示所有线程的信息" class="headerlink" title="显示所有线程的信息"></a>显示所有线程的信息</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">$ thread</span><br><span class="line">Threads Total: 16, NEW: 0, RUNNABLE: 7, BLOCKED: 0, WAITING: 5, TIMED_WAITING: 4, TERMINATED: 0</span><br><span class="line">ID         NAME                             GROUP                 PRIORITY   STATE      %CPU       TIME       INTERRUPTE DAEMON</span><br><span class="line">30         as-command-execute-daemon        system                9          RUNNABLE   72         0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">23         as-session-expire-daemon         system                9          TIMED_WAIT 27         0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">22         Attach Listener                  system                9          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">11         pool-2-thread-1                  main                  5          TIMED_WAIT 0          0:0        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">12         Thread-2                         main                  5          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">13         pool-3-thread-1                  main                  5          TIMED_WAIT 0          0:0        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">25         as-selector-daemon               system                9          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">14         Thread-3                         main                  5          TIMED_WAIT 0          0:0        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">26         pool-5-thread-1                  system                5          WAITING    0          0:0        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">15         Thread-4                         main                  5          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">1          main                             main                  5          WAITING    0          0:2        <span class="literal">false</span>      <span class="literal">false</span></span><br><span class="line">2          Reference Handler                system                10         WAITING    0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">3          Finalizer                        system                8          WAITING    0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">4          Signal Dispatcher                system                9          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">20         NonBlockingInputStreamThread     main                  5          WAITING    0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br><span class="line">21         Thread-8                         main                  5          RUNNABLE   0          0:0        <span class="literal">false</span>      <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h3 id="显示指定线程的运行堆栈"><a href="#显示指定线程的运行堆栈" class="headerlink" title="显示指定线程的运行堆栈"></a>显示指定线程的运行堆栈</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ thread 1</span><br><span class="line"><span class="string">"main"</span> Id=1 WAITING on java.util.concurrent.CountDownLatch<span class="variable">$Sync</span>@29fafb28</span><br><span class="line">    at sun.misc.Unsafe.park(Native Method)</span><br><span class="line">    -  waiting on java.util.concurrent.CountDownLatch<span class="variable">$Sync</span>@29fafb28</span><br><span class="line">    at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)</span><br><span class="line">    at java.util.concurrent.locks.AbstractQueuedSynchronizer.parkAndCheckInterrupt(AbstractQueuedSynchronizer.java:836)</span><br><span class="line">    at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireSharedInterruptibly(AbstractQueuedSynchronizer.java:997)</span><br><span class="line">    at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireSharedInterruptibly(AbstractQueuedSynchronizer.java:1304)</span><br><span class="line">    at java.util.concurrent.CountDownLatch.await(CountDownLatch.java:231)</span><br></pre></td></tr></table></figure>
+<h3 id="显示当前最忙的前N个线程并打印堆栈"><a href="#显示当前最忙的前N个线程并打印堆栈" class="headerlink" title="显示当前最忙的前N个线程并打印堆栈"></a>显示当前最忙的前N个线程并打印堆栈</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">thread -n 3</span><br><span class="line"><span class="string">"as-command-execute-daemon"</span> Id=29 cpuUsage=75% RUNNABLE</span><br><span class="line">    at sun.management.ThreadImpl.dumpThreads0(Native Method)</span><br><span class="line">    at sun.management.ThreadImpl.getThreadInfo(ThreadImpl.java:440)</span><br><span class="line">    at com.taobao.arthas.core.command.monitor200.ThreadCommand<span class="variable">$1</span>.action(ThreadCommand.java:58)</span><br><span class="line">    at com.taobao.arthas.core.command.handler.AbstractCommandHandler.execute(AbstractCommandHandler.java:238)</span><br><span class="line">    at com.taobao.arthas.core.command.handler.DefaultCommandHandler.handleCommand(DefaultCommandHandler.java:67)</span><br><span class="line">    at com.taobao.arthas.core.server.ArthasServer<span class="variable">$4</span>.run(ArthasServer.java:276)</span><br><span class="line">    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)</span><br><span class="line">    at java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>.run(ThreadPoolExecutor.java:615)</span><br><span class="line">    at java.lang.Thread.run(Thread.java:745)</span><br><span class="line"> </span><br><span class="line">    Number of locked synchronizers = 1</span><br><span class="line">    - java.util.concurrent.ThreadPoolExecutor<span class="variable">$Worker</span>@6cd0b6f8</span><br><span class="line"> </span><br><span class="line"><span class="string">"as-session-expire-daemon"</span> Id=25 cpuUsage=24% TIMED_WAITING</span><br><span class="line">    at java.lang.Thread.sleep(Native Method)</span><br><span class="line">    at com.taobao.arthas.core.server.DefaultSessionManager<span class="variable">$2</span>.run(DefaultSessionManager.java:85)</span><br><span class="line"> </span><br><span class="line"><span class="string">"Reference Handler"</span> Id=2 cpuUsage=0% WAITING on java.lang.ref.Reference<span class="variable">$Lock</span>@69ba0f27</span><br><span class="line">    at java.lang.Object.wait(Native Method)</span><br><span class="line">    -  waiting on java.lang.ref.Reference<span class="variable">$Lock</span>@69ba0f27</span><br><span class="line">    at java.lang.Object.wait(Object.java:503)</span><br><span class="line">    at java.lang.ref.Reference<span class="variable">$ReferenceHandler</span>.run(Reference.java:133)</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/java/">java</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/arthas/">arthas</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2019/11/28/使用Arthas trace定位并优化接口响应慢的问题/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          使用Arthas trace定位并优化接口响应慢的问题
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/11/28/使用Arthas tt命令记录调用信息/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">使用Arthas tt命令记录调用信息</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Arthas-thread命令介绍"><span class="nav-number">1.</span> <span class="nav-text">Arthas thread命令介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用方法"><span class="nav-number">2.</span> <span class="nav-text">使用方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#显示所有线程的信息"><span class="nav-number">2.1.</span> <span class="nav-text">显示所有线程的信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示指定线程的运行堆栈"><span class="nav-number">2.2.</span> <span class="nav-text">显示指定线程的运行堆栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#显示当前最忙的前N个线程并打印堆栈"><span class="nav-number">2.3.</span> <span class="nav-text">显示当前最忙的前N个线程并打印堆栈</span></a></li></ol></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>在K8S集群中安装istio | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="istio">
+  
+  
+  
+  
+  <meta name="description" content="istio版本：1.4.5 k8s版本：1.14.8 docker版本：18.6.1 内核版本：4.19.12-1.el7.elrepo.x86_64 安装下载安装包方式一：在线下载1curl -L https://istio.io/downloadIstio | sh - 方式二：离线下载https://github.com/istio/istio/releases 下载安装包后上传到服务器并解">
+<meta name="keywords" content="istio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="在K8S集群中安装istio">
+<meta property="og:url" content="http://sunshanpeng.com/2020/02/27/在K8S集群中安装istio/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="istio版本：1.4.5 k8s版本：1.14.8 docker版本：18.6.1 内核版本：4.19.12-1.el7.elrepo.x86_64 安装下载安装包方式一：在线下载1curl -L https://istio.io/downloadIstio | sh - 方式二：离线下载https://github.com/istio/istio/releases 下载安装包后上传到服务器并解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:36:18.274Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在K8S集群中安装istio">
+<meta name="twitter:description" content="istio版本：1.4.5 k8s版本：1.14.8 docker版本：18.6.1 内核版本：4.19.12-1.el7.elrepo.x86_64 安装下载安装包方式一：在线下载1curl -L https://istio.io/downloadIstio | sh - 方式二：离线下载https://github.com/istio/istio/releases 下载安装包后上传到服务器并解">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-在K8S集群中安装istio" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      在K8S集群中安装istio
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2020/02/27/在K8S集群中安装istio/" class="article-date">
+	  <time datetime="2020-02-27T13:26:37.000Z" itemprop="datePublished">二月 27, 2020</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/istio/">istio</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>istio版本：1.4.5</p>
+<p>k8s版本：1.14.8</p>
+<p>docker版本：18.6.1</p>
+<p>内核版本：4.19.12-1.el7.elrepo.x86_64</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="下载安装包"><a href="#下载安装包" class="headerlink" title="下载安装包"></a>下载安装包</h3><h4 id="方式一：在线下载"><a href="#方式一：在线下载" class="headerlink" title="方式一：在线下载"></a>方式一：在线下载</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl -L https://istio.io/downloadIstio | sh -</span><br></pre></td></tr></table></figure>
+<h4 id="方式二：离线下载"><a href="#方式二：离线下载" class="headerlink" title="方式二：离线下载"></a>方式二：离线下载</h4><p><a href="https://github.com/istio/istio/releases" target="_blank" rel="noopener">https://github.com/istio/istio/releases</a></p>
+<p>下载安装包后上传到服务器并解压</p>
+<h3 id="进入安装包并设置环境变量"><a href="#进入安装包并设置环境变量" class="headerlink" title="进入安装包并设置环境变量"></a>进入安装包并设置环境变量</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> istio-1.4.5</span><br><span class="line"><span class="comment"># istioctl在/bin目录下</span></span><br><span class="line"><span class="comment"># K8S安装yaml文件在/install/kubernetes目录下</span></span><br><span class="line"><span class="comment"># 示例程序在/samples下</span></span><br><span class="line">$ ll</span><br><span class="line">total 28</span><br><span class="line">drwxr-x---  2 root root    21 Feb 14 01:23 bin</span><br><span class="line">drwxr-xr-x  6 root root    74 Feb 14 01:23 install</span><br><span class="line">-rw-r--r--  1 root root 11348 Feb 14 01:23 LICENSE</span><br><span class="line">-rw-r-----  1 root root   657 Feb 14 01:23 manifest.yaml</span><br><span class="line">-rw-r--r--  1 root root  6080 Feb 14 01:23 README.md</span><br><span class="line">drwxr-xr-x 19 root root  4096 Feb 14 01:23 samples</span><br><span class="line">drwxr-x---  3 root root   132 Feb 14 01:23 tools</span><br><span class="line"></span><br><span class="line">$ <span class="built_in">export</span> PATH=<span class="variable">$PWD</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<h3 id="安装istio"><a href="#安装istio" class="headerlink" title="安装istio"></a>安装istio</h3><h4 id="安装demo示例（不适用生产环境）"><a href="#安装demo示例（不适用生产环境）" class="headerlink" title="安装demo示例（不适用生产环境）"></a>安装demo示例（不适用生产环境）</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl manifest apply --<span class="built_in">set</span> profile=demo</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Base...</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Base.</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Tracing...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Policy...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Galley...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Citadel...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component EgressGateway...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Pilot...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Telemetry...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Injector...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component IngressGateway...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Prometheus...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Kiali...</span><br><span class="line">- Applying manifest <span class="keyword">for</span> component Grafana...</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Injector.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Galley.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Citadel.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Prometheus.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component IngressGateway.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Kiali.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Pilot.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Policy.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Tracing.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component EgressGateway.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Grafana.</span><br><span class="line">✔ Finished applying manifest <span class="keyword">for</span> component Telemetry.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">✔ Installation complete</span><br></pre></td></tr></table></figure>
+<h4 id="查看安装情况"><a href="#查看安装情况" class="headerlink" title="查看安装情况"></a>查看安装情况</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get svc -n istio-system</span><br><span class="line">NAME                     TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                                                                                      AGE</span><br><span class="line">grafana                  ClusterIP      172.21.92.238    &lt;none&gt;        3000/TCP                                                                                                                     117s</span><br><span class="line">istio-citadel            ClusterIP      172.21.219.100   &lt;none&gt;        8060/TCP,15014/TCP                                                                                                           119s</span><br><span class="line">istio-egressgateway      ClusterIP      172.21.132.59    &lt;none&gt;        80/TCP,443/TCP,15443/TCP                                                                                                     117s</span><br><span class="line">istio-galley             ClusterIP      172.21.181.69    &lt;none&gt;        443/TCP,15014/TCP,9901/TCP,15019/TCP                                                                                         119s</span><br><span class="line">istio-ingressgateway     LoadBalancer   172.21.147.170   &lt;pending&gt;     15020:34070/TCP,80:24804/TCP,443:38932/TCP,15029:23713/TCP,15030:30635/TCP,15031:34451/TCP,15032:30379/TCP,15443:39703/TCP   118s</span><br><span class="line">istio-pilot              ClusterIP      172.21.121.250   &lt;none&gt;        15010/TCP,15011/TCP,8080/TCP,15014/TCP                                                                                       118s</span><br><span class="line">istio-policy             ClusterIP      172.21.178.10    &lt;none&gt;        9091/TCP,15004/TCP,15014/TCP                                                                                                 117s</span><br><span class="line">istio-sidecar-injector   ClusterIP      172.21.223.149   &lt;none&gt;        443/TCP                                                                                                                      119s</span><br><span class="line">istio-telemetry          ClusterIP      172.21.49.247    &lt;none&gt;        9091/TCP,15004/TCP,15014/TCP,42422/TCP                                                                                       116s</span><br><span class="line">jaeger-agent             ClusterIP      None             &lt;none&gt;        5775/UDP,6831/UDP,6832/UDP                                                                                                   2m</span><br><span class="line">jaeger-collector         ClusterIP      172.21.159.105   &lt;none&gt;        14267/TCP,14268/TCP,14250/TCP                                                                                                119s</span><br><span class="line">jaeger-query             ClusterIP      172.21.203.16    &lt;none&gt;        16686/TCP                                                                                                                    118s</span><br><span class="line">kiali                    ClusterIP      172.21.207.47    &lt;none&gt;        20001/TCP                                                                                                                    118s</span><br><span class="line">prometheus               ClusterIP      172.21.71.218    &lt;none&gt;        9090/TCP                                                                                                                     118s</span><br><span class="line">tracing                  ClusterIP      172.21.49.79     &lt;none&gt;        80/TCP                                                                                                                       118s</span><br><span class="line">zipkin                   ClusterIP      172.21.13.237    &lt;none&gt;        9411/TCP                                                                                                                     117s</span><br></pre></td></tr></table></figure>
+<p><strong>镜像下载速度很慢，需要加速</strong></p>
+<blockquote>
+<p>使用指定仓库<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; istioctl manifest apply --<span class="built_in">set</span> hub=harbor.sunshanpeng.com/istio</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods -n istio-system</span><br><span class="line">grafana-5f798469fd-hm5vs                  1/1     Running   0          142m</span><br><span class="line">istio-citadel-58bb67f9b8-bkwkm            1/1     Running   0          142m</span><br><span class="line">istio-egressgateway-6fd57475b5-wdqck      1/1     Running   0          142m</span><br><span class="line">istio-galley-7d4b9874c8-jk495             1/1     Running   0          142m</span><br><span class="line">istio-ingressgateway-7d65bf7fdf-jbqst     1/1     Running   0          142m</span><br><span class="line">istio-pilot-65f8557545-kbs75              1/1     Running   0          142m</span><br><span class="line">istio-policy-6c6449c56f-btzpd             1/1     Running   0          142m</span><br><span class="line">istio-sidecar-injector-774969d686-lgnjb   1/1     Running   0          142m</span><br><span class="line">istio-telemetry-585cc965f7-vjwwn          1/1     Running   8          142m</span><br><span class="line">istio-tracing-cd67ddf8-wpdqr              1/1     Running   0          142m</span><br><span class="line">kiali-7964898d8c-4z88n                    1/1     Running   0          142m</span><br><span class="line">prometheus-586d4445c7-wv9qv               1/1     Running   0          142m</span><br></pre></td></tr></table></figure>
+<h3 id="注入Sidecar"><a href="#注入Sidecar" class="headerlink" title="注入Sidecar"></a>注入Sidecar</h3><h4 id="方式一：指定namespace自动注入"><a href="#方式一：指定namespace自动注入" class="headerlink" title="方式一：指定namespace自动注入"></a>方式一：指定namespace自动注入</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl label namespace &lt;namespace&gt; istio-injection=enabled</span><br></pre></td></tr></table></figure>
+<h4 id="方式二：指定pod注入"><a href="#方式二：指定pod注入" class="headerlink" title="方式二：指定pod注入"></a>方式二：指定pod注入</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#三种方式</span></span><br><span class="line">$ istioctl kube-inject -f resource.yaml | kubectl apply -f -</span><br><span class="line">$ kubectl apply -f &lt;(istioctl kube-inject -f &lt;resource.yaml&gt;)</span><br><span class="line">$ kubectl get deployment deploy -o yaml | istioctl kube-inject -f - | kubectl apply -f -</span><br></pre></td></tr></table></figure>
+<p>istioctl kube-inject 命令用于在创建部署之前修改yaml 文件，把 Envoy 注入到 Kubernetes 资源。</p>
+<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ istioctl manifest generate --<span class="built_in">set</span> profile=demo | kubectl delete -f -</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://istio.io/docs/setup/getting-started/" target="_blank" rel="noopener">https://istio.io/docs/setup/getting-started/</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/istio/">istio</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/istio/">istio</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2020/02/27/istio官方示例bookinfo/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          istio官方示例bookinfo
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2020/02/27/设置istioctl自动补全/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">设置istioctl自动补全</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#下载安装包"><span class="nav-number">1.1.</span> <span class="nav-text">下载安装包</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式一：在线下载"><span class="nav-number">1.1.1.</span> <span class="nav-text">方式一：在线下载</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式二：离线下载"><span class="nav-number">1.1.2.</span> <span class="nav-text">方式二：离线下载</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进入安装包并设置环境变量"><span class="nav-number">1.2.</span> <span class="nav-text">进入安装包并设置环境变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装istio"><span class="nav-number">1.3.</span> <span class="nav-text">安装istio</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装demo示例（不适用生产环境）"><span class="nav-number">1.3.1.</span> <span class="nav-text">安装demo示例（不适用生产环境）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查看安装情况"><span class="nav-number">1.3.2.</span> <span class="nav-text">查看安装情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注入Sidecar"><span class="nav-number">1.4.</span> <span class="nav-text">注入Sidecar</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#方式一：指定namespace自动注入"><span class="nav-number">1.4.1.</span> <span class="nav-text">方式一：指定namespace自动注入</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方式二：指定pod注入"><span class="nav-number">1.4.2.</span> <span class="nav-text">方式二：指定pod注入</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载"><span class="nav-number">2.</span> <span class="nav-text">卸载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">3.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>

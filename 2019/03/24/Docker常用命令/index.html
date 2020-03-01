@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="阿鹏的博客">
 <meta property="og:description" content="拉取镜像1docker pull mysql:5.6 格式：docker pull [OPTIONS] NAME[:TAG|@DIGEST]，tag不写的话默认latest。 登录镜像仓库1docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com 格式：docker login [OPTIONS] [S">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2019-10-08T00:23:33.805Z">
+<meta property="og:updated_time" content="2020-03-01T13:13:39.766Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker常用命令">
 <meta name="twitter:description" content="拉取镜像1docker pull mysql:5.6 格式：docker pull [OPTIONS] NAME[:TAG|@DIGEST]，tag不写的话默认latest。 登录镜像仓库1docker login --username sunshanpeng --password 123456 harbor.sunshanpeng.com 格式：docker login [OPTIONS] [S">
@@ -204,7 +204,7 @@
 <li><p><code>-d</code>指定容器后台运行</p>
 <p>其他还有很多指定IP、Hostname、CPU、内存、网络、内核参数、重启策略等等参数，可以通过<code>docker run --help</code>查询。</p>
 <h3 id="mysql容器启动命令"><a href="#mysql容器启动命令" class="headerlink" title="mysql容器启动命令"></a>mysql容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -v=/docker/mysql/data:/var/lib/mysql -v=/docker/mysql/my.cnf:/etc/mysql/my.cnf -v=/usr/share/zoneinfo/Asia/Shanghai:/etc/localtime -d mysql:5.6</span><br></pre></td></tr></table></figure>
-<h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 /docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
+<h3 id="redis容器启动命令"><a href="#redis容器启动命令" class="headerlink" title="redis容器启动命令"></a>redis容器启动命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run --name redis -p 6379:6379 -v=/docker/redis/data:/data -d redis:3.2</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
 <h2 id="重命名容器"><a href="#重命名容器" class="headerlink" title="重命名容器"></a>重命名容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker rename mysql mysql1</span><br></pre></td></tr></table></figure>
@@ -337,7 +337,7 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2019 阿鹏的博客 All Rights Reserved.
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
               本站访客数<span id="busuanzi_value_site_uv"></span>人次  

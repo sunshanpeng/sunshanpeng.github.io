@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>istio官方示例bookinfo | 阿鹏的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  
+  <meta name="keywords" content="istio">
+  
+  
+  
+  
+  <meta name="description" content="istio版本：1.4.5 部署bookinfo部署资源1kubectl apply -f &amp;lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml) 确认资源创建1234567$ kubectl get servicesNAME                       CLUSTER-IP   EXTE">
+<meta name="keywords" content="istio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="istio官方示例bookinfo">
+<meta property="og:url" content="http://sunshanpeng.com/2020/02/27/istio官方示例bookinfo/index.html">
+<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:description" content="istio版本：1.4.5 部署bookinfo部署资源1kubectl apply -f &amp;lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml) 确认资源创建1234567$ kubectl get servicesNAME                       CLUSTER-IP   EXTE">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2020-03-01T13:39:27.662Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="istio官方示例bookinfo">
+<meta name="twitter:description" content="istio版本：1.4.5 部署bookinfo部署资源1kubectl apply -f &amp;lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml) 确认资源创建1234567$ kubectl get servicesNAME                       CLUSTER-IP   EXTE">
+  
+    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+  
+  <link rel="icon" href="/css/images/favicon.ico">
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Montserrat:700" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,300,300italic,400italic" rel="stylesheet" type="text/css">
+  <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+  <style type="text/css">
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/9749f0/00000000000000000001008f/27/l?subset_id=2&fvd=n5) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/90cf9f/000000000000000000010091/27/l?subset_id=2&fvd=n7) format("woff2");font-weight:500;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/8a5494/000000000000000000013365/27/l?subset_id=2&fvd=n4) format("woff2");font-weight:lighter;font-style:normal;}
+    @font-face{font-family:futura-pt;src:url(https://use.typekit.net/af/d337d8/000000000000000000010095/27/l?subset_id=2&fvd=i4) format("woff2");font-weight:400;font-style:italic;}</style>
+    
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Yanone+Kaffeesatz%3A200%2C300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+
+  <link rel="stylesheet" id="athemes-headings-fonts-css" href="//fonts.googleapis.com/css?family=Oswald%3A300%2C400%2C700&amp;ver=4.6.1" type="text/css" media="all">
+  <link rel="stylesheet" href="/css/style.css">
+
+  <script src="/js/jquery-3.1.1.min.js"></script>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="/css/bootstrap.css">
+  <link rel="stylesheet" href="/css/fashion.css">
+  <link rel="stylesheet" href="/css/glyphs.css">
+
+</head>
+</html>
+
+
+  <body data-spy="scroll" data-target="#toc" data-offset="50">
+
+
+  
+  
+  <div class="site-header-image">
+    <img id="originBg" width="100%" alt="Hike News" src>
+  </div>
+
+  <div id="header-blur" class="site-header-image blur" style="position: absolute; top:0; height: 207px; min-height: 207px; min-width: 100%;">
+    <img id="blurBg" width="100%" style="top: 96%" alt="Hike News" src>
+  </div>
+
+  <script>
+        var imgUrls = "css/images/pose01.jpg,https://source.unsplash.com/collection/954550/1920x1080,https://source.unsplash.com/collection/954550/1920x1081".split(",");
+        var random = Math.floor((Math.random() * imgUrls.length ));
+        if (imgUrls[random].startsWith('http') || imgUrls[random].indexOf('://') >= 0) {
+          document.getElementById("originBg").src=imgUrls[random];
+          document.getElementById("blurBg").src=imgUrls[random];
+        } else {
+          document.getElementById("originBg").src='/' + imgUrls[random];
+          document.getElementById("blurBg").src='/' + imgUrls[random];
+        }
+    </script>
+
+
+
+
+<header id="allheader" class="site-header" role="banner" style="width: 100%; position: absolute; top:0; background: rgba(255,255,255,.8);">
+  <div class="clearfix container">
+      <div class="site-branding">
+
+          <h1 class="site-title">
+            
+              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+            
+          </h1>
+          
+          
+            <div class="site-description">java go devops kubernetes docker</div>
+          
+            
+          <nav id="main-navigation" class="main-navigation" role="navigation">
+            <a class="nav-open">Menu</a>
+            <a class="nav-close">Close</a>
+
+            <div class="clearfix sf-menu">
+              <ul id="main-nav" class="menu sf-js-enabled sf-arrows" style="touch-action: pan-y;">
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/">Home</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/archives">Archives</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/categories">Categories</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/tags">Tags</a> </li>
+                    
+                      <li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-home menu-item-1663"> <a class href="/about">About</a> </li>
+                    
+              </ul>
+            </div>
+          </nav>
+
+      </div>
+  </div>
+</header>
+
+
+  <div id="container">
+    <div id="wrap">
+            
+      <div id="content" class="outer">
+        
+          <section id="main" style="float:none;"><article id="post-istio官方示例bookinfo" style="width: 66%; float:left;" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      istio官方示例bookinfo
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2020/02/27/istio官方示例bookinfo/" class="article-date">
+	  <time datetime="2020-02-27T13:26:37.000Z" itemprop="datePublished">二月 27, 2020</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/istio/">istio</a>
+ 
+      
+	<span id="busuanzi_container_page_pv">
+	  本文总阅读量<span id="busuanzi_value_page_pv"></span>次
+	</span>
+
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>istio版本：1.4.5</p>
+<h2 id="部署bookinfo"><a href="#部署bookinfo" class="headerlink" title="部署bookinfo"></a>部署bookinfo</h2><h3 id="部署资源"><a href="#部署资源" class="headerlink" title="部署资源"></a>部署资源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f &lt;(istioctl kube-inject -f samples/bookinfo/platform/kube/bookinfo.yaml)</span><br></pre></td></tr></table></figure>
+<h3 id="确认资源创建"><a href="#确认资源创建" class="headerlink" title="确认资源创建"></a>确认资源创建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get services</span><br><span class="line">NAME                       CLUSTER-IP   EXTERNAL-IP   PORT(S)              AGE</span><br><span class="line">details                    10.0.0.31    &lt;none&gt;        9080/TCP             6m</span><br><span class="line">kubernetes                 10.0.0.1     &lt;none&gt;        443/TCP              7d</span><br><span class="line">productpage                10.0.0.120   &lt;none&gt;        9080/TCP             6m</span><br><span class="line">ratings                    10.0.0.15    &lt;none&gt;        9080/TCP             6m</span><br><span class="line">reviews                    10.0.0.170   &lt;none&gt;        9080/TCP             6m</span><br></pre></td></tr></table></figure>
+<p><strong>镜像加载很慢</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get pods</span><br><span class="line">NAME                                        READY     STATUS    RESTARTS   AGE</span><br><span class="line">details-v1-1520924117-48z17                 2/2       Running   0          6m</span><br><span class="line">productpage-v1-560495357-jk1lz              2/2       Running   0          6m</span><br><span class="line">ratings-v1-734492171-rnr5l                  2/2       Running   0          6m</span><br><span class="line">reviews-v1-874083890-f0qf0                  2/2       Running   0          6m</span><br><span class="line">reviews-v2-1343845940-b34q5                 2/2       Running   0          6m</span><br><span class="line">reviews-v3-1813607990-8ch52                 2/2       Running   0          6m</span><br></pre></td></tr></table></figure>
+<h3 id="访问productpage"><a href="#访问productpage" class="headerlink" title="访问productpage"></a>访问productpage</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl <span class="built_in">exec</span> -it $(kubectl get pod -l app=ratings -o jsonpath=<span class="string">'&#123;.items[0].metadata.name&#125;'</span>) -c ratings -- curl productpage:9080/productpage | grep -o <span class="string">"&lt;title&gt;.*&lt;/title&gt;"</span></span><br><span class="line">&lt;title&gt;Simple Bookstore App&lt;/title&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="部署bookinfo-gateway"><a href="#部署bookinfo-gateway" class="headerlink" title="部署bookinfo-gateway"></a>部署bookinfo-gateway</h2><h3 id="部署资源-1"><a href="#部署资源-1" class="headerlink" title="部署资源"></a>部署资源</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/bookinfo-gateway.yaml</span><br></pre></td></tr></table></figure>
+<h3 id="确认资源创建-1"><a href="#确认资源创建-1" class="headerlink" title="确认资源创建"></a>确认资源创建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl get gateway</span><br><span class="line">NAME               AGE</span><br><span class="line">bookinfo-gateway   32s</span><br></pre></td></tr></table></figure>
+<h3 id="获取IP端口"><a href="#获取IP端口" class="headerlink" title="获取IP端口"></a>获取IP端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#IP</span></span><br><span class="line">$ <span class="built_in">export</span> INGRESS_HOST=$(kubectl get po -l istio=ingressgateway -n istio-system -o jsonpath=<span class="string">'&#123;.items[0].status.hostIP&#125;'</span>)</span><br><span class="line"><span class="comment">#PORT</span></span><br><span class="line">$ <span class="built_in">export</span> INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=<span class="string">'&#123;.spec.ports[?(@.name=="http2")].nodePort&#125;'</span>)</span><br><span class="line">$ <span class="built_in">export</span> SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath=<span class="string">'&#123;.spec.ports[?(@.name=="https")].nodePort&#125;'</span>)</span><br><span class="line"><span class="comment"># IP:PORT</span></span><br><span class="line">$ <span class="built_in">export</span> GATEWAY_URL=<span class="variable">$INGRESS_HOST</span>:<span class="variable">$INGRESS_PORT</span></span><br></pre></td></tr></table></figure>
+<h2 id="访问productpage-1"><a href="#访问productpage-1" class="headerlink" title="访问productpage"></a>访问productpage</h2><h3 id="服务器上访问"><a href="#服务器上访问" class="headerlink" title="服务器上访问"></a>服务器上访问</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ curl -s http://<span class="variable">$&#123;GATEWAY_URL&#125;</span>/productpage | grep -o <span class="string">"&lt;title&gt;.*&lt;/title&gt;"</span></span><br><span class="line">&lt;title&gt;Simple Bookstore App&lt;/title&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="浏览器上访问"><a href="#浏览器上访问" class="headerlink" title="浏览器上访问"></a>浏览器上访问</h3><p>获取地址</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">echo</span> <span class="variable">$GATEWAY_UR</span></span><br><span class="line">10.22.19.14:24804</span><br></pre></td></tr></table></figure>
+<p>打开页面</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">http://10.22.19.14:24804/productpage</span></span><br></pre></td></tr></table></figure>
+<p><strong>刷新页面，发现评价有时星星是红色的，有时是黑色的，有时没有星星。说明有三个版本在负载均衡。</strong></p>
+<h2 id="只访问V1版本"><a href="#只访问V1版本" class="headerlink" title="只访问V1版本"></a>只访问<code>V1</code>版本</h2><h3 id="创建destination-rule"><a href="#创建destination-rule" class="headerlink" title="创建destination rule"></a>创建<code>destination rule</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/destination-rule-all.yaml</span><br><span class="line">$  kubectl get destinationrules.networking.istio.io </span><br><span class="line">NAME          HOST          AGE</span><br><span class="line">details       details       162m</span><br><span class="line">productpage   productpage   162m</span><br><span class="line">ratings       ratings       162m</span><br><span class="line">reviews       reviews       162m</span><br></pre></td></tr></table></figure>
+<h3 id="创建V1版本的virtual-service"><a href="#创建V1版本的virtual-service" class="headerlink" title="创建V1版本的virtual service"></a>创建<code>V1</code>版本的<code>virtual service</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/virtual-service-all-v1.yaml</span><br></pre></td></tr></table></figure>
+<p><strong>此时刷新页面，显示的内容中不包含带星的评价信息。</strong></p>
+<h2 id="指定用户访问V2版本"><a href="#指定用户访问V2版本" class="headerlink" title="指定用户访问V2版本"></a>指定用户访问<code>V2</code>版本</h2><h3 id="配置V2版本的reviews-virtual-service"><a href="#配置V2版本的reviews-virtual-service" class="headerlink" title="配置V2版本的reviews virtual service"></a>配置<code>V2</code>版本的<code>reviews virtual service</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/virtual-service-reviews-test-v2.yaml</span><br></pre></td></tr></table></figure>
+<p><strong>登录<code>jason/jason</code>后，显示的内容变成了黑色星星的评价信息</strong></p>
+<h2 id="基于权重的流量比例"><a href="#基于权重的流量比例" class="headerlink" title="基于权重的流量比例"></a>基于权重的流量比例</h2><h3 id="配置V1和V2权重"><a href="#配置V1和V2权重" class="headerlink" title="配置V1和V2权重"></a>配置<code>V1</code>和<code>V2</code>权重</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/virtual-service-reviews-80-20.yaml</span><br></pre></td></tr></table></figure>
+<p><strong>80%流量到<code>V1</code>版本，20%流量到<code>V2</code>版本</strong></p>
+<h2 id="注入延迟故障"><a href="#注入延迟故障" class="headerlink" title="注入延迟故障"></a>注入延迟故障</h2><h3 id="配置ratings-virtual-service"><a href="#配置ratings-virtual-service" class="headerlink" title="配置ratings virtual service"></a>配置<code>ratings virtual service</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/virtual-service-ratings-test-delay.yaml</span><br></pre></td></tr></table></figure>
+<p><strong>普通用户访问正常，jason用户加载评论失败</strong></p>
+<h2 id="注入500故障"><a href="#注入500故障" class="headerlink" title="注入500故障"></a>注入500故障</h2><h3 id="配置ratings-virtual-service-1"><a href="#配置ratings-virtual-service-1" class="headerlink" title="配置ratings virtual service"></a>配置<code>ratings virtual service</code></h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ kubectl apply -f samples/bookinfo/networking/virtual-service-ratings-test-abort.yaml</span><br></pre></td></tr></table></figure>
+<p><strong>普通用户访问正常，jason用户提示<code>Ratings service is currently unavailable</code></strong></p>
+<h2 id="卸载"><a href="#卸载" class="headerlink" title="卸载"></a>卸载</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ samples/bookinfo/platform/kube/cleanup.sh</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://istio.io/docs/examples/bookinfo/" target="_blank" rel="noopener">https://istio.io/docs/examples/bookinfo/</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/istio/">istio</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/istio/">istio</a></li></ul>
+
+      
+        
+	<div id="comment">
+		<!-- 来必力City版安装代码 -->
+		<div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQ4MS82MDQ5">
+		<script type="text/javascript">
+		   (function(d, s) {
+		       var j, e = d.getElementsByTagName(s)[0];
+
+		       if (typeof LivereTower === 'function') { return; }
+
+		       j = d.createElement(s);
+		       j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+		       j.async = true;
+
+		       e.parentNode.insertBefore(j, e);
+		   })(document, 'script');
+		</script>
+		<noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+		</div>
+		<!-- City版安装代码已完成 -->
+	</div>
+
+
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/02/27/在K8S集群中安装istio/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">在K8S集群中安装istio</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+<!-- Table of Contents -->
+
+  <aside id="sidebar">
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">Contents</strong>
+    
+      <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#部署bookinfo"><span class="nav-number">1.</span> <span class="nav-text">部署bookinfo</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署资源"><span class="nav-number">1.1.</span> <span class="nav-text">部署资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认资源创建"><span class="nav-number">1.2.</span> <span class="nav-text">确认资源创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问productpage"><span class="nav-number">1.3.</span> <span class="nav-text">访问productpage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#部署bookinfo-gateway"><span class="nav-number">2.</span> <span class="nav-text">部署bookinfo-gateway</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#部署资源-1"><span class="nav-number">2.1.</span> <span class="nav-text">部署资源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#确认资源创建-1"><span class="nav-number">2.2.</span> <span class="nav-text">确认资源创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取IP端口"><span class="nav-number">2.3.</span> <span class="nav-text">获取IP端口</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问productpage-1"><span class="nav-number">3.</span> <span class="nav-text">访问productpage</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#服务器上访问"><span class="nav-number">3.1.</span> <span class="nav-text">服务器上访问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器上访问"><span class="nav-number">3.2.</span> <span class="nav-text">浏览器上访问</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#只访问V1版本"><span class="nav-number">4.</span> <span class="nav-text">只访问V1版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建destination-rule"><span class="nav-number">4.1.</span> <span class="nav-text">创建destination rule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建V1版本的virtual-service"><span class="nav-number">4.2.</span> <span class="nav-text">创建V1版本的virtual service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#指定用户访问V2版本"><span class="nav-number">5.</span> <span class="nav-text">指定用户访问V2版本</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置V2版本的reviews-virtual-service"><span class="nav-number">5.1.</span> <span class="nav-text">配置V2版本的reviews virtual service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于权重的流量比例"><span class="nav-number">6.</span> <span class="nav-text">基于权重的流量比例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置V1和V2权重"><span class="nav-number">6.1.</span> <span class="nav-text">配置V1和V2权重</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注入延迟故障"><span class="nav-number">7.</span> <span class="nav-text">注入延迟故障</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置ratings-virtual-service"><span class="nav-number">7.1.</span> <span class="nav-text">配置ratings virtual service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注入500故障"><span class="nav-number">8.</span> <span class="nav-text">注入500故障</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置ratings-virtual-service-1"><span class="nav-number">8.1.</span> <span class="nav-text">配置ratings virtual service</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载"><span class="nav-number">9.</span> <span class="nav-text">卸载</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">10.</span> <span class="nav-text">参考</span></a></li></ol>
+    
+    </div>
+  </aside>
+</section>
+        
+      </div>
+
+    </div>
+    <!-- <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/categories" class="mobile-nav-link">Categories</a>
+  
+    <a href="/tags" class="mobile-nav-link">Tags</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+</nav> -->
+    <footer id="footer" class="site-footer">
+  
+
+  <div class="clearfix container">
+      <div class="site-info">
+	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+        
+            <span id="busuanzi_container_site_uv">
+              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
+              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+            </span>
+          
+      </div>
+      <div class="site-credit">
+        Theme by <a href="https://github.com/iTimeTraveler/hexo-theme-hipaper" target="_blank">hipaper</a>
+      </div>
+  </div>
+</footer>
+
+
+<!-- min height -->
+
+<script>
+    var wrapdiv = document.getElementById("wrap");
+    var contentdiv = document.getElementById("content");
+
+    wrapdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+    contentdiv.style.minHeight = document.body.offsetHeight - document.getElementById("allheader").offsetHeight - document.getElementById("footer").offsetHeight + "px";
+
+
+    <!-- headerblur min height -->
+    
+      var headerblur = document.getElementById("header-blur");
+      headerblur.style.minHeight = window.getComputedStyle(document.getElementById("allheader"), null).height;
+    
+    
+</script>
+    
+<div style="display: none;">
+  <script src="https://s11.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+</div>
+
+<!-- mathjax config similar to math.stackexchange -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    });
+</script>
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+
+<script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+<script src="/js/bootstrap.js"></script>
+<script src="/js/main.js"></script>
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="https://s95.cnzz.com/z_stat.php?id=1260716016&web_id=1260716016" language="JavaScript"></script>
+  </div>
+
+
+
+	<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+	</script>
+
+
+
+
+
+
+  </div>
+
+  <a id="rocket" href="#top" class=""></a>
+  <script type="text/javascript" src="/js/totop.js" async=""></script>
+</body>
+</html>
