@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>使用apollo配置中心生成雪花算法的workerId | 阿鹏的博客</title>
+  <title>使用apollo配置中心生成雪花算法的workerId | sunshanpeng</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   <meta name="keywords" content="apollo">
@@ -16,7 +16,7 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用apollo配置中心生成雪花算法的workerId">
 <meta property="og:url" content="http://sunshanpeng.com/2019/02/24/使用apollo配置中心生成雪花算法的workerId/index.html">
-<meta property="og:site_name" content="阿鹏的博客">
+<meta property="og:site_name" content="sunshanpeng">
 <meta property="og:description" content="前言在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。 但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。 使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。 Apollo配置中心介绍Apo">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png">
@@ -26,7 +26,7 @@
 <meta name="twitter:description" content="前言在分布式系统中，有一些需要使用全局唯一ID的场景，这时候雪花算法（snowflake）就是一种不错的解决方式。 但是雪花算法需要用到一个workerId，同一个应用部署多个实例的时候workerId不能相同。 使用环境变量或者启动参数来指定workerId的方式虽然在一定程度上解决了workerId的问题，但是给容器环境下的自动化部署或者动态扩容带来了新的挑战。 Apollo配置中心介绍Apo">
 <meta name="twitter:image" content="https://github.com/ctripcorp/apollo/raw/master/doc/images/overall-architecture.png">
   
-    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="sunshanpeng" type="application/atom+xml">
   
   <link rel="icon" href="/css/images/favicon.ico">
   
@@ -91,12 +91,12 @@
 
           <h1 class="site-title">
             
-              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+              <a href="/" title="sunshanpeng" rel="home"> sunshanpeng </a>
             
           </h1>
           
           
-            <div class="site-description">java go devops kubernetes docker</div>
+            <div class="site-description">java devops kubernetes</div>
           
             
           <nav id="main-navigation" class="main-navigation" role="navigation">
@@ -241,19 +241,19 @@
     
 <nav id="article-nav">
   
-    <a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2019/02/24/Pod的意义/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          修改Kubernetes集群Pod容器的内核参数
+          Pod的意义
         
       </div>
     </a>
   
   
-    <a href="/2019/02/24/使用同一个deployment实现金丝雀（灰度）发布/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2019/02/24/修改Kubernetes集群Pod容器的内核参数/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">使用同一个deployment实现金丝雀（灰度）发布</div>
+      <div class="article-nav-title">修改Kubernetes集群Pod容器的内核参数</div>
     </a>
   
 </nav>
@@ -294,11 +294,10 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+	      &copy; 2020 sunshanpeng All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
-              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
-              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              <a href="http://beian.miit.gov.cn">浙ICP备18016576号</a>
             </span>
           
       </div>

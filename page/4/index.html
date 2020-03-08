@@ -3,25 +3,25 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Page 4 | 阿鹏的博客</title>
+  <title>Page 4 | sunshanpeng</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   
   
   
   
-  <meta name="description" content="java go devops kubernetes docker">
-<meta name="keywords" content="java go devops kubernetes docker">
+  <meta name="description" content="java devops kubernetes">
+<meta name="keywords" content="java go devops kubernetes">
 <meta property="og:type" content="website">
-<meta property="og:title" content="阿鹏的博客">
+<meta property="og:title" content="sunshanpeng">
 <meta property="og:url" content="http://sunshanpeng.com/page/4/index.html">
-<meta property="og:site_name" content="阿鹏的博客">
-<meta property="og:description" content="java go devops kubernetes docker">
+<meta property="og:site_name" content="sunshanpeng">
+<meta property="og:description" content="java devops kubernetes">
 <meta property="og:locale" content="zh_CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="阿鹏的博客">
-<meta name="twitter:description" content="java go devops kubernetes docker">
+<meta name="twitter:title" content="sunshanpeng">
+<meta name="twitter:description" content="java devops kubernetes">
   
-    <link rel="alternate" href="/atom.xml" title="阿鹏的博客" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="sunshanpeng" type="application/atom+xml">
   
   <link rel="icon" href="/css/images/favicon.ico">
   
@@ -86,12 +86,12 @@
 
           <h1 class="site-title">
             
-              <a href="/" title="阿鹏的博客" rel="home"> 阿鹏的博客 </a>
+              <a href="/" title="sunshanpeng" rel="home"> sunshanpeng </a>
             
           </h1>
           
           
-            <div class="site-description">java go devops kubernetes docker</div>
+            <div class="site-description">java devops kubernetes</div>
           
             
           <nav id="main-navigation" class="main-navigation" role="navigation">
@@ -356,6 +356,88 @@
 <!-- Table of Contents -->
 
   
+    <article id="post-使用ephemeral-storage管理容器的临时存储" class="article article-type-post" itemscope itemprop="blogPost">
+  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="thumb" itemprop="name">
+      <a class="article-title" href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/">使用ephemeral-storage管理容器的临时存储</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-meta">
+      
+	<a href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/" class="article-date">
+	  <time datetime="2018-11-28T08:26:37.000Z" itemprop="datePublished">十一月 28, 2018</time>
+	</a>
+
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+ 
+      
+    </div>
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="ephemeral-storage介绍"><a href="#ephemeral-storage介绍" class="headerlink" title="ephemeral-storage介绍"></a>ephemeral-storage介绍</h2><p>Kubernetes在1.8的版本中引入了一种类似于CPU，内存的新的资源模式：<code>ephemeral-storage</code>，并且在1.10的版本在kubelet中默认打开了这个特性。</p>
+<ul>
+<li>Alpha release target (x.y): 1.7/1.8</li>
+<li>Beta release target (x.y): 1.10</li>
+<li>Stable release target (x.y): 1.11</li>
+</ul>
+<p><code>ephemeral-storage</code>是为了管理和调度Kubernetes中运行的应用的短暂存储。</p>
+<blockquote>
+<p>在每个Kubernetes的节点上，kubelet的根目录(默认是/var/lib/kubelet)和日志目录(/var/log)保存在节点的主分区上，这个分区同时也会被Pod的EmptyDir类型的volume、容器日志、镜像的层、容器的可写层所占用。<code>ephemeral-storage</code>便是对这块主分区进行管理，通过应用定义的需求(requests)和约束(limits)来调度和管理节点上的应用对主分区的消耗。</p>
+</blockquote>
+<h2 id="ephemeral-storage的eviction逻辑"><a href="#ephemeral-storage的eviction逻辑" class="headerlink" title="ephemeral-storage的eviction逻辑"></a>ephemeral-storage的eviction逻辑</h2><p>在节点上的<code>kubelet</code>启动的时候，<code>kubelet</code>会统计当前节点的主分区的可分配的磁盘资源，或者你可以覆盖节点上<code>kubelet</code>的配置来自定义可分配的资源。在创建<code>Pod</code>时会根据存储需求调度到满足存储的节点，在<code>Pod</code>使用超过限制的存储时会对其做驱逐的处理来保证不会耗尽节点上的磁盘空间。</p>
+<blockquote>
+<p>如果运行时指定了别的独立的分区，比如修改了docker的镜像层和容器可写层的存储位置(默认是/var/lib/docker)所在的分区，将不再将其计入<code>ephemeral-storage</code>的消耗。</p>
+</blockquote>
+<ul>
+<li>EmptyDir 的使用量超过了他的 SizeLimit，那么这个 pod 将会被驱逐</li>
+<li>Container 的使用量（log，如果没有 overlay 分区，则包括 imagefs）超过了他的 limit，则这个 pod 会被驱逐</li>
+<li>Pod 对本地临时存储总的使用量（所有 emptydir 和 container）超过了 pod 中所有container 的 limit 之和，则 pod 被驱逐</li>
+</ul>
+<h2 id="ephemeral-storage使用"><a href="#ephemeral-storage使用" class="headerlink" title="ephemeral-storage使用"></a>ephemeral-storage使用</h2><p>和内存和CPU的限制类似，存储的限制也是定义在Pod的container中</p>
+<blockquote>
+<p>spec.containers[].resources.limits.ephemeral-storage</p>
+<p>spec.containers[].resources.requests.ephemeral-storage</p>
+</blockquote>
+<p>示例：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.14</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">["bash",</span> <span class="string">"-c"</span><span class="string">,</span> <span class="string">"while true; do dd if=/dev/zero of=$(date '+%s').out count=1 bs=10MB; sleep 1; done"</span><span class="string">]</span> <span class="comment"># 持续写入文件到容器的rootfs中</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      limits:</span></span><br><span class="line"><span class="attr">        ephemeral-storage:</span> <span class="number">100</span><span class="string">Mi</span> <span class="comment">#定义存储的限制为100M</span></span><br><span class="line"><span class="attr">      requests:</span></span><br><span class="line"><span class="attr">        ephemeral-storage:</span> <span class="number">100</span><span class="string">Mi</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># kubectl get pods -o wide</span></span><br><span class="line">NAME                                READY     STATUS    RESTARTS   AGE       IP               NODE            NOMINATED NODE</span><br><span class="line">teststorage                         1/1       Running   0          7s        172.20.189.69    10.208.204.35   &lt;none&gt;</span><br><span class="line">-------------------------------------------------------------------------------------------------</span><br><span class="line">teststorage                         0/1       Evicted   0          1m        &lt;none&gt;           10.208.204.35   &lt;none&gt;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># kubectl describe pod teststorage </span></span><br><span class="line">Name:         teststorage</span><br><span class="line">Namespace:    default</span><br><span class="line">Node:         10.208.204.35/</span><br><span class="line">Start Time:   Wed, 28 Nov 2018 13:48:37 +0800</span><br><span class="line">Labels:       app=teststorage</span><br><span class="line">Annotations:  kubectl.kubernetes.io/last-applied-configuration=&#123;<span class="string">"apiVersion"</span>:<span class="string">"v1"</span>,<span class="string">"kind"</span>:<span class="string">"Pod"</span>,<span class="string">"metadata"</span>:&#123;<span class="string">"annotations"</span>:&#123;&#125;,<span class="string">"labels"</span>:&#123;<span class="string">"app"</span>:<span class="string">"teststorage"</span>&#125;,<span class="string">"name"</span>:<span class="string">"teststorage"</span>,<span class="string">"namespace"</span>:<span class="string">"default"</span>&#125;,<span class="string">"spec"</span>:&#123;<span class="string">"contai...</span></span><br><span class="line"><span class="string">Status:       Failed</span></span><br><span class="line"><span class="string">Reason:       Evicted</span></span><br><span class="line"><span class="string">Message:      Pod ephemeral local storage usage exceeds the total limit of containers 100Mi. </span></span><br><span class="line"><span class="string">IP:           </span></span><br><span class="line"><span class="string">Containers:</span></span><br><span class="line"><span class="string">  teststorage:</span></span><br><span class="line"><span class="string">    Image:      nginx:1.14</span></span><br><span class="line"><span class="string">    Port:       &lt;none&gt;</span></span><br><span class="line"><span class="string">    Host Port:  &lt;none&gt;</span></span><br><span class="line"><span class="string">    Command:</span></span><br><span class="line"><span class="string">      bash</span></span><br><span class="line"><span class="string">      -c</span></span><br><span class="line"><span class="string">      while true; do dd if=/dev/zero of=<span class="variable">$(date '+%s')</span>.out count=1 bs=10MB; sleep 1; done</span></span><br><span class="line"><span class="string">    Limits:</span></span><br><span class="line"><span class="string">      ephemeral-storage:  100Mi</span></span><br><span class="line"><span class="string">    Requests:</span></span><br><span class="line"><span class="string">      ephemeral-storage:  100Mi</span></span><br><span class="line"><span class="string">    Environment:          &lt;none&gt;</span></span><br><span class="line"><span class="string">    Mounts:</span></span><br><span class="line"><span class="string">      /var/run/secrets/kubernetes.io/serviceaccount from default-token-mqzrh (ro)</span></span><br><span class="line"><span class="string">Volumes:</span></span><br><span class="line"><span class="string">  default-token-mqzrh:</span></span><br><span class="line"><span class="string">    Type:        Secret (a volume populated by a Secret)</span></span><br><span class="line"><span class="string">    SecretName:  default-token-mqzrh</span></span><br><span class="line"><span class="string">    Optional:    false</span></span><br><span class="line"><span class="string">QoS Class:       BestEffort</span></span><br><span class="line"><span class="string">Node-Selectors:  &lt;none&gt;</span></span><br><span class="line"><span class="string">Tolerations:     &lt;none&gt;</span></span><br><span class="line"><span class="string">Events:</span></span><br><span class="line"><span class="string">  Type     Reason     Age   From                    Message</span></span><br><span class="line"><span class="string">  ----     ------     ----  ----                    -------</span></span><br><span class="line"><span class="string">  Normal   Scheduled  1m    default-scheduler       Successfully assigned default/teststorage to 10.208.204.35</span></span><br><span class="line"><span class="string">  Normal   Pulled     1m    kubelet, 10.208.204.35  Container image "</span>nginx:1.14<span class="string">" already present on machine</span></span><br><span class="line"><span class="string">  Normal   Created    1m    kubelet, 10.208.204.35  Created container</span></span><br><span class="line"><span class="string">  Normal   Started    1m    kubelet, 10.208.204.35  Started container</span></span><br><span class="line"><span class="string">  Warning  Evicted    8s    kubelet, 10.208.204.35  Pod ephemeral local storage usage exceeds the total limit of containers 100Mi.</span></span><br><span class="line"><span class="string">  Normal   Killing    8s    kubelet, 10.208.204.35  Killing container with id docker://teststorage:Need to kill Pod</span></span><br></pre></td></tr></table></figure>
+<h2 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h2><p><a href="https://v1-11.docs.kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/" target="_blank" rel="noopener">https://v1-11.docs.kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/</a></p>
+<p><a href="https://github.com/kubernetes/enhancements/issues/361" target="_blank" rel="noopener">https://github.com/kubernetes/enhancements/issues/361</a></p>
+<p><a href="https://yq.aliyun.com/articles/594066" target="_blank" rel="noopener">https://yq.aliyun.com/articles/594066</a></p>
+<p><a href="http://www.k8smeetup.com/article/VyEncpgA7" target="_blank" rel="noopener">http://www.k8smeetup.com/article/VyEncpgA7</a></p>
+
+      
+    </div>
+    <footer class="entry-meta entry-footer">
+      
+	<span class="ico-folder"></span>
+    <a class="article-category-link" href="/categories/容器/">容器</a>
+
+      
+  <span class="ico-tags"></span>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
+
+      
+    </footer>
+    <hr class="entry-footer-hr">
+  </div>
+  
+</article>
+
+<!-- Table of Contents -->
+
+  
     <article id="post-下载谷歌镜像的几种姿势" class="article article-type-post" itemscope itemprop="blogPost">
   <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
     
@@ -429,88 +511,6 @@
       
   <span class="ico-tags"></span>
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/docker/">docker</a></li></ul>
-
-      
-    </footer>
-    <hr class="entry-footer-hr">
-  </div>
-  
-</article>
-
-<!-- Table of Contents -->
-
-  
-    <article id="post-使用ephemeral-storage管理容器的临时存储" class="article article-type-post" itemscope itemprop="blogPost">
-  <div id="articleInner" class="clearfix post-1016 post type-post status-publish format-standard has-post-thumbnail hentry category-template-2 category-uncategorized tag-codex tag-edge-case tag-featured-image tag-image tag-template">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="thumb" itemprop="name">
-      <a class="article-title" href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/">使用ephemeral-storage管理容器的临时存储</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-meta">
-      
-	<a href="/2018/11/28/使用ephemeral-storage管理容器的临时存储/" class="article-date">
-	  <time datetime="2018-11-28T08:26:37.000Z" itemprop="datePublished">十一月 28, 2018</time>
-	</a>
-
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
- 
-      
-    </div>
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="ephemeral-storage介绍"><a href="#ephemeral-storage介绍" class="headerlink" title="ephemeral-storage介绍"></a>ephemeral-storage介绍</h2><p>Kubernetes在1.8的版本中引入了一种类似于CPU，内存的新的资源模式：<code>ephemeral-storage</code>，并且在1.10的版本在kubelet中默认打开了这个特性。</p>
-<ul>
-<li>Alpha release target (x.y): 1.7/1.8</li>
-<li>Beta release target (x.y): 1.10</li>
-<li>Stable release target (x.y): 1.11</li>
-</ul>
-<p><code>ephemeral-storage</code>是为了管理和调度Kubernetes中运行的应用的短暂存储。</p>
-<blockquote>
-<p>在每个Kubernetes的节点上，kubelet的根目录(默认是/var/lib/kubelet)和日志目录(/var/log)保存在节点的主分区上，这个分区同时也会被Pod的EmptyDir类型的volume、容器日志、镜像的层、容器的可写层所占用。<code>ephemeral-storage</code>便是对这块主分区进行管理，通过应用定义的需求(requests)和约束(limits)来调度和管理节点上的应用对主分区的消耗。</p>
-</blockquote>
-<h2 id="ephemeral-storage的eviction逻辑"><a href="#ephemeral-storage的eviction逻辑" class="headerlink" title="ephemeral-storage的eviction逻辑"></a>ephemeral-storage的eviction逻辑</h2><p>在节点上的<code>kubelet</code>启动的时候，<code>kubelet</code>会统计当前节点的主分区的可分配的磁盘资源，或者你可以覆盖节点上<code>kubelet</code>的配置来自定义可分配的资源。在创建<code>Pod</code>时会根据存储需求调度到满足存储的节点，在<code>Pod</code>使用超过限制的存储时会对其做驱逐的处理来保证不会耗尽节点上的磁盘空间。</p>
-<blockquote>
-<p>如果运行时指定了别的独立的分区，比如修改了docker的镜像层和容器可写层的存储位置(默认是/var/lib/docker)所在的分区，将不再将其计入<code>ephemeral-storage</code>的消耗。</p>
-</blockquote>
-<ul>
-<li>EmptyDir 的使用量超过了他的 SizeLimit，那么这个 pod 将会被驱逐</li>
-<li>Container 的使用量（log，如果没有 overlay 分区，则包括 imagefs）超过了他的 limit，则这个 pod 会被驱逐</li>
-<li>Pod 对本地临时存储总的使用量（所有 emptydir 和 container）超过了 pod 中所有container 的 limit 之和，则 pod 被驱逐</li>
-</ul>
-<h2 id="ephemeral-storage使用"><a href="#ephemeral-storage使用" class="headerlink" title="ephemeral-storage使用"></a>ephemeral-storage使用</h2><p>和内存和CPU的限制类似，存储的限制也是定义在Pod的container中</p>
-<blockquote>
-<p>spec.containers[].resources.limits.ephemeral-storage</p>
-<p>spec.containers[].resources.requests.ephemeral-storage</p>
-</blockquote>
-<p>示例：</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Pod</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    app:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  containers:</span></span><br><span class="line"><span class="attr">  - name:</span> <span class="string">teststorage</span></span><br><span class="line"><span class="attr">    image:</span> <span class="attr">nginx:1.14</span></span><br><span class="line"><span class="attr">    command:</span> <span class="string">["bash",</span> <span class="string">"-c"</span><span class="string">,</span> <span class="string">"while true; do dd if=/dev/zero of=$(date '+%s').out count=1 bs=10MB; sleep 1; done"</span><span class="string">]</span> <span class="comment"># 持续写入文件到容器的rootfs中</span></span><br><span class="line"><span class="attr">    resources:</span></span><br><span class="line"><span class="attr">      limits:</span></span><br><span class="line"><span class="attr">        ephemeral-storage:</span> <span class="number">100</span><span class="string">Mi</span> <span class="comment">#定义存储的限制为100M</span></span><br><span class="line"><span class="attr">      requests:</span></span><br><span class="line"><span class="attr">        ephemeral-storage:</span> <span class="number">100</span><span class="string">Mi</span></span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># kubectl get pods -o wide</span></span><br><span class="line">NAME                                READY     STATUS    RESTARTS   AGE       IP               NODE            NOMINATED NODE</span><br><span class="line">teststorage                         1/1       Running   0          7s        172.20.189.69    10.208.204.35   &lt;none&gt;</span><br><span class="line">-------------------------------------------------------------------------------------------------</span><br><span class="line">teststorage                         0/1       Evicted   0          1m        &lt;none&gt;           10.208.204.35   &lt;none&gt;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">[root@master1 ~]<span class="comment"># kubectl describe pod teststorage </span></span><br><span class="line">Name:         teststorage</span><br><span class="line">Namespace:    default</span><br><span class="line">Node:         10.208.204.35/</span><br><span class="line">Start Time:   Wed, 28 Nov 2018 13:48:37 +0800</span><br><span class="line">Labels:       app=teststorage</span><br><span class="line">Annotations:  kubectl.kubernetes.io/last-applied-configuration=&#123;<span class="string">"apiVersion"</span>:<span class="string">"v1"</span>,<span class="string">"kind"</span>:<span class="string">"Pod"</span>,<span class="string">"metadata"</span>:&#123;<span class="string">"annotations"</span>:&#123;&#125;,<span class="string">"labels"</span>:&#123;<span class="string">"app"</span>:<span class="string">"teststorage"</span>&#125;,<span class="string">"name"</span>:<span class="string">"teststorage"</span>,<span class="string">"namespace"</span>:<span class="string">"default"</span>&#125;,<span class="string">"spec"</span>:&#123;<span class="string">"contai...</span></span><br><span class="line"><span class="string">Status:       Failed</span></span><br><span class="line"><span class="string">Reason:       Evicted</span></span><br><span class="line"><span class="string">Message:      Pod ephemeral local storage usage exceeds the total limit of containers 100Mi. </span></span><br><span class="line"><span class="string">IP:           </span></span><br><span class="line"><span class="string">Containers:</span></span><br><span class="line"><span class="string">  teststorage:</span></span><br><span class="line"><span class="string">    Image:      nginx:1.14</span></span><br><span class="line"><span class="string">    Port:       &lt;none&gt;</span></span><br><span class="line"><span class="string">    Host Port:  &lt;none&gt;</span></span><br><span class="line"><span class="string">    Command:</span></span><br><span class="line"><span class="string">      bash</span></span><br><span class="line"><span class="string">      -c</span></span><br><span class="line"><span class="string">      while true; do dd if=/dev/zero of=<span class="variable">$(date '+%s')</span>.out count=1 bs=10MB; sleep 1; done</span></span><br><span class="line"><span class="string">    Limits:</span></span><br><span class="line"><span class="string">      ephemeral-storage:  100Mi</span></span><br><span class="line"><span class="string">    Requests:</span></span><br><span class="line"><span class="string">      ephemeral-storage:  100Mi</span></span><br><span class="line"><span class="string">    Environment:          &lt;none&gt;</span></span><br><span class="line"><span class="string">    Mounts:</span></span><br><span class="line"><span class="string">      /var/run/secrets/kubernetes.io/serviceaccount from default-token-mqzrh (ro)</span></span><br><span class="line"><span class="string">Volumes:</span></span><br><span class="line"><span class="string">  default-token-mqzrh:</span></span><br><span class="line"><span class="string">    Type:        Secret (a volume populated by a Secret)</span></span><br><span class="line"><span class="string">    SecretName:  default-token-mqzrh</span></span><br><span class="line"><span class="string">    Optional:    false</span></span><br><span class="line"><span class="string">QoS Class:       BestEffort</span></span><br><span class="line"><span class="string">Node-Selectors:  &lt;none&gt;</span></span><br><span class="line"><span class="string">Tolerations:     &lt;none&gt;</span></span><br><span class="line"><span class="string">Events:</span></span><br><span class="line"><span class="string">  Type     Reason     Age   From                    Message</span></span><br><span class="line"><span class="string">  ----     ------     ----  ----                    -------</span></span><br><span class="line"><span class="string">  Normal   Scheduled  1m    default-scheduler       Successfully assigned default/teststorage to 10.208.204.35</span></span><br><span class="line"><span class="string">  Normal   Pulled     1m    kubelet, 10.208.204.35  Container image "</span>nginx:1.14<span class="string">" already present on machine</span></span><br><span class="line"><span class="string">  Normal   Created    1m    kubelet, 10.208.204.35  Created container</span></span><br><span class="line"><span class="string">  Normal   Started    1m    kubelet, 10.208.204.35  Started container</span></span><br><span class="line"><span class="string">  Warning  Evicted    8s    kubelet, 10.208.204.35  Pod ephemeral local storage usage exceeds the total limit of containers 100Mi.</span></span><br><span class="line"><span class="string">  Normal   Killing    8s    kubelet, 10.208.204.35  Killing container with id docker://teststorage:Need to kill Pod</span></span><br></pre></td></tr></table></figure>
-<h2 id="参考文档："><a href="#参考文档：" class="headerlink" title="参考文档："></a>参考文档：</h2><p><a href="https://v1-11.docs.kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/" target="_blank" rel="noopener">https://v1-11.docs.kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/</a></p>
-<p><a href="https://github.com/kubernetes/enhancements/issues/361" target="_blank" rel="noopener">https://github.com/kubernetes/enhancements/issues/361</a></p>
-<p><a href="https://yq.aliyun.com/articles/594066" target="_blank" rel="noopener">https://yq.aliyun.com/articles/594066</a></p>
-<p><a href="http://www.k8smeetup.com/article/VyEncpgA7" target="_blank" rel="noopener">http://www.k8smeetup.com/article/VyEncpgA7</a></p>
-
-      
-    </div>
-    <footer class="entry-meta entry-footer">
-      
-	<span class="ico-folder"></span>
-    <a class="article-category-link" href="/categories/容器/">容器</a>
-
-      
-  <span class="ico-tags"></span>
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/k8s/">k8s</a></li></ul>
 
       
     </footer>
@@ -717,7 +717,7 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/12/16/MySQL服务端配置/">MySQL服务端配置</a></h6>
+              <h6 style="margin: 0;"><a href="/2019/12/16/MySQL开发规范/">MySQL开发规范</a></h6>
               <span>十二月 16, 2019</span>
             </div>
 
@@ -729,7 +729,7 @@
               <div class="widget-entry-summary" style="margin: 0;">
             
 
-              <h6 style="margin: 0;"><a href="/2019/12/16/MySQL开发规范/">MySQL开发规范</a></h6>
+              <h6 style="margin: 0;"><a href="/2019/12/16/MySQL服务端配置/">MySQL服务端配置</a></h6>
               <span>十二月 16, 2019</span>
             </div>
 
@@ -803,11 +803,10 @@
 
   <div class="clearfix container">
       <div class="site-info">
-	      &copy; 2020 阿鹏的博客 All Rights Reserved.
+	      &copy; 2020 sunshanpeng All Rights Reserved.
         
             <span id="busuanzi_container_site_uv">
-              本站访客数<span id="busuanzi_value_site_uv"></span>人次  
-              本站总访问量<span id="busuanzi_value_site_pv"></span>次
+              <a href="http://beian.miit.gov.cn">浙ICP备18016576号</a>
             </span>
           
       </div>
